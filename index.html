@@ -15,20 +15,23 @@
       /* Palette */
       --gold:#d4af37;
       --gold-strong:#b89017;     /* darker gold for borders/active */
-      --gold-soft:#fff0c9;       /* light gold fill for confirm */
-      --gold-soft-2:#f6e7b8;     /* pale gold tint */
+      --gold-soft:#fff0c9;       /* light gold fill for Confirm */
       --cream:#fff7ec;           /* page background */
       --white:#ffffff;
-      --text:#1f2937;            /* cool dark text */
+      --text:#1f2937;
       --muted:#6b7280;
+
+      /* Hero wallpaper + overlay controls (adjust these to change JPG visibility) */
+      --wallpaper:url('wallpaper.jpg');
+      --hero-overlay-color: 255,247,236; /* warm cream RGB */
+      --hero-overlay-1: .40;   /* top opacity (reduce to see more image) */
+      --hero-overlay-2: .55;   /* middle opacity */
+      --hero-overlay-3: .72;   /* bottom opacity */
 
       /* UI */
       --radius:14px;
       --shadow:0 10px 30px rgba(0,0,0,.10);
       --shadow-sm:0 6px 16px rgba(0,0,0,.08);
-
-      /* Hero wallpaper */
-      --wallpaper:url('wallpaper.jpg');
     }
 
     *{ box-sizing:border-box }
@@ -38,6 +41,11 @@
       font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
       background:var(--cream);
+    }
+
+    /* Particle canvas (behind everything) */
+    #bg-particles{
+      position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.35;
     }
 
     /* Top-right minimalist controls */
@@ -57,17 +65,47 @@
     .icon-btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
     .icon-btn:active{ transform:translateY(0); }
 
-    /* Hero: reduce/soften overlay so JPG is more visible, warm to blend with cream */
+    /* Volume popover */
+    .volume-pop{
+      position:fixed; z-index:9998; display:none;
+      background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:12px;
+      box-shadow:var(--shadow); padding:10px 10px 12px; width:56px;
+    }
+    .volume-pop.show{ display:block; }
+    .vol-wrap{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+    .vol-slider-wrap{ width:28px; height:140px; position:relative; }
+    .vol-slider{
+      appearance:none; position:absolute; top:0; left:0;
+      width:140px; height:28px; transform-origin:left top; transform:rotate(-90deg);
+      outline:none; background:transparent;
+    }
+    .vol-slider::-webkit-slider-thumb{
+      appearance:none; width:16px; height:16px; border-radius:50%;
+      background:var(--gold); border:1px solid var(--gold-strong);
+      box-shadow:0 1px 3px rgba(0,0,0,.1);
+    }
+    .vol-slider::-webkit-slider-runnable-track{
+      height:6px; background:linear-gradient(#eee,#eee);
+      border-radius:999px; border:1px solid #ddd;
+    }
+    .vol-btn{
+      width:32px; height:32px; border-radius:999px;
+      display:grid; place-items:center; cursor:pointer;
+      border:1px solid var(--gold-strong); background:#fff; color:#111;
+      box-shadow:var(--shadow-sm); font-weight:700;
+    }
+
+    /* Hero: NEW overlay using the variables above (less washout) */
     .hero{
-      position:relative;
+      position:relative; z-index:1;
       min-height:72vh;
       display:grid; place-items:center; text-align:center; color:#222;
       background:
         linear-gradient(
           180deg,
-          rgba(255,255,255,.60) 0%,
-          rgba(255,247,236,.78) 55%,
-          rgba(255,247,236,.90) 100%
+          rgba(var(--hero-overlay-color), var(--hero-overlay-1)) 0%,
+          rgba(var(--hero-overlay-color), var(--hero-overlay-2)) 55%,
+          rgba(var(--hero-overlay-color), var(--hero-overlay-3)) 100%
         ),
         var(--wallpaper) center/cover no-repeat fixed;
     }
@@ -89,13 +127,8 @@
     .btn-outline{ background:#fff; color:#111; border:1px solid var(--gold-strong) }
 
     /* Submit button special styles */
-    #submitBtn{
-      background:var(--gold); color:#111; border:1px solid var(--gold-strong);
-    }
-    #submitBtn[disabled]{
-      background:#eee; color:#999; border-color:#ddd; cursor:not-allowed;
-      box-shadow:none; transform:none;
-    }
+    #submitBtn{ background:var(--gold); color:#111; border:1px solid var(--gold-strong); }
+    #submitBtn[disabled]{ background:#eee; color:#999; border-color:#ddd; cursor:not-allowed; box-shadow:none; transform:none; }
 
     section{ padding:58px 16px; background:transparent; }
     .container{ max-width:980px; margin:0 auto; }
@@ -104,7 +137,7 @@
       border-radius:var(--radius); box-shadow:var(--shadow); padding:22px;
     }
 
-    /* Guest rows: always single column; each row is input (1fr) + button (auto) */
+    /* Guest rows always single line: input (1fr) + button */
     .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
     .row{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
 
@@ -115,20 +148,11 @@
       transition:border-color .12s ease, box-shadow .12s ease, background .12s ease;
       outline:none;
     }
-    /* VERY subtle placeholder */
-    .input::placeholder{ color:#c8c8c8; opacity:1; }
-    ::-webkit-input-placeholder{ color:#c8c8c8; }
-    :-ms-input-placeholder{ color:#c8c8c8; }
-
+    .input::placeholder{ color:#c8c8c8; opacity:1; } /* very subtle */
     .input:focus:not([readonly]){
-      border-color:var(--gold-strong);
-      box-shadow:0 0 0 3px rgba(212,175,55,.20);
+      border-color:var(--gold-strong); box-shadow:0 0 0 3px rgba(212,175,55,.20);
     }
-    .input[readonly]{
-      background:#fffdf7;
-      border-color:#ead79a;
-      color:#6b4b00;
-    }
+    .input[readonly]{ background:#fffdf7; border-color:#ead79a; color:#6b4b00; }
 
     .tiny{ font-size:12px; color:var(--muted) }
     .total{ text-align:center; margin-top:6px; color:#374151 }
@@ -142,19 +166,25 @@
       transition:opacity .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
       cursor:pointer;
     }
-    /* State: Confirm (editable) = light gold fill */
-    .confirm-btn.confirm-state{ background:var(--gold-soft); color:#111; }
-    /* State: Edit (locked) = white fill */
-    .confirm-btn.edit-state{ background:#fff; color:#111; }
+    .confirm-btn.confirm-state{ background:var(--gold-soft); color:#111; } /* Confirm = light gold */
+    .confirm-btn.edit-state{ background:#fff; color:#111; }               /* Edit = white */
     .confirm-btn[disabled]{ opacity:.45; cursor:not-allowed; }
 
-    .submit-wrap{ display:flex; flex-direction:column; gap:12px; }
+    /* New separators and spacing */
+    .separator{
+      height:1px; margin:18px 0;
+      background:linear-gradient(90deg, transparent, rgba(184,144,23,.35), transparent);
+    }
+    .spacer-8{ height:8px }
+    .spacer-16{ height:16px }
+    .spacer-20{ height:20px }
+
+    /* Notice (validation) */
     .notice{
       background:#fff; border:1px solid #fde68a;
       padding:12px 14px; border-radius:12px; color:#92400e;
       box-shadow:var(--shadow-sm);
     }
-    .muted{ color:var(--muted) }
 
     .actions{ display:flex; flex-wrap:wrap; gap:10px; }
     .footer{ text-align:center; color:#6b7280; padding:30px 16px 70px; background:transparent; }
@@ -170,10 +200,24 @@
 </head>
 <body>
 
+  <!-- Particles -->
+  <canvas id="bg-particles" aria-hidden="true"></canvas>
+
   <!-- Top-right controls -->
   <div class="top-controls">
     <button id="langToggle" class="icon-btn" aria-label="Toggle language">Malay</button>
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
+  </div>
+
+  <!-- Volume popover -->
+  <div id="volumePop" class="volume-pop" role="dialog" aria-label="Volume">
+    <div class="vol-wrap">
+      <div class="vol-slider-wrap">
+        <input id="volumeSlider" class="vol-slider" type="range" min="1" max="100" step="1" value="20" aria-label="Volume slider">
+      </div>
+      <button id="volPlus" class="vol-btn" type="button">+</button>
+      <button id="volMinus" class="vol-btn" type="button">−</button>
+    </div>
   </div>
 
   <header class="hero">
@@ -206,18 +250,35 @@
             <input type="hidden" name="ua" id="post_ua">
             <input type="hidden" name="note" id="post_note">
 
+            <!-- Guests -->
             <div id="guestRows" class="grid" aria-live="polite"></div>
 
-            <div class="submit-wrap">
-              <div>
-                <label for="phone" class="tiny" id="phoneLabel">Main contact number *</label>
-                <input class="input" id="phone" name="phone" autocomplete="tel" placeholder="e.g. +60 12 345 6789" required />
-              </div>
-              <button class="btn" id="submitBtn" type="submit" disabled>Submit RSVP</button>
-              <div class="tiny total" id="totalGuests">Total: 0 guest(s)</div>
-              <div class="notice tiny" id="validationMsg" style="display:none" aria-live="polite"></div>
+            <!-- Separator before phone -->
+            <div class="separator"></div>
+            <div class="spacer-8"></div>
+
+            <!-- Phone -->
+            <div>
+              <label for="phone" class="tiny" id="phoneLabel">Main contact number *</label>
+              <input class="input" id="phone" name="phone" autocomplete="tel" placeholder="e.g. +60 12 345 6789" required />
             </div>
+
+            <!-- Spacer & separator before error -->
+            <div class="spacer-16"></div>
+            <div class="separator"></div>
+
+            <!-- Error / validation ABOVE submit -->
+            <div class="spacer-8"></div>
+            <div class="notice tiny" id="validationMsg" style="display:none" aria-live="polite"></div>
+            <div class="spacer-16"></div>
+
+            <!-- Submit -->
+            <button class="btn" id="submitBtn" type="submit" disabled>Submit RSVP</button>
+
+            <!-- Totals -->
+            <div class="tiny total" id="totalGuests">Total: 0 guest(s)</div>
           </form>
+
           <iframe name="hidden_iframe" id="hidden_iframe" style="display:none"></iframe>
         </div>
       </div>
@@ -233,16 +294,6 @@
             <a class="btn btn-outline" id="btnWaze" target="_blank" rel="noopener">Waze</a>
           </div>
           <div class="muted tiny" id="locNote">Tip: You can share the link with friends who are carpooling.</div>
-        </div>
-      </div>
-    </section>
-
-    <section id="contact">
-      <div class="container">
-        <div class="card">
-          <h2 style="margin:0 0 8px;font-family:'Playfair Display',serif" id="contactTitle">Contact (Bride's family)</h2>
-          <p class="muted" id="contactDesc">Tap a name to call directly.</p>
-          <div id="contactList" class="actions" style="margin-top:6px"></div>
         </div>
       </div>
     </section>
@@ -292,8 +343,6 @@
         locTitle: "Location & Directions",
         locDesc: "Tap a button below to open directions.",
         locNote: "Tip: You can share the link with friends who are carpooling.",
-        contactTitle: "Contact (Bride's family)",
-        contactDesc: "Tap a name to call directly.",
       },
       ms: {
         title: "Adakah anda akan hadir ke majlis kami?",
@@ -315,8 +364,6 @@
         locTitle: "Lokasi & Arah",
         locDesc: "Tekan butang untuk buka arah ke lokasi.",
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
-        contactTitle: "Hubungi (keluarga pengantin perempuan)",
-        contactDesc: "Tekan nama untuk terus membuat panggilan.",
       }
     };
 
@@ -333,25 +380,19 @@
     const langToggle = document.getElementById('langToggle');
     const muteBtn = document.getElementById('muteBtn');
 
-    // Top texts
-    const titleText = document.getElementById('titleText');
-    const subtitleText = document.getElementById('subtitleText');
+    // Hero buttons
     const rsvpBtn = document.getElementById('rsvpBtn');
     const locationBtn = document.getElementById('locationBtn');
-    const rsvpIntro = document.getElementById('rsvpIntro');
-    const phoneLabel = document.getElementById('phoneLabel');
-    const locTitle = document.getElementById('locTitle');
-    const locDesc = document.getElementById('locDesc');
-    const locNote = document.getElementById('locNote');
-    const contactTitle = document.getElementById('contactTitle');
-    const contactDesc = document.getElementById('contactDesc');
 
     // Map buttons
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
 
-    // Contacts
-    const contactList = document.getElementById('contactList');
+    // Volume popover
+    const volumePop = document.getElementById('volumePop');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volPlus = document.getElementById('volPlus');
+    const volMinus = document.getElementById('volMinus');
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'en';
@@ -382,7 +423,7 @@
 
     function updateTotals(){
       const n = getGuestNames().filter(Boolean).length;
-      totalGuestsEl.textContent = I18N[LANG].total(n);
+      document.getElementById('totalGuests').textContent = I18N[LANG].total(n);
     }
 
     function saveLocal(){
@@ -394,7 +435,6 @@
     }
 
     function lockSubmissionUI(){
-      // Lock all inputs/buttons permanently until cache cleared
       getGuestInputs().forEach(inp => { inp.readOnly = true; });
       getGuestButtons().forEach(btn => { btn.disabled = true; btn.classList.remove('confirm-state'); btn.classList.add('edit-state'); });
       phoneInput.readOnly = true;
@@ -457,10 +497,7 @@
           btn.classList.add('edit-state');
           btn.disabled = false;
         }else{
-          // Even if user taps Edit, if already submitted we keep it locked
-          if(isSubmitted()){
-            return;
-          }
+          if(isSubmitted()){ return; } // keep locked after submission
           input.readOnly = false;
           btn.textContent = T.confirm;
           btn.classList.remove('edit-state');
@@ -481,17 +518,6 @@
       }
     }
 
-    function renderContacts(){
-      contactList.innerHTML = '';
-      CONTACTS.forEach(c=>{
-        const a = document.createElement('a');
-        a.className = 'btn btn-outline';
-        a.href = `tel:${c.phone.replace(/\s+/g,'')}`;
-        a.textContent = `${c.name} (${c.phone})`;
-        contactList.appendChild(a);
-      });
-    }
-
     function renderMaps(){
       const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
       const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
@@ -500,19 +526,16 @@
 
     function i18n(){
       const T = I18N[LANG];
-      // top texts
-      titleText.textContent = T.title;
-      subtitleText.textContent = T.subtitle;
-      rsvpBtn.textContent = T.rsvp;
-      locationBtn.textContent = T.location;
-      rsvpIntro.textContent = T.rsvpIntro;
-      phoneLabel.textContent = T.phoneLabel;
-      submitBtn.textContent = (LANG === 'en' ? 'Submit RSVP' : 'Hantar RSVP');
-      locTitle.textContent = T.locTitle;
-      locDesc.textContent = T.locDesc;
-      locNote.textContent = T.locNote;
-      contactTitle.textContent = T.contactTitle;
-      contactDesc.textContent = T.contactDesc;
+      document.getElementById('titleText')?.textContent = T.title;
+      document.getElementById('subtitleText')?.textContent = T.subtitle;
+      document.getElementById('rsvpIntro')?.textContent = T.rsvpIntro;
+      document.getElementById('phoneLabel')?.textContent = T.phoneLabel;
+      document.getElementById('locTitle')?.textContent = T.locTitle;
+      document.getElementById('locDesc')?.textContent = T.locDesc;
+      document.getElementById('locNote')?.textContent = T.locNote;
+      document.getElementById('rsvpBtn')?.textContent = T.rsvp;
+      document.getElementById('locationBtn')?.textContent = T.location;
+      submitBtn.textContent = (LANG === 'en' ? T.submit : T.submit);
 
       // rebuild rows to refresh placeholders, then restore saved states
       const savedNames = getStoredNames();
@@ -533,7 +556,7 @@
       refreshLangToggleLabel();
       document.getElementById('post_lang').value = LANG;
 
-      // Make sure validation/lock message flips language too
+      // refresh validation/lock message in current language
       maybeEnableSubmit();
       if(isSubmitted()){
         lockSubmissionUI();
@@ -562,7 +585,7 @@
       }
     }
 
-    // ===== Language toggle =====
+    // ===== Language toggle (keep as-is) =====
     langToggle.addEventListener('click', (e)=>{
       e.preventDefault();
       LANG = (LANG === 'en') ? 'ms' : 'en';
@@ -570,12 +593,10 @@
       i18n(); saveLocal(); maybeEnableSubmit();
     });
 
-    // ===== Music: audible autoplay + volume 20% =====
+    // ===== Music (keep as-is): audible autoplay + volume 20% with retries; mute toggles muted only =====
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
-    async function tryPlayAudible(){
-      try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; }
-    }
+    async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
     async function ensurePlayback(){
       let ok = await tryPlayAudible();
       if(ok) return;
@@ -600,13 +621,8 @@
     }
     window.addEventListener('pageshow', ensurePlayback);
     window.addEventListener('load', ensurePlayback);
-
-    muteBtn.addEventListener('click', async (e)=>{
-      e.preventDefault();
-      try{ await bgm.play(); }catch(_){}
-      bgm.muted = !bgm.muted;
-      setMutedUI();
-    });
+    muteBtn.addEventListener('click', async (e)=>{ e.preventDefault(); try{ await bgm.play(); }catch(_){}
+      bgm.muted = !bgm.muted; setMutedUI(); });
 
     // ===== Smooth scrolling with ease-in/out =====
     function easeInOutQuad(t){ return t<0.5 ? 2*t*t : -1+(4-2*t)*t; }
@@ -635,20 +651,13 @@
     handleSmoothLink(rsvpBtn, '#rsvp');
     handleSmoothLink(locationBtn, '#location');
 
-    // ===== Subtle click/error sounds (WebAudio) =====
+    // ===== Click/error sounds (WebAudio) =====
     let audioCtx;
-    function initAudioCtx(){
-      if(!audioCtx){
-        const AC = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AC();
-      }
-    }
+    function initAudioCtx(){ if(!audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; audioCtx = new AC(); } }
     function playTone(freq=660, ms=60, type='sine', volume=0.05){
       initAudioCtx();
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      o.type = type; o.frequency.value = freq;
-      g.gain.value = volume;
+      const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+      o.type = type; o.frequency.value = freq; g.gain.value = volume;
       o.connect(g); g.connect(audioCtx.destination);
       o.start();
       g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + ms/1000);
@@ -661,37 +670,59 @@
       const el = e.target.closest('button, a');
       if(!el) return;
       const isDisabled = el.matches('button[disabled], .disabled') || el.getAttribute('aria-disabled') === 'true';
-      if(isDisabled){
-        e.preventDefault();
-        playError();
-        return;
-      }
+      if(isDisabled){ e.preventDefault(); playError(); return; }
       if(el.tagName === 'A' && el.getAttribute('href') === '#'){ e.preventDefault(); }
       playClick();
     }, true);
 
+    // ===== Volume popover behaviour =====
+    let hidePopTimer;
+    function positionVolumePop(){
+      const r = muteBtn.getBoundingClientRect();
+      const top = r.bottom + 8; // show below the button
+      const left = r.right - 56; // align right edges
+      volumePop.style.top = `${top}px`;
+      volumePop.style.left = `${left}px`;
+    }
+    function showVolumePop(){
+      positionVolumePop();
+      volumePop.classList.add('show');
+      clearTimeout(hidePopTimer);
+    }
+    function hideVolumePop(){
+      hidePopTimer = setTimeout(()=>volumePop.classList.remove('show'), 150);
+    }
+
+    // Hover to show (desktop), click to toggle (also works on touch)
+    muteBtn.addEventListener('mouseenter', showVolumePop);
+    muteBtn.addEventListener('mouseleave', hideVolumePop);
+    volumePop.addEventListener('mouseenter', ()=>clearTimeout(hidePopTimer));
+    volumePop.addEventListener('mouseleave', hideVolumePop);
+    muteBtn.addEventListener('click', ()=>{ showVolumePop(); }); // open on click too
+    window.addEventListener('scroll', ()=>{ if(volumePop.classList.contains('show')) positionVolumePop(); });
+    window.addEventListener('resize', ()=>{ if(volumePop.classList.contains('show')) positionVolumePop(); });
+
+    // Slider + buttons
+    function applyVolumeFromSlider(){
+      const v = Math.max(1, Math.min(100, parseInt(volumeSlider.value || '20', 10)));
+      bgm.volume = v / 100;
+    }
+    volumeSlider.addEventListener('input', applyVolumeFromSlider);
+    function adjustVolume(delta){
+      let v = parseInt(volumeSlider.value || '20', 10);
+      v = Math.max(1, Math.min(100, v + delta));
+      volumeSlider.value = String(v);
+      applyVolumeFromSlider();
+    }
+    volPlus.addEventListener('click', ()=>adjustVolume(+10));
+    volMinus.addEventListener('click', ()=>adjustVolume(-10));
+
     // ===== Render (order matters) =====
-    function renderContacts(){
-      contactList.innerHTML = '';
-      CONTACTS.forEach(c=>{
-        const a = document.createElement('a');
-        a.className = 'btn btn-outline';
-        a.href = `tel:${c.phone.replace(/\s+/g,'')}`;
-        a.textContent = `${c.name} (${c.phone})`;
-        contactList.appendChild(a);
-      });
-    }
-    function renderMaps(){
-      const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
-      const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
-      btnGmaps.href = gq; btnWaze.href = wz;
-    }
-
     function renderAll(){
+      // i18n + rows
       i18n();
-      renderContacts();
-      renderMaps();
 
+      // restore saved states
       const names = getStoredNames();
       const conf  = getStoredConfirmed();
       getGuestInputs().forEach((inp, idx)=>{
@@ -704,15 +735,104 @@
         btn.classList.toggle('confirm-state', !isConfirmed);
         btn.disabled = isConfirmed ? false : inp.value.trim().length === 0;
       });
-      updateTotals();
-      refreshLangToggleLabel();
+
+      // Maps
+      renderMaps();
+
+      // Phone & totals
       phoneInput.value = localStorage.getItem('rsvp_phone') || '';
-      if(isSubmitted()) lockSubmissionUI();
-      else maybeEnableSubmit();
+      updateTotals();
+
+      // Submission lock / validation
+      if(isSubmitted()) lockSubmissionUI(); else maybeEnableSubmit();
+
+      // Volume UI initial
+      volumeSlider.value = String(Math.round(bgm.volume * 100) || 20);
     }
 
-    renderAll();
+    // Build initial guest rows
+    function renderGuestRows(){
+      guestRowsEl.innerHTML = '';
+      for(let i=0; i<MAX_GUESTS; i++){
+        guestRowsEl.appendChild(makeGuestRow(i));
+      }
+    }
 
+    // Particle animation (subtle gold bubbles rising)
+    (function initParticles(){
+      const canvas = document.getElementById('bg-particles');
+      const ctx = canvas.getContext('2d');
+      let w, h, particles=[], last=0, running=true;
+
+      const colorPool = [
+        'rgba(212,175,55,0.20)',
+        'rgba(184,144,23,0.18)',
+        'rgba(240,210,120,0.16)'
+      ];
+
+      function resize(){
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      resize(); window.addEventListener('resize', resize);
+
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(prefersReduced) return; // respect user preference
+
+      const count = Math.min(80, Math.max(40, Math.floor((w*h)/60000))); // scale by area
+      for(let i=0;i<count;i++){
+        particles.push({
+          x: Math.random()*w,
+          y: Math.random()*h,
+          r: 1 + Math.random()*3,
+          s: 10 + Math.random()*30,   // speed px/s
+          c: colorPool[Math.floor(Math.random()*colorPool.length)],
+          drift: (Math.random()*0.6 - 0.3) // slight horizontal drift
+        });
+      }
+
+      function step(ts){
+        if(!last) last = ts;
+        const dt = Math.min(0.033, (ts - last)/1000); // cap dt (33ms)
+        last = ts;
+
+        ctx.clearRect(0,0,w,h);
+        ctx.globalCompositeOperation = 'lighter';
+        for(const p of particles){
+          p.y -= p.s * dt;
+          p.x += p.drift;
+          if(p.y < -10){ p.y = h + 10; p.x = Math.random()*w; }
+          ctx.beginPath();
+          ctx.fillStyle = p.c;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.fill();
+        }
+        if(running) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+
+      document.addEventListener('visibilitychange', ()=>{
+        running = !document.hidden;
+        if(running){ last=0; requestAnimationFrame(step); }
+      });
+    })();
+
+    // Contact list (kept simple)
+    (function renderContacts(){
+      const contactList = document.getElementById('contactList');
+      if(!contactList) return;
+      contactList.innerHTML = '';
+      (CONTACTS||[]).forEach(c=>{
+        const a = document.createElement('a');
+        a.className = 'btn btn-outline';
+        a.href = `tel:${c.phone.replace(/\s+/g,'')}`;
+        a.textContent = `${c.name} (${c.phone})`;
+        contactList.appendChild(a);
+      });
+    })();
+
+    // Initial render & input handlers
+    renderAll();
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
 
     // ===== Submit to Google Apps Script (hidden iframe) =====
@@ -734,23 +854,17 @@
     let _pendingSubmit = false;
 
     hiddenIframe.addEventListener('load', ()=>{
-      // Only handle the load that follows a form submission
       if(!_pendingSubmit) return;
       _pendingSubmit = false;
-
       showToast(I18N[LANG].thanks);
       markSubmitted();
       lockSubmissionUI();
-      saveLocal();
-      updateTotals();
+      saveLocal(); updateTotals();
     });
 
     form.addEventListener('submit', (e)=>{
-      // Disallow resubmit if already submitted
       if(isSubmitted() || submitBtn.disabled){
-        e.preventDefault();
-        playError();
-        return;
+        e.preventDefault(); playError(); return;
       }
       syncHiddenFields();
       saveLocal();
