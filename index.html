@@ -14,12 +14,12 @@
     :root{
       /* Palette */
       --gold:#d4af37;
-      --gold-strong:#b89017;     /* darker gold for borders/active */
-      --gold-soft:#fff0c9;       /* light gold fill for confirm */
-      --gold-soft-2:#f6e7b8;     /* pale gold tint */
-      --cream:#fff7ec;           /* page background */
+      --gold-strong:#b89017;
+      --gold-soft:#fff0c9;
+      --gold-soft-2:#f6e7b8;
+      --cream:#fff7ec;
       --white:#ffffff;
-      --text:#1f2937;            /* cool dark text */
+      --text:#1f2937;
       --muted:#6b7280;
 
       /* UI */
@@ -30,15 +30,15 @@
       /* Hero wallpaper */
       --wallpaper:url('wallpaper.jpg');
 
-      /* Overlay tuning (lower = more visible photo) */
-      --hero-overlay-color: 255,247,236; /* warm cream RGB */
-      --hero-overlay-1: .35;  /* top opacity */
-      --hero-overlay-2: .50;  /* middle opacity */
-      --hero-overlay-3: .65;  /* bottom opacity */
+      /* Overlay tuning */
+      --hero-overlay-color: 255,247,236;
+      --hero-overlay-1: .35;
+      --hero-overlay-2: .50;
+      --hero-overlay-3: .65;
     }
 
     *{ box-sizing:border-box }
-    html{ scroll-behavior:auto } /* custom easing via JS */
+    html{ scroll-behavior:auto }
     body{
       margin:0;
       font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
@@ -48,10 +48,10 @@
 
     /* Background particles */
     #bg-particles{
-      position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.35;
+      position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.45;
     }
 
-    /* Top-right minimalist controls */
+    /* Top-right controls */
     .top-controls{
       position:fixed; top:15px; right:15px;
       display:flex; gap:10px; z-index:9999;
@@ -68,7 +68,7 @@
     .icon-btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
     .icon-btn:active{ transform:translateY(0); }
 
-    /* Volume popover (appears under mute button) */
+    /* Volume popover (under the mute button) */
     .volume-pop{
       position:fixed; z-index:9998; display:none;
       background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:12px;
@@ -76,10 +76,12 @@
     }
     .volume-pop.show{ display:block; }
     .vol-wrap{ display:flex; flex-direction:column; align-items:center; gap:10px; }
-    .vol-slider-wrap{ width:28px; height:140px; position:relative; }
+    .vol-slider-wrap{ width:28px; height:160px; position:relative; }
     .vol-slider{
-      appearance:none; position:absolute; top:0; left:0;
-      width:140px; height:28px; transform-origin:left top; transform:rotate(-90deg);
+      appearance:none;
+      position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%) rotate(-90deg);
+      width:160px; height:28px;
       outline:none; background:transparent;
     }
     .vol-slider::-webkit-slider-thumb{
@@ -98,7 +100,7 @@
       box-shadow:var(--shadow-sm); font-weight:700;
     }
 
-    /* Hero with adjustable overlay */
+    /* Hero */
     .hero{
       position:relative; z-index:1;
       min-height:72vh;
@@ -130,22 +132,14 @@
     .btn-outline{ background:#fff; color:#111; border:1px solid var(--gold-strong) }
 
     /* Submit button */
-    #submitBtn{
-      background:var(--gold); color:#111; border:1px solid var(--gold-strong);
-    }
-    #submitBtn[disabled]{
-      background:#eee; color:#999; border-color:#ddd; cursor:not-allowed;
-      box-shadow:none; transform:none;
-    }
+    #submitBtn{ background:var(--gold); color:#111; border:1px solid var(--gold-strong); }
+    #submitBtn[disabled]{ background:#eee; color:#999; border-color:#ddd; cursor:not-allowed; box-shadow:none; transform:none; }
 
     section{ padding:58px 16px; background:transparent; }
     .container{ max-width:980px; margin:0 auto; }
-    .card{
-      background:#fff; border:1px solid rgba(0,0,0,.06);
-      border-radius:var(--radius); box-shadow:var(--shadow); padding:22px;
-    }
+    .card{ background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
 
-    /* Guest rows: input (1fr) + button (auto) */
+    /* Guest rows */
     .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
     .row{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
 
@@ -157,15 +151,8 @@
       outline:none;
     }
     .input::placeholder{ color:#c8c8c8; opacity:1; }
-    .input:focus:not([readonly]){
-      border-color:var(--gold-strong);
-      box-shadow:0 0 0 3px rgba(212,175,55,.20);
-    }
-    .input[readonly]{
-      background:#fffdf7;
-      border-color:#ead79a;
-      color:#6b4b00;
-    }
+    .input:focus:not([readonly]){ border-color:var(--gold-strong); box-shadow:0 0 0 3px rgba(212,175,55,.20); }
+    .input[readonly]{ background:#fffdf7; border-color:#ead79a; color:#6b4b00; }
 
     .tiny{ font-size:12px; color:var(--muted) }
     .total{ text-align:center; margin-top:6px; color:#374151 }
@@ -193,11 +180,8 @@
     }
     .muted{ color:var(--muted) }
 
-    /* Subtle gold separator + spacers */
-    .separator{
-      height:1px; margin:18px 0;
-      background:linear-gradient(90deg, transparent, rgba(184,144,23,.35), transparent);
-    }
+    /* Separator + spacers */
+    .separator{ height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(184,144,23,.35), transparent); }
     .spacer-8{ height:8px }
     .spacer-16{ height:16px }
 
@@ -207,8 +191,7 @@
     .toast{
       position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
       background:#111; color:#fff; padding:12px 16px; border-radius:12px;
-      opacity:0; pointer-events:none; transition:.25s ease;
-      box-shadow:0 8px 24px rgba(0,0,0,.3)
+      opacity:0; pointer-events:none; transition:.25s ease; box-shadow:0 8px 24px rgba(0,0,0,.3)
     }
     .toast.show{ opacity:1 }
   </style>
@@ -230,8 +213,8 @@
       <div class="vol-slider-wrap">
         <input id="volumeSlider" class="vol-slider" type="range" min="1" max="100" step="1" value="20" aria-label="Volume slider">
       </div>
-      <button id="volPlus" class="vol-btn" type="button">+</button>
-      <button id="volMinus" class="vol-btn" type="button">−</button>
+      <button id="volPlus" class="vol-btn" type="button" aria-label="Volume up +10">+</button>
+      <button id="volMinus" class="vol-btn" type="button" aria-label="Volume down -10">−</button>
     </div>
   </div>
 
@@ -282,7 +265,7 @@
               <div class="spacer-16"></div>
               <div class="separator"></div>
 
-              <!-- Error ABOVE submit (no extra spacer above error) -->
+              <!-- Error ABOVE submit -->
               <div class="notice tiny" id="validationMsg" style="display:none" aria-live="polite"></div>
 
               <!-- Small space between error and submit -->
@@ -334,7 +317,7 @@
 
   <script>
     // ====== CONFIG ======
-    const MAX_GUESTS = 4; // keep ≤ 4 unless Apps Script is updated to accept more guestN fields
+    const MAX_GUESTS = 4;
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbWUzpJp8IH7eIJ4PorTtVFEJK9npyGY8HR6o0HfaNj9_Adin081iRrvof4V_LVMs/exec";
     const GMAPS_COORDS = { lat: 5.975194, lng: 116.0688396 };
     const WAZE_COORDS  = { lat: 5.975194, lng: 116.0688396 };
@@ -404,11 +387,9 @@
     const toast = document.getElementById('toast');
     const bgm = document.getElementById('bgm');
 
-    // Controls
     const langToggle = document.getElementById('langToggle');
     const muteBtn = document.getElementById('muteBtn');
 
-    // Top texts
     const titleText = document.getElementById('titleText');
     const subtitleText = document.getElementById('subtitleText');
     const rsvpBtn = document.getElementById('rsvpBtn');
@@ -421,11 +402,10 @@
     const contactTitle = document.getElementById('contactTitle');
     const contactDesc = document.getElementById('contactDesc');
 
-    // Map buttons
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
 
-    // Volume popover
+    // Volume controls
     const volumePop = document.getElementById('volumePop');
     const volumeSlider = document.getElementById('volumeSlider');
     const volPlus = document.getElementById('volPlus');
@@ -433,9 +413,7 @@
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'en';
-    function refreshLangToggleLabel(){
-      langToggle.textContent = (LANG === 'en') ? 'Malay' : 'English';
-    }
+    function refreshLangToggleLabel(){ langToggle.textContent = (LANG === 'en') ? 'Malay' : 'English'; }
 
     // ===== Local state for confirmation & submission lock =====
     function getStoredNames(){ return JSON.parse(localStorage.getItem('rsvp_names')||'[]'); }
@@ -446,11 +424,7 @@
     function markSubmitted(){ localStorage.setItem('rsvp_submitted','1'); }
 
     // ===== Helpers =====
-    function showToast(msg){
-      toast.textContent = msg;
-      toast.classList.add('show');
-      setTimeout(()=>toast.classList.remove('show'), 1600);
-    }
+    function showToast(msg){ toast.textContent = msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1600); }
 
     function getGuestInputs(){ return Array.from(document.querySelectorAll('.guest-name')); }
     function getGuestButtons(){ return Array.from(document.querySelectorAll('.guest-confirm')); }
@@ -458,10 +432,7 @@
     function getConfirmedCount(){ return getGuestInputs().filter(inp => inp.readOnly && inp.value.trim().length>0).length; }
     function anyUnconfirmedTyped(){ return getGuestInputs().some(inp => !inp.readOnly && inp.value.trim().length>0); }
 
-    function updateTotals(){
-      const n = getGuestNames().filter(Boolean).length;
-      totalGuestsEl.textContent = I18N[LANG].total(n);
-    }
+    function updateTotals(){ const n = getGuestNames().filter(Boolean).length; totalGuestsEl.textContent = I18N[LANG].total(n); }
 
     function saveLocal(){
       localStorage.setItem('rsvp_phone', phoneInput.value.trim());
@@ -472,7 +443,6 @@
     }
 
     function lockSubmissionUI(){
-      // Lock all inputs/buttons permanently until cache cleared
       getGuestInputs().forEach(inp => { inp.readOnly = true; });
       getGuestButtons().forEach(btn => { btn.disabled = true; btn.classList.remove('confirm-state'); btn.classList.add('edit-state'); });
       phoneInput.readOnly = true;
@@ -485,7 +455,6 @@
       const phone = localStorage.getItem('rsvp_phone') || '';
       const names = getStoredNames();
       const confirmed = getStoredConfirmed();
-
       phoneInput.value = phone;
 
       getGuestInputs().forEach((inp, idx)=>{
@@ -502,9 +471,7 @@
       updateTotals();
       maybeEnableSubmit();
 
-      if(isSubmitted()){
-        lockSubmissionUI();
-      }
+      if(isSubmitted()) lockSubmissionUI();
     }
 
     function makeGuestRow(idx){
@@ -531,18 +498,13 @@
           input.readOnly = true;
           input.blur();
           btn.textContent = T.edit;
-          btn.classList.remove('confirm-state');
-          btn.classList.add('edit-state');
+          btn.classList.remove('confirm-state'); btn.classList.add('edit-state');
           btn.disabled = false;
         }else{
-          // Even if user taps Edit, if already submitted we keep it locked
-          if(isSubmitted()){
-            return;
-          }
+          if(isSubmitted()) return;
           input.readOnly = false;
           btn.textContent = T.confirm;
-          btn.classList.remove('edit-state');
-          btn.classList.add('confirm-state');
+          btn.classList.remove('edit-state'); btn.classList.add('confirm-state');
           btn.disabled = input.value.trim().length === 0;
           input.focus();
         }
@@ -554,9 +516,7 @@
 
     function renderGuestRows(){
       guestRowsEl.innerHTML = '';
-      for(let i=0; i<MAX_GUESTS; i++){
-        guestRowsEl.appendChild(makeGuestRow(i));
-      }
+      for(let i=0; i<MAX_GUESTS; i++){ guestRowsEl.appendChild(makeGuestRow(i)); }
     }
 
     function renderContacts(){
@@ -580,7 +540,6 @@
 
     function i18n(){
       const T = I18N[LANG];
-      // top texts
       titleText.textContent = T.title;
       subtitleText.textContent = T.subtitle;
       rsvpBtn.textContent = T.rsvp;
@@ -594,7 +553,6 @@
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
 
-      // rebuild rows to refresh placeholders, then restore saved states
       const savedNames = getStoredNames();
       const savedConfirmed = getStoredConfirmed();
       renderGuestRows();
@@ -613,11 +571,8 @@
       refreshLangToggleLabel();
       document.getElementById('post_lang').value = LANG;
 
-      // Make sure validation/lock message flips language too
       maybeEnableSubmit();
-      if(isSubmitted()){
-        lockSubmissionUI();
-      }
+      if(isSubmitted()) lockSubmissionUI();
     }
 
     function maybeEnableSubmit(){
@@ -631,15 +586,10 @@
 
       const T = I18N[LANG];
       validationMsg.style.display = (!ok) ? 'block' : 'none';
-      if(!hasPhone){
-        validationMsg.textContent = T.needPhone;
-      }else if(confirmedCount < 1){
-        validationMsg.textContent = T.needOneName;
-      }else if(hasUnconfirmedTyped){
-        validationMsg.textContent = T.needOneName;
-      }else{
-        validationMsg.textContent = '';
-      }
+      if(!hasPhone){ validationMsg.textContent = T.needPhone; }
+      else if(confirmedCount < 1){ validationMsg.textContent = T.needOneName; }
+      else if(hasUnconfirmedTyped){ validationMsg.textContent = T.needOneName; }
+      else{ validationMsg.textContent = ''; }
     }
 
     // ===== Language toggle =====
@@ -653,26 +603,13 @@
     // ===== Music: audible autoplay + volume 20% =====
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
-    async function tryPlayAudible(){
-      try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; }
-    }
+    async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
     async function ensurePlayback(){
       let ok = await tryPlayAudible();
       if(ok) return;
       let tries = 0;
-      const iv = setInterval(async ()=>{
-        tries++;
-        if(await tryPlayAudible()){ clearInterval(iv); }
-        if(tries > 6){ clearInterval(iv); }
-      }, 900);
-      const unlock = async ()=>{
-        if(await tryPlayAudible()){
-          window.removeEventListener('pointerdown', unlock);
-          window.removeEventListener('keydown', unlock);
-          window.removeEventListener('scroll', unlock);
-          window.removeEventListener('touchstart', unlock);
-        }
-      };
+      const iv = setInterval(async ()=>{ tries++; if(await tryPlayAudible()){ clearInterval(iv); } if(tries > 6){ clearInterval(iv); } }, 900);
+      const unlock = async ()=>{ if(await tryPlayAudible()){ window.removeEventListener('pointerdown', unlock); window.removeEventListener('keydown', unlock); window.removeEventListener('scroll', unlock); window.removeEventListener('touchstart', unlock); } };
       window.addEventListener('pointerdown', unlock, { once:true });
       window.addEventListener('keydown', unlock, { once:true });
       window.addEventListener('scroll', unlock, { once:true });
@@ -684,10 +621,8 @@
     muteBtn.addEventListener('click', async (e)=>{
       e.preventDefault();
       try{ await bgm.play(); }catch(_){}
-      bgm.muted = !bgm.muted;
-      setMutedUI();
-      // also show volume pop on click
-      showVolumePop();
+      bgm.muted = !bgm.muted; setMutedUI();
+      toggleVolumePop(true);
     });
 
     // ===== Smooth scrolling with ease-in/out =====
@@ -695,42 +630,22 @@
     function smoothScrollTo(target, duration=700){
       const start = window.scrollY || window.pageYOffset;
       const end = (typeof target === 'number') ? target : (target.getBoundingClientRect().top + start);
-      const diff = end - start;
-      let startTime = null;
-      function step(ts){
-        if(startTime === null) startTime = ts;
-        const t = Math.min(1, (ts - startTime) / duration);
-        const eased = easeInOutQuad(t);
-        window.scrollTo(0, start + diff * eased);
-        if(t < 1) requestAnimationFrame(step);
-      }
+      const diff = end - start; let startTime = null;
+      function step(ts){ if(startTime === null) startTime = ts; const t = Math.min(1, (ts - startTime) / duration); const eased = easeInOutQuad(t); window.scrollTo(0, start + diff * eased); if(t < 1) requestAnimationFrame(step); }
       requestAnimationFrame(step);
     }
     function handleSmoothLink(link, selector){
-      link.addEventListener('click', (e)=>{
-        e.preventDefault();
-        playClick();
-        const el = document.querySelector(selector);
-        if(el){ smoothScrollTo(el, 750); }
-      });
+      link.addEventListener('click', (e)=>{ e.preventDefault(); playClick(); const el = document.querySelector(selector); if(el){ smoothScrollTo(el, 750); } });
     }
-    handleSmoothLink(rsvpBtn, '#rsvp');
-    handleSmoothLink(locationBtn, '#location');
+    handleSmoothLink(rsvpBtn, '#rsvp'); handleSmoothLink(locationBtn, '#location');
 
-    // ===== Subtle click/error sounds (WebAudio) =====
+    // ===== Click/error sounds (WebAudio) =====
     let audioCtx;
-    function initAudioCtx(){
-      if(!audioCtx){
-        const AC = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AC();
-      }
-    }
+    function initAudioCtx(){ if(!audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; audioCtx = new AC(); } }
     function playTone(freq=660, ms=60, type='sine', volume=0.05){
       initAudioCtx();
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      o.type = type; o.frequency.value = freq;
-      g.gain.value = volume;
+      const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+      o.type = type; o.frequency.value = freq; g.gain.value = volume;
       o.connect(g); g.connect(audioCtx.destination);
       o.start();
       g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + ms/1000);
@@ -738,55 +653,49 @@
     }
     function playClick(){ playTone(660, 50, 'sine', 0.05); }
     function playError(){ playTone(220, 120, 'sine', 0.06); }
-
     document.addEventListener('click', (e)=>{
-      const el = e.target.closest('button, a');
-      if(!el) return;
+      const el = e.target.closest('button, a'); if(!el) return;
       const isDisabled = el.matches('button[disabled], .disabled') || el.getAttribute('aria-disabled') === 'true';
-      if(isDisabled){
-        e.preventDefault();
-        playError();
-        return;
-      }
+      if(isDisabled){ e.preventDefault(); playError(); return; }
       if(el.tagName === 'A' && el.getAttribute('href') === '#'){ e.preventDefault(); }
       playClick();
     }, true);
 
-    // ===== Volume popover behaviour =====
+    // ===== Volume popover behaviour (desktop + mobile) =====
     let hidePopTimer;
     function positionVolumePop(){
       const r = muteBtn.getBoundingClientRect();
-      const top = r.bottom + 8; // show below the button
-      const left = r.right - 56; // align right edges
+      const top = r.bottom + 8;               // below the button
+      const left = r.right - 56;              // right edge align
       volumePop.style.top = `${top}px`;
       volumePop.style.left = `${left}px`;
     }
-    function showVolumePop(){
-      positionVolumePop();
-      volumePop.classList.add('show');
-      clearTimeout(hidePopTimer);
+    function showVolumePop(){ positionVolumePop(); volumePop.classList.add('show'); clearTimeout(hidePopTimer); }
+    function hideVolumePopSoon(){ hidePopTimer = setTimeout(()=>volumePop.classList.remove('show'), 140); }
+    function toggleVolumePop(forceShow=false){
+      if(forceShow){ showVolumePop(); return; }
+      if(volumePop.classList.contains('show')) volumePop.classList.remove('show'); else showVolumePop();
     }
-    function hideVolumePop(){
-      hidePopTimer = setTimeout(()=>volumePop.classList.remove('show'), 150);
-    }
+
+    // Hover (desktop)
     muteBtn.addEventListener('mouseenter', showVolumePop);
-    muteBtn.addEventListener('mouseleave', hideVolumePop);
+    muteBtn.addEventListener('mouseleave', hideVolumePopSoon);
     volumePop.addEventListener('mouseenter', ()=>clearTimeout(hidePopTimer));
-    volumePop.addEventListener('mouseleave', hideVolumePop);
+    volumePop.addEventListener('mouseleave', hideVolumePopSoon);
+
+    // Click / tap (desktop & mobile)
+    muteBtn.addEventListener('touchstart', ()=>toggleVolumePop(true), {passive:true});
+    document.addEventListener('pointerdown', (e)=>{
+      if(!volumePop.classList.contains('show')) return;
+      if(e.target === muteBtn || volumePop.contains(e.target)) return;
+      volumePop.classList.remove('show');
+    });
     window.addEventListener('scroll', ()=>{ if(volumePop.classList.contains('show')) positionVolumePop(); });
     window.addEventListener('resize', ()=>{ if(volumePop.classList.contains('show')) positionVolumePop(); });
 
-    function applyVolumeFromSlider(){
-      const v = Math.max(1, Math.min(100, parseInt(volumeSlider.value || '20', 10)));
-      bgm.volume = v / 100;
-    }
+    function applyVolumeFromSlider(){ const v = Math.max(1, Math.min(100, parseInt(volumeSlider.value || '20', 10))); bgm.volume = v / 100; }
     volumeSlider.addEventListener('input', applyVolumeFromSlider);
-    function adjustVolume(delta){
-      let v = parseInt(volumeSlider.value || '20', 10);
-      v = Math.max(1, Math.min(100, v + delta));
-      volumeSlider.value = String(v);
-      applyVolumeFromSlider();
-    }
+    function adjustVolume(delta){ let v = parseInt(volumeSlider.value || '20', 10); v = Math.max(1, Math.min(100, v + delta)); volumeSlider.value = String(v); applyVolumeFromSlider(); }
     volPlus.addEventListener('click', ()=>adjustVolume(+10));
     volMinus.addEventListener('click', ()=>adjustVolume(-10));
 
@@ -837,7 +746,6 @@
     }
 
     renderAll();
-
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
 
     // ===== Submit to Google Apps Script (hidden iframe) =====
@@ -857,33 +765,23 @@
     }
 
     let _pendingSubmit = false;
-
     hiddenIframe.addEventListener('load', ()=>{
-      // Only handle the load that follows a form submission
       if(!_pendingSubmit) return;
       _pendingSubmit = false;
-
       showToast(I18N[LANG].thanks);
       markSubmitted();
       lockSubmissionUI();
-      saveLocal();
-      updateTotals();
+      saveLocal(); updateTotals();
     });
 
     form.addEventListener('submit', (e)=>{
-      // Disallow resubmit if already submitted
-      if(isSubmitted() || submitBtn.disabled){
-        e.preventDefault();
-        playError();
-        return;
-      }
-      syncHiddenFields();
-      saveLocal();
-      _pendingSubmit = true; // the next iframe load is our submission response
+      if(isSubmitted() || submitBtn.disabled){ e.preventDefault(); playError(); return; }
+      syncHiddenFields(); saveLocal();
+      _pendingSubmit = true;
       // posts to iframe
     });
 
-    // ===== Particle animation (subtle gold bubbles) =====
+    // ===== Particle animation (gold/cream/white bubbles with glow) =====
     (function initParticles(){
       const canvas = document.getElementById('bg-particles');
       const ctx = canvas.getContext('2d');
@@ -896,20 +794,27 @@
       function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
       resize(); window.addEventListener('resize', resize);
 
-      const colorPool = [
-        'rgba(212,175,55,0.20)',
-        'rgba(184,144,23,0.18)',
-        'rgba(240,210,120,0.16)'
+      // Tweak density here:
+      const count = Math.min(90, Math.max(55, Math.floor((w*h)/52000)));
+
+      const palettes = [
+        { inner:'rgba(255,255,255,0.9)', outer:'rgba(255,255,255,0.0)' },             // bright white
+        { inner:'rgba(255,240,210,0.85)', outer:'rgba(255,240,210,0.0)' },             // cream
+        { inner:'rgba(240,210,120,0.85)', outer:'rgba(240,210,120,0.0)' },             // soft gold
+        { inner:'rgba(212,175,55,0.85)',  outer:'rgba(212,175,55,0.0)'  },             // classic gold
+        { inner:'rgba(184,144,23,0.85)',  outer:'rgba(184,144,23,0.0)'  }              // dark gold
       ];
-      const count = Math.min(80, Math.max(40, Math.floor((window.innerWidth*window.innerHeight)/60000)));
+
       for(let i=0;i<count;i++){
+        const p = palettes[Math.floor(Math.random()*palettes.length)];
         particles.push({
           x: Math.random()*w,
           y: Math.random()*h,
-          r: 1 + Math.random()*3,
-          s: 10 + Math.random()*30,   // speed px/s
-          c: colorPool[Math.floor(Math.random()*colorPool.length)],
-          drift: (Math.random()*0.6 - 0.3) // slight horizontal drift
+          r: 1 + Math.random()*4 + (Math.random()<0.12?2:0), // a few bigger bubbles
+          s: 12 + Math.random()*34,                           // speed
+          drift: (Math.random()*0.8 - 0.4),                   // horizontal drift
+          inner: p.inner, outer: p.outer,
+          pulse: 0.85 + Math.random()*0.3,                    // tiny size pulse
         });
       }
 
@@ -922,11 +827,18 @@
         ctx.globalCompositeOperation = 'lighter';
         for(const p of particles){
           p.y -= p.s * dt;
-          p.x += p.drift;
+          p.x += p.drift * dt * 60;
           if(p.y < -10){ p.y = h + 10; p.x = Math.random()*w; }
+
+          const rr = p.r * (p.pulse + Math.sin((ts/600)+(p.x+p.y))*0.03);
+          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr*2.2);
+          g.addColorStop(0, p.inner);
+          g.addColorStop(0.5, p.inner);
+          g.addColorStop(1, p.outer);
+
+          ctx.fillStyle = g;
           ctx.beginPath();
-          ctx.fillStyle = p.c;
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.arc(p.x, p.y, rr, 0, Math.PI*2);
           ctx.fill();
         }
         if(running) requestAnimationFrame(step);
