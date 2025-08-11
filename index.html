@@ -32,7 +32,16 @@
     }
     .brand{ position:absolute; top:14px; left:14px; display:flex; gap:8px; align-items:center; z-index:5; }
     .chip{display:inline-flex; align-items:center; gap:.5rem; border:1px solid rgba(0,0,0,.06); padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.8); backdrop-filter: blur(6px); box-shadow:var(--shadow)}
-    .chip button{border:0;background:transparent;cursor:pointer;font:inherit}
+    /*.chip button{border:0;background:transparent;cursor:pointer;font:inherit}*/
+	.chip button {
+		border: 0;
+		background: none;
+		cursor: pointer;
+		font: inherit;
+		padding: 0;
+		color: var(--gold-strong);
+		font-size: 18px;
+	}
     .chip .sep{width:1px;height:20px;background:rgba(0,0,0,.08)}
 
     .heading{font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,52px); line-height:1.12;}
@@ -240,6 +249,7 @@
     const phoneInput = document.getElementById('phone');
     const toast = document.getElementById('toast');
     const bgm = document.getElementById('bgm');
+	bgm.volume = 0.4; // set default volume to 40%
 
     // Top texts
     const titleText = document.getElementById('titleText');
