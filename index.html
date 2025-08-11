@@ -30,7 +30,7 @@
       /* Hero wallpaper */
       --wallpaper:url('wallpaper.jpg');
 
-      /* NEW: overlay tuning (lower = more visible photo) */
+      /* Overlay tuning (lower = more visible photo) */
       --hero-overlay-color: 255,247,236; /* warm cream RGB */
       --hero-overlay-1: .35;  /* top opacity */
       --hero-overlay-2: .50;  /* middle opacity */
@@ -44,6 +44,11 @@
       font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
       background:var(--cream);
+    }
+
+    /* Background particles */
+    #bg-particles{
+      position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.35;
     }
 
     /* Top-right minimalist controls */
@@ -63,9 +68,39 @@
     .icon-btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
     .icon-btn:active{ transform:translateY(0); }
 
-    /* Hero: use adjustable overlay vars (less washout) */
+    /* Volume popover (appears under mute button) */
+    .volume-pop{
+      position:fixed; z-index:9998; display:none;
+      background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:12px;
+      box-shadow:var(--shadow); padding:10px 10px 12px; width:56px;
+    }
+    .volume-pop.show{ display:block; }
+    .vol-wrap{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+    .vol-slider-wrap{ width:28px; height:140px; position:relative; }
+    .vol-slider{
+      appearance:none; position:absolute; top:0; left:0;
+      width:140px; height:28px; transform-origin:left top; transform:rotate(-90deg);
+      outline:none; background:transparent;
+    }
+    .vol-slider::-webkit-slider-thumb{
+      appearance:none; width:16px; height:16px; border-radius:50%;
+      background:var(--gold); border:1px solid var(--gold-strong);
+      box-shadow:0 1px 3px rgba(0,0,0,.1);
+    }
+    .vol-slider::-webkit-slider-runnable-track{
+      height:6px; background:linear-gradient(#eee,#eee);
+      border-radius:999px; border:1px solid #ddd;
+    }
+    .vol-btn{
+      width:32px; height:32px; border-radius:999px;
+      display:grid; place-items:center; cursor:pointer;
+      border:1px solid var(--gold-strong); background:#fff; color:#111;
+      box-shadow:var(--shadow-sm); font-weight:700;
+    }
+
+    /* Hero with adjustable overlay */
     .hero{
-      position:relative;
+      position:relative; z-index:1;
       min-height:72vh;
       display:grid; place-items:center; text-align:center; color:#222;
       background:
@@ -94,7 +129,7 @@
     .btn:active{ transform:translateY(0); }
     .btn-outline{ background:#fff; color:#111; border:1px solid var(--gold-strong) }
 
-    /* Submit button special styles */
+    /* Submit button */
     #submitBtn{
       background:var(--gold); color:#111; border:1px solid var(--gold-strong);
     }
@@ -110,7 +145,7 @@
       border-radius:var(--radius); box-shadow:var(--shadow); padding:22px;
     }
 
-    /* Guest rows: always single column; each row is input (1fr) + button (auto) */
+    /* Guest rows: input (1fr) + button (auto) */
     .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
     .row{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
 
@@ -121,11 +156,7 @@
       transition:border-color .12s ease, box-shadow .12s ease, background .12s ease;
       outline:none;
     }
-    /* VERY subtle placeholder */
     .input::placeholder{ color:#c8c8c8; opacity:1; }
-    ::-webkit-input-placeholder{ color:#c8c8c8; }
-    :-ms-input-placeholder{ color:#c8c8c8; }
-
     .input:focus:not([readonly]){
       border-color:var(--gold-strong);
       box-shadow:0 0 0 3px rgba(212,175,55,.20);
@@ -148,13 +179,13 @@
       transition:opacity .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
       cursor:pointer;
     }
-    /* State: Confirm (editable) = light gold fill */
     .confirm-btn.confirm-state{ background:var(--gold-soft); color:#111; }
-    /* State: Edit (locked) = white fill */
     .confirm-btn.edit-state{ background:#fff; color:#111; }
     .confirm-btn[disabled]{ opacity:.45; cursor:not-allowed; }
 
     .submit-wrap{ display:flex; flex-direction:column; gap:12px; }
+
+    /* Notice (validation) */
     .notice{
       background:#fff; border:1px solid #fde68a;
       padding:12px 14px; border-radius:12px; color:#92400e;
@@ -162,7 +193,7 @@
     }
     .muted{ color:var(--muted) }
 
-    /* NEW: subtle gold separator + spacers */
+    /* Subtle gold separator + spacers */
     .separator{
       height:1px; margin:18px 0;
       background:linear-gradient(90deg, transparent, rgba(184,144,23,.35), transparent);
@@ -184,10 +215,24 @@
 </head>
 <body>
 
+  <!-- Particles -->
+  <canvas id="bg-particles" aria-hidden="true"></canvas>
+
   <!-- Top-right controls -->
   <div class="top-controls">
     <button id="langToggle" class="icon-btn" aria-label="Toggle language">Malay</button>
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
+  </div>
+
+  <!-- Volume popover -->
+  <div id="volumePop" class="volume-pop" role="dialog" aria-label="Volume">
+    <div class="vol-wrap">
+      <div class="vol-slider-wrap">
+        <input id="volumeSlider" class="vol-slider" type="range" min="1" max="100" step="1" value="20" aria-label="Volume slider">
+      </div>
+      <button id="volPlus" class="vol-btn" type="button">+</button>
+      <button id="volMinus" class="vol-btn" type="button">−</button>
+    </div>
   </div>
 
   <header class="hero">
@@ -237,11 +282,11 @@
               <div class="spacer-16"></div>
               <div class="separator"></div>
 
-              <!-- Error ABOVE submit -->
-              <div class="spacer-8"></div>
+              <!-- Error ABOVE submit (no extra spacer above error) -->
               <div class="notice tiny" id="validationMsg" style="display:none" aria-live="polite"></div>
 
-              <!-- Submit -->
+              <!-- Small space between error and submit -->
+              <div class="spacer-8"></div>
               <button class="btn" id="submitBtn" type="submit" disabled>Submit RSVP</button>
 
               <!-- Totals -->
@@ -380,8 +425,11 @@
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
 
-    // Contacts
-    const contactList = document.getElementById('contactList');
+    // Volume popover
+    const volumePop = document.getElementById('volumePop');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volPlus = document.getElementById('volPlus');
+    const volMinus = document.getElementById('volMinus');
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'en';
@@ -512,6 +560,8 @@
     }
 
     function renderContacts(){
+      const contactList = document.getElementById('contactList');
+      if(!contactList) return;
       contactList.innerHTML = '';
       CONTACTS.forEach(c=>{
         const a = document.createElement('a');
@@ -636,6 +686,8 @@
       try{ await bgm.play(); }catch(_){}
       bgm.muted = !bgm.muted;
       setMutedUI();
+      // also show volume pop on click
+      showVolumePop();
     });
 
     // ===== Smooth scrolling with ease-in/out =====
@@ -700,6 +752,44 @@
       playClick();
     }, true);
 
+    // ===== Volume popover behaviour =====
+    let hidePopTimer;
+    function positionVolumePop(){
+      const r = muteBtn.getBoundingClientRect();
+      const top = r.bottom + 8; // show below the button
+      const left = r.right - 56; // align right edges
+      volumePop.style.top = `${top}px`;
+      volumePop.style.left = `${left}px`;
+    }
+    function showVolumePop(){
+      positionVolumePop();
+      volumePop.classList.add('show');
+      clearTimeout(hidePopTimer);
+    }
+    function hideVolumePop(){
+      hidePopTimer = setTimeout(()=>volumePop.classList.remove('show'), 150);
+    }
+    muteBtn.addEventListener('mouseenter', showVolumePop);
+    muteBtn.addEventListener('mouseleave', hideVolumePop);
+    volumePop.addEventListener('mouseenter', ()=>clearTimeout(hidePopTimer));
+    volumePop.addEventListener('mouseleave', hideVolumePop);
+    window.addEventListener('scroll', ()=>{ if(volumePop.classList.contains('show')) positionVolumePop(); });
+    window.addEventListener('resize', ()=>{ if(volumePop.classList.contains('show')) positionVolumePop(); });
+
+    function applyVolumeFromSlider(){
+      const v = Math.max(1, Math.min(100, parseInt(volumeSlider.value || '20', 10)));
+      bgm.volume = v / 100;
+    }
+    volumeSlider.addEventListener('input', applyVolumeFromSlider);
+    function adjustVolume(delta){
+      let v = parseInt(volumeSlider.value || '20', 10);
+      v = Math.max(1, Math.min(100, v + delta));
+      volumeSlider.value = String(v);
+      applyVolumeFromSlider();
+    }
+    volPlus.addEventListener('click', ()=>adjustVolume(+10));
+    volMinus.addEventListener('click', ()=>adjustVolume(-10));
+
     // ===== Render (order matters) =====
     function renderContacts(){
       const contactList = document.getElementById('contactList');
@@ -741,6 +831,9 @@
       phoneInput.value = localStorage.getItem('rsvp_phone') || '';
       if(isSubmitted()) lockSubmissionUI();
       else maybeEnableSubmit();
+
+      // Volume UI initial
+      volumeSlider.value = String(Math.round(bgm.volume * 100) || 20);
     }
 
     renderAll();
@@ -789,6 +882,62 @@
       _pendingSubmit = true; // the next iframe load is our submission response
       // posts to iframe
     });
+
+    // ===== Particle animation (subtle gold bubbles) =====
+    (function initParticles(){
+      const canvas = document.getElementById('bg-particles');
+      const ctx = canvas.getContext('2d');
+      if(!canvas || !ctx) return;
+
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(prefersReduced) return;
+
+      let w, h, particles=[], last=0, running=true;
+      function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+      resize(); window.addEventListener('resize', resize);
+
+      const colorPool = [
+        'rgba(212,175,55,0.20)',
+        'rgba(184,144,23,0.18)',
+        'rgba(240,210,120,0.16)'
+      ];
+      const count = Math.min(80, Math.max(40, Math.floor((window.innerWidth*window.innerHeight)/60000)));
+      for(let i=0;i<count;i++){
+        particles.push({
+          x: Math.random()*w,
+          y: Math.random()*h,
+          r: 1 + Math.random()*3,
+          s: 10 + Math.random()*30,   // speed px/s
+          c: colorPool[Math.floor(Math.random()*colorPool.length)],
+          drift: (Math.random()*0.6 - 0.3) // slight horizontal drift
+        });
+      }
+
+      function step(ts){
+        if(!last) last = ts;
+        const dt = Math.min(0.033, (ts - last)/1000);
+        last = ts;
+
+        ctx.clearRect(0,0,w,h);
+        ctx.globalCompositeOperation = 'lighter';
+        for(const p of particles){
+          p.y -= p.s * dt;
+          p.x += p.drift;
+          if(p.y < -10){ p.y = h + 10; p.x = Math.random()*w; }
+          ctx.beginPath();
+          ctx.fillStyle = p.c;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.fill();
+        }
+        if(running) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+
+      document.addEventListener('visibilitychange', ()=>{
+        running = !document.hidden;
+        if(running){ last=0; requestAnimationFrame(step); }
+      });
+    })();
   </script>
 </body>
 </html>
