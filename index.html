@@ -51,12 +51,9 @@
     .top-controls,
     .hero .heading,
     .hero .sub,
-    .couple-title,
     .cta-row,
     .card,
-    .footer,
-    #schedule,
-    #countdown { position:relative; z-index:10; }
+    .footer { position:relative; z-index:10; }
 
     /* Top-right controls */
     .top-controls{
@@ -93,24 +90,22 @@
         var(--wallpaper) center/cover no-repeat fixed;
     }
 
-    /* (9) Couple title */
+    /* (2) NEW: decorative couple title */
     .couple-title{
+      display:flex; align-items:center; justify-content:center; gap:18px;
+      margin-bottom:16px;
       font-family:'Playfair Display',serif;
       font-weight:700;
+      font-size:clamp(34px,8vw,84px);
+      line-height:1;
       letter-spacing:.5px;
-      margin-bottom:10px;
-      background:linear-gradient(90deg,#b78727,#e0c15b,#b78727);
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      text-shadow:0 1px 0 rgba(255,255,255,.4);
+      color:var(--gold-strong);
+      text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
     }
-    .couple-inline{ font-size:clamp(38px,7vw,76px); line-height:1.05; }
-    .couple-stack{ display:none; font-size:clamp(34px,10vw,70px); line-height:1.05; }
-    .couple-heart{ display:block; line-height:1; }
-    @media(max-width:520px){
-      .couple-inline{ display:none; }
-      .couple-stack{ display:block; }
+    .couple-title .heart{ font-size:1.05em; transform:translateY(-2px); }
+    @media (max-width:520px){
+      .couple-title{ flex-direction:column; gap:6px; }
+      .couple-title .heart{ transform:none; }
     }
 
     .heading{ font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,52px); line-height:1.12; }
@@ -153,7 +148,7 @@
     .input:focus:not([readonly]){ border-color:var(--gold-strong); box-shadow:0 0 0 3px rgba(212,175,55,.20); }
     .input[readonly]{ background:#fffdf7; border-color:#ead79a; color:#6b4b00; }
 
-    .tiny{ font-size:12px; color:#6b7280 }
+    .tiny{ font-size:12px; color:var(--muted) }
     .total{ text-align:center; margin-top:6px; color:#374151 }
 
     /* Confirm/Edit pill – match input height */
@@ -177,7 +172,9 @@
       padding:12px 14px; border-radius:12px; color:#92400e;
       box-shadow:var(--shadow-sm);
     }
+    .muted{ color:var(--muted) }
 
+    /* Section title style */
     .section-title{
       margin:0 0 8px; font-family:'Playfair Display',serif; font-size:clamp(22px,3.6vw,28px);
       color:#1f2937;
@@ -197,89 +194,42 @@
     }
     .toast.show{ opacity:1 }
 
-    /* (11) Schedule */
-    #schedule .sched-title{
-      font-family:'Playfair Display',serif;
-      color:#b78727;
-      text-align:center;
-      font-size:clamp(26px,5.2vw,46px);
-      margin:0 0 18px;
+    /* (3) NEW: countdown */
+    #countdown .cd-sub{ margin:6px 0 16px; }
+    .countdown-row{ display:flex; gap:12px; align-items:stretch; flex-wrap:nowrap; }
+    .cd-box{
+      flex:1 1 0; min-width:0; text-align:center;
+      background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius);
+      box-shadow:var(--shadow-sm); padding:16px 12px;
     }
-    .sched-grid{
-      display:grid;
-      grid-template-columns:280px 1fr;
-      gap:26px;
-      align-items:start;
-    }
-    .sched-date{
-      font-size:clamp(18px,3.4vw,28px);
-      color:#1f2937;
-      line-height:1.35;
-    }
-    .sched-day{
-      color:#2563eb;
-      margin-top:6px;
-      font-size:clamp(14px,2.8vw,18px);
-    }
-    .tl{
-      position:relative;
-      padding-left:26px;
-    }
-    .tl::before{
-      content:'';
-      position:absolute; left:8px; top:0; bottom:0;
-      width:2px; background:linear-gradient(180deg,rgba(184,144,23,.3),rgba(184,144,23,.7));
-      border-radius:2px;
+    .cd-num{ font-family:'Playfair Display',serif; font-weight:700; line-height:1;
+      font-size:clamp(22px,8vw,48px); }
+    .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:var(--muted); }
+
+    /* (4) NEW: agenda schedule */
+    .agenda{ display:grid; grid-template-columns: 240px 1fr; gap:24px; }
+    .agenda-date{ font-family:'Playfair Display',serif; font-size:clamp(18px,2.6vw,24px); }
+    .agenda-day{ color:var(--muted); margin-top:6px; }
+    .timeline{ position:relative; padding-left:28px; }
+    .timeline::before{
+      content:''; position:absolute; left:11px; top:6px; bottom:6px; width:2px; background:var(--gold-strong);
     }
     .tl-item{
-      display:grid; grid-template-columns:120px auto; align-items:center;
-      gap:14px; padding:18px 0; position:relative;
+      position:relative; display:grid; grid-template-columns: 120px 12px 1fr; align-items:center;
+      gap:10px; margin:20px 0;
     }
     .tl-item::before{
-      content:''; position:absolute; left:0; top:28px;
-      width:12px; height:12px; border-radius:999px;
-      background:#fff; border:2px solid #d4af37; box-shadow:0 2px 6px rgba(0,0,0,.08);
-      transform:translate(-50%,-50%);
+      content:''; position:absolute; left:4px; width:14px; height:14px; border-radius:50%;
+      background:var(--gold-strong); top:50%; transform:translateY(-50%);
+      box-shadow:0 0 0 3px var(--gold-soft);
     }
-    .tl-time{ color:#1f2937; font-weight:600; font-size:clamp(15px,2.8vw,20px) }
-    .tl-text{ color:#1f2937; letter-spacing:.02em; font-size:clamp(15px,3vw,22px) }
+    .tl-time{ font-weight:600; color:#0f172a; }
+    .tl-mid{ text-align:center; color:#0f172a; font-weight:700; }
+    .tl-what{ color:#0f172a; }
 
-    @media(max-width:720px){
-      .sched-grid{ grid-template-columns:1fr; }
-      .tl{ padding-left:20px; }
-      .tl-item{ grid-template-columns:100px auto; }
-      .tl-item::before{ left:2px; }
-    }
-
-    /* (10) Countdown */
-    #countdown{ padding:64px 16px 86px; }
-    .cd-title{
-      font-family:'Playfair Display',serif;
-      font-size:clamp(26px,5.5vw,42px);
-      text-align:center;
-      margin:0 0 18px;
-      color:#b78727;
-    }
-    .cd-row{
-      display:flex; justify-content:center; gap:16px; flex-wrap:nowrap;
-    }
-    .cd-box{
-      background:#fff; border:1px solid rgba(0,0,0,.06);
-      border-radius:16px; box-shadow:var(--shadow); padding:16px 14px;
-      min-width:70px; text-align:center;
-    }
-    .cd-num{
-      font-size:clamp(18px,6vw,34px);
-      font-weight:700; color:#111; line-height:1.1;
-    }
-    .cd-label{
-      margin-top:6px; letter-spacing:.36em; font-size:10px; color:#9CA3AF;
-    }
-    @media(max-width:420px){
-      .cd-row{ gap:10px; }
-      .cd-box{ min-width:62px; padding:12px 10px; }
-      .cd-num{ font-size:clamp(16px,6vw,28px); }
-      .cd-label{ letter-spacing:.28em; font-size:9px; }
+    @media (max-width:700px){
+      .agenda{ grid-template-columns:1fr; }
+      .tl-item{ grid-template-columns: 96px 8px 1fr; }
     }
   </style>
 </head>
@@ -294,18 +244,27 @@
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
   </div>
 
-  <!-- (COMMENTED OUT) Volume popover to revisit later -->
-  <!-- ... -->
+  <!-- (COMMENTED OUT) Volume popover to revisit later
+  <div id="volumePop" class="volume-pop" role="dialog" aria-label="Volume">
+    <div class="vol-wrap">
+      <div class="vol-slider-wrap">
+        <input id="volumeSlider" class="vol-slider" type="range" min="1" max="100" step="1" value="20" aria-label="Volume slider">
+      </div>
+      <button id="volPlus" class="vol-btn" type="button" aria-label="Volume up +10">+</button>
+      <button id="volMinus" class="vol-btn" type="button" aria-label="Volume down -10">−</button>
+    </div>
+  </div>
+  -->
 
   <header class="hero">
     <div>
-      <!-- (9) Couple title -->
-      <div class="couple-title couple-inline">Basran&nbsp;♡&nbsp;Khairani</div>
-      <div class="couple-title couple-stack">
-        Basran<br><span class="couple-heart">♡</span><br>Khairani
+      <!-- (2) NEW decorative couple title -->
+      <div class="couple-title" aria-label="Basran love Khairani">
+        <span class="name">Basran</span>
+        <span class="heart">♡</span>
+        <span class="name">Khairani</span>
       </div>
 
-      <!-- Basran ♡ Khairani -->
       <div class="heading" id="titleText">Will you attend our wedding?</div>
       <div class="sub" id="subtitleText">We'd love to celebrate with you. Please RSVP below.</div>
       <div class="cta-row">
@@ -340,10 +299,10 @@
             <div class="spacer-8"></div>
 
             <div class="submit-wrap">
+              <!-- (1) UPDATED header + hint text -->
               <div>
                 <h2 class="section-title" id="phoneHeader">Phone Number</h2>
-                <!-- (8) Small note under phone header -->
-                <p class="tiny" id="phoneNote">We’ll use this number if we need to confirm details or share any updates.</p>
+                <p class="tiny muted" id="phoneHint">We’ll use this to contact you if there are any updates or changes.</p>
                 <input class="input" id="phone" name="phone" autocomplete="tel" placeholder="e.g. +60 12 345 6789" required />
               </div>
 
@@ -387,42 +346,61 @@
       </div>
     </section>
 
-    <!-- (11) Schedule -->
+    <!-- (4) NEW: Event agenda schedule -->
     <section id="schedule">
       <div class="container">
-        <h2 class="sched-title" id="schedTitle">Schedule</h2>
-        <div class="sched-grid">
-          <div>
-            <div class="sched-date" id="schedDate">November 22, 2025</div>
-            <div class="sched-day" id="schedDay">Saturday</div>
-          </div>
-          <div class="tl" id="scheduleList">
-            <!-- items injected -->
+        <div class="card">
+          <h2 class="section-title">Schedule</h2>
+          <div class="agenda">
+            <div>
+              <div class="agenda-date">November 22, 2025</div>
+              <div class="agenda-day tiny">Saturday</div>
+            </div>
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="tl-time">10:00am</div><div class="tl-mid">•</div><div class="tl-what">GUEST ARRIVAL</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-time">12:00pm</div><div class="tl-mid">•</div><div class="tl-what">NIKAH</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-time">1:00pm</div><div class="tl-mid">•</div><div class="tl-what">WEDDING CEREMONY</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-time">2:00pm</div><div class="tl-mid">•</div><div class="tl-what">LUNCH</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-time">3:00pm</div><div class="tl-mid">•</div><div class="tl-what">PHOTO SESSION</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- (10) Countdown -->
+    <!-- (3) NEW: Live countdown at the very bottom -->
     <section id="countdown">
       <div class="container">
-        <h2 class="cd-title" id="cdTitle">Countdown</h2>
-        <div class="cd-row">
-          <div class="cd-box">
-            <div class="cd-num" id="cdDays">0</div>
-            <div class="cd-label" id="cdLabelDays">DAYS</div>
-          </div>
-          <div class="cd-box">
-            <div class="cd-num" id="cdHours">0</div>
-            <div class="cd-label" id="cdLabelHours">HOURS</div>
-          </div>
-          <div class="cd-box">
-            <div class="cd-num" id="cdMins">0</div>
-            <div class="cd-label" id="cdLabelMins">MINS</div>
-          </div>
-          <div class="cd-box">
-            <div class="cd-num" id="cdSecs">0</div>
-            <div class="cd-label" id="cdLabelSecs">SECS</div>
+        <div class="card">
+          <h2 class="section-title">Countdown timer</h2>
+          <p class="muted cd-sub" id="cdSub">Our big day’s coming soon!</p>
+          <div class="countdown-row" role="timer" aria-live="polite">
+            <div class="cd-box">
+              <div id="cdDays" class="cd-num">0</div>
+              <div class="cd-label">DAYS</div>
+            </div>
+            <div class="cd-box">
+              <div id="cdHours" class="cd-num">0</div>
+              <div class="cd-label">HOURS</div>
+            </div>
+            <div class="cd-box">
+              <div id="cdMins" class="cd-num">0</div>
+              <div class="cd-label">MINS</div>
+            </div>
+            <div class="cd-box">
+              <div id="cdSecs" class="cd-num">0</div>
+              <div class="cd-label">SECS</div>
+            </div>
           </div>
         </div>
       </div>
@@ -440,9 +418,6 @@
   <script>
     // ====== CONFIG ======
     const MAX_GUESTS = 4;
-    // (10) Change this once to update countdown + schedule date & weekday
-    const WEDDING_DATE = new Date('2025-11-22T10:00:00+08:00'); // 22 Nov 2025, 10:00am MYT
-
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbWUzpJp8IH7eIJ4PorTtVFEJK9npyGY8HR6o0HfaNj9_Adin081iRrvof4V_LVMs/exec";
     const GMAPS_COORDS = { lat: 5.975194, lng: 116.0688396 };
     const WAZE_COORDS  = { lat: 5.975194, lng: 116.0688396 };
@@ -453,21 +428,9 @@
       { name: "Anyone", phone: "+60 19 121 2121" },
     ];
 
-    // (11) Agenda items (EN + MS)
-    const SCHEDULE_EN = [
-      { time:"10:00am", title:"GUEST ARRIVAL" },
-      { time:"12:00pm", title:"NIKAH" },
-      { time:"1:00pm",  title:"WEDDING CEREMONY" },
-      { time:"2:00pm",  title:"LUNCH" },
-      { time:"3:00pm",  title:"PHOTO SESSION" },
-    ];
-    const SCHEDULE_MS = [
-      { time:"10:00 pagi",         title:"KETIBAAN TETAMU" },
-      { time:"12:00 tengah hari",  title:"NIKAH" },
-      { time:"1:00 petang",        title:"MAJLIS PERNIKAHAN" },
-      { time:"2:00 petang",        title:"JAMUAN" },
-      { time:"3:00 petang",        title:"SESI FOTO" },
-    ];
+    // (3) COUNTDOWN TARGET — easy to change
+    // Uses local time. Change date/time below as needed.
+    const COUNTDOWN_TARGET = new Date("2025-11-22T10:00:00");
 
     // ====== i18n strings ======
     const I18N = {
@@ -481,8 +444,8 @@
         fullNameOthers: "Attend with",
         confirm: "Confirm",
         edit: "Edit",
-        phoneHeader: "Phone Number",
-        phoneNote: "We’ll use this number if we need to confirm details or share any updates.",
+        phoneHeader: "Phone Number",                 // (1) keep simple labels
+        phoneHint: "We’ll use this to inform you if anything changes.", // (1) NEW
         submit: "Submit RSVP",
         total: (n)=>`Total: ${n} guest(s)`,
         needPhone: "Please add your contact number.",
@@ -494,10 +457,6 @@
         locNote: "Tip: You can share the link with friends who are carpooling.",
         contactTitle: "Contact (Bride's family)",
         contactDesc: "Tap a name to call directly.",
-        // schedule + countdown
-        schedTitle: "Schedule",
-        cdTitle: "Countdown",
-        DAYS:"DAYS", HOURS:"HOURS", MINS:"MINS", SECS:"SECS",
       },
       ms: {
         title: "Adakah anda akan hadir ke majlis kami?",
@@ -509,8 +468,8 @@
         fullNameOthers: "Hadir bersama",
         confirm: "Sahkan",
         edit: "Ubah",
-        phoneHeader: "Nombor Telefon",
-        phoneNote: "Kami akan gunakan nombor ini jika perlu mengesahkan butiran atau berkongsi makluman.",
+        phoneHeader: "Nombor Telephone",            // (1) EXACT wording requested
+        phoneHint: "Nombor ini untuk dihubungi jika ada makluman/perubahan.", // (1) NEW
         submit: "Hantar RSVP",
         total: (n)=>`Jumlah: ${n} tetamu`,
         needPhone: "Sila isi nombor telefon.",
@@ -522,10 +481,6 @@
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
         contactTitle: "Hubungi (keluarga pengantin perempuan)",
         contactDesc: "Tekan nama untuk terus membuat panggilan.",
-        // schedule + countdown
-        schedTitle: "Jadual",
-        cdTitle: "Kiraan Detik",
-        DAYS:"HARI", HOURS:"JAM", MINS:"MIN", SECS:"SAAT",
       }
     };
 
@@ -535,7 +490,6 @@
     const validationMsg = document.getElementById('validationMsg');
     const submitBtn = document.getElementById('submitBtn');
     const phoneInput = document.getElementById('phone');
-    const phoneNote = document.getElementById('phoneNote');
     const toast = document.getElementById('toast');
     const bgm = document.getElementById('bgm');
 
@@ -548,6 +502,7 @@
     const locationBtn = document.getElementById('locationBtn');
     const rsvpIntro = document.getElementById('rsvpIntro');
     const phoneHeader = document.getElementById('phoneHeader');
+    const phoneHint = document.getElementById('phoneHint'); // (1) NEW
     const locTitle = document.getElementById('locTitle');
     const locDesc = document.getElementById('locDesc');
     const locNote = document.getElementById('locNote');
@@ -556,21 +511,6 @@
 
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
-
-    // schedule + countdown refs
-    const schedTitle = document.getElementById('schedTitle');
-    const schedDate = document.getElementById('schedDate');
-    const schedDay = document.getElementById('schedDay');
-    const scheduleList = document.getElementById('scheduleList');
-    const cdTitle = document.getElementById('cdTitle');
-    const cdDays = document.getElementById('cdDays');
-    const cdHours = document.getElementById('cdHours');
-    const cdMins = document.getElementById('cdMins');
-    const cdSecs = document.getElementById('cdSecs');
-    const cdLabelDays = document.getElementById('cdLabelDays');
-    const cdLabelHours = document.getElementById('cdLabelHours');
-    const cdLabelMins = document.getElementById('cdLabelMins');
-    const cdLabelSecs = document.getElementById('cdLabelSecs');
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'en';
@@ -639,10 +579,9 @@
       const placeholder = idx===0 ? T.fullNameFirst : T.fullNameOthers;
       const row = document.createElement('div');
       row.className = 'row';
-      row.innerHTML = `
-        <input class="input guest-name" placeholder="${placeholder}" aria-label="${placeholder}" />
-        <button class="confirm-btn guest-confirm confirm-state" type="button" disabled>${T.confirm}</button>
-      `;
+      row.innerHTML =
+        `<input class="input guest-name" placeholder="${placeholder}" aria-label="${placeholder}" />
+         <button class="confirm-btn guest-confirm confirm-state" type="button" disabled>${T.confirm}</button>`;
       const input = row.querySelector('input');
       const btn   = row.querySelector('button');
 
@@ -652,17 +591,17 @@
       });
 
       btn.addEventListener('click', ()=>{
-        const T = I18N[LANG];
+        const T2 = I18N[LANG];
         if(!input.readOnly){
           if(input.value.trim().length === 0){ input.focus(); return; }
           input.readOnly = true; input.blur();
-          btn.textContent = T.edit;
+          btn.textContent = T2.edit;
           btn.classList.remove('confirm-state'); btn.classList.add('edit-state');
           btn.disabled = false;
         }else{
           if(isSubmitted()) return;
           input.readOnly = false;
-          btn.textContent = T.confirm;
+          btn.textContent = T2.confirm;
           btn.classList.remove('edit-state'); btn.classList.add('confirm-state');
           btn.disabled = input.value.trim().length === 0;
           input.focus();
@@ -697,49 +636,6 @@
       btnGmaps.href = gq; btnWaze.href = wz;
     }
 
-    // format date & day according to LANG
-    function renderScheduleHeader(){
-      const loc = LANG === 'en' ? 'en-MY' : 'ms-MY';
-      const d = WEDDING_DATE;
-      schedDate.textContent = d.toLocaleDateString(loc, { year:'numeric', month:'long', day:'numeric' });
-      schedDay.textContent  = d.toLocaleDateString(loc, { weekday:'long' });
-    }
-    function renderScheduleItems(){
-      const items = (LANG === 'en') ? SCHEDULE_EN : SCHEDULE_MS;
-      scheduleList.innerHTML = '';
-      items.forEach(it=>{
-        const div = document.createElement('div');
-        div.className = 'tl-item';
-        div.innerHTML = `<div class="tl-time">${it.time}</div><div class="tl-text">${it.title}</div>`;
-        scheduleList.appendChild(div);
-      });
-    }
-
-    // Countdown
-    let cdTimer;
-    function pad2(n){ return n<10 ? '0'+n : ''+n; }
-    function updateCountdown(){
-      const now = Date.now();
-      const target = WEDDING_DATE.getTime();
-      let diff = Math.max(0, Math.floor((target - now)/1000)); // seconds
-      const days = Math.floor(diff / 86400); diff -= days*86400;
-      const hours = Math.floor(diff / 3600); diff -= hours*3600;
-      const mins = Math.floor(diff / 60); diff -= mins*60;
-      const secs = diff;
-
-      cdDays.textContent = days;
-      cdHours.textContent = pad2(hours);
-      cdMins.textContent = pad2(mins);
-      cdSecs.textContent = pad2(secs);
-
-      if(target <= now && cdTimer){ clearInterval(cdTimer); }
-    }
-    function initCountdown(){
-      updateCountdown();
-      if(cdTimer) clearInterval(cdTimer);
-      cdTimer = setInterval(updateCountdown, 1000);
-    }
-
     function i18n(){
       const T = I18N[LANG];
       titleText.textContent = T.title;
@@ -747,22 +643,14 @@
       rsvpBtn.textContent = T.rsvp;
       locationBtn.textContent = T.location;
       rsvpIntro.textContent = T.rsvpIntro;
-      phoneHeader.textContent = T.phoneHeader;
-      phoneNote.textContent = T.phoneNote;
+      phoneHeader.textContent = T.phoneHeader;            // (1)
+      phoneHint.textContent = T.phoneHint;                // (1)
       submitBtn.textContent = (LANG === 'en' ? 'Submit RSVP' : 'Hantar RSVP');
       locTitle.textContent = T.locTitle;
       locDesc.textContent = T.locDesc;
       locNote.textContent = T.locNote;
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
-
-      // schedule + countdown labels
-      schedTitle.textContent = T.schedTitle;
-      cdTitle.textContent = T.cdTitle;
-      cdLabelDays.textContent = T.DAYS;
-      cdLabelHours.textContent = T.HOURS;
-      cdLabelMins.textContent = T.MINS;
-      cdLabelSecs.textContent = T.SECS;
 
       const savedNames = getStoredNames();
       const savedConfirmed = getStoredConfirmed();
@@ -781,13 +669,6 @@
       updateTotals();
       refreshLangToggleLabel();
       document.getElementById('post_lang').value = LANG;
-
-      // schedule header + items
-      renderScheduleHeader();
-      renderScheduleItems();
-
-      // countdown
-      initCountdown();
 
       maybeEnableSubmit();
       if(isSubmitted()) lockSubmissionUI();
@@ -819,7 +700,6 @@
     });
 
     // ===== Music: audible autoplay + fixed volume 20% =====
-    const bgm = document.getElementById('bgm');
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -837,6 +717,7 @@
     window.addEventListener('pageshow', ensurePlayback);
     window.addEventListener('load', ensurePlayback);
 
+    // Mute/unmute only
     muteBtn.addEventListener('click', async (e)=>{
       e.preventDefault();
       try{ await bgm.play(); }catch(_){}
@@ -854,7 +735,7 @@
       requestAnimationFrame(step);
     }
     function handleSmoothLink(link, selector){
-      link.addEventListener('click', (e)=>{ e.preventDefault(); const el = document.querySelector(selector); if(el){ smoothScrollTo(el, 750); } });
+      link.addEventListener('click', (e)=>{ e.preventDefault(); playClick(); const el = document.querySelector(selector); if(el){ smoothScrollTo(el, 750); } });
     }
     handleSmoothLink(rsvpBtn, '#rsvp'); handleSmoothLink(locationBtn, '#location');
 
@@ -880,7 +761,25 @@
       playClick();
     }, true);
 
-    // ===== Render =====
+    // ===== Render (keep existing duplicates intact) =====
+    function renderContacts(){
+      const contactList = document.getElementById('contactList');
+      if(!contactList) return;
+      contactList.innerHTML = '';
+      CONTACTS.forEach(c=>{
+        const a = document.createElement('a');
+        a.className = 'btn btn-outline';
+        a.href = `tel:${c.phone.replace(/\s+/g,'')}`;
+        a.textContent = `${c.name} (${c.phone})`;
+        contactList.appendChild(a);
+      });
+    }
+    function renderMaps(){
+      const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
+      const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
+      btnGmaps.href = gq; btnWaze.href = wz;
+    }
+
     function renderAll(){
       i18n();
       renderContacts();
@@ -1004,6 +903,31 @@
         running=!document.hidden;
         if(running){ last=0; requestAnimationFrame(step); }
       });
+    })();
+
+    // ===== (3) Countdown logic =====
+    (function initCountdown(){
+      const dEl = document.getElementById('cdDays');
+      const hEl = document.getElementById('cdHours');
+      const mEl = document.getElementById('cdMins');
+      const sEl = document.getElementById('cdSecs');
+
+      function pad(n){ return String(n); }
+      function tick(){
+        const now = new Date();
+        let diff = Math.max(0, COUNTDOWN_TARGET.getTime() - now.getTime());
+
+        const days = Math.floor(diff / (1000*60*60*24)); diff -= days*(1000*60*60*24);
+        const hrs  = Math.floor(diff / (1000*60*60));     diff -= hrs *(1000*60*60);
+        const mins = Math.floor(diff / (1000*60));        diff -= mins*(1000*60);
+        const secs = Math.floor(diff / 1000);
+
+        dEl.textContent = pad(days);
+        hEl.textContent = pad(hrs);
+        mEl.textContent = pad(mins);
+        sEl.textContent = pad(secs);
+      }
+      tick(); setInterval(tick, 1000);
     })();
   </script>
 </body>
