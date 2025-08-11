@@ -12,7 +12,6 @@
 
   <style>
     :root{
-      /* Palette */
       --gold:#d4af37;
       --gold-strong:#b89017;
       --gold-soft:#fff0c9;
@@ -22,15 +21,12 @@
       --text:#1f2937;
       --muted:#6b7280;
 
-      /* UI */
       --radius:14px;
       --shadow:0 10px 30px rgba(0,0,0,.10);
       --shadow-sm:0 6px 16px rgba(0,0,0,.08);
 
-      /* Hero wallpaper */
       --wallpaper:url('wallpaper.jpg');
 
-      /* Overlay tuning */
       --hero-overlay-color: 255,247,236;
       --hero-overlay-1: .35;
       --hero-overlay-2: .50;
@@ -46,10 +42,18 @@
       background:var(--cream);
     }
 
-    /* Background particles (global, full page) */
+    /* Global particles ABOVE everything */
     #bg-particles{
-      position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.45;
+      position:fixed; inset:0; z-index:9; pointer-events:none; opacity:.45;
     }
+
+    /* Lift only the important UI above particles */
+    .top-controls,
+    .hero .heading,
+    .hero .sub,
+    .cta-row,
+    .card,
+    .footer { position:relative; z-index:10; }
 
     /* Top-right controls */
     .top-controls{
@@ -68,12 +72,12 @@
     .icon-btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
     .icon-btn:active{ transform:translateY(0); }
 
-    /* (COMMENTED OUT FEATURE) Volume popover – keep styles but hidden */
+    /* (DISABLED) Volume popover kept for future */
     .volume-pop{ display:none !important; }
 
     /* Hero */
     .hero{
-      position:relative; /* allows hero overlay canvas */
+      position:relative;
       min-height:72vh;
       display:grid; place-items:center; text-align:center; color:#222;
       background:
@@ -84,14 +88,7 @@
           rgba(var(--hero-overlay-color), var(--hero-overlay-3)) 100%
         ),
         var(--wallpaper) center/cover no-repeat fixed;
-      z-index:2; /* above global canvas background */
     }
-    /* hero particles ABOVE the photo but BELOW the text */
-    #hero-particles{
-      position:absolute; inset:0; z-index:1; pointer-events:none; opacity:.7;
-    }
-    .hero-inner{ position:relative; z-index:2; }
-
     .heading{ font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,52px); line-height:1.12; }
     .sub{ color:var(--muted); margin-top:8px }
 
@@ -113,7 +110,7 @@
     #submitBtn{ background:var(--gold); color:#111; border:1px solid var(--gold-strong); }
     #submitBtn[disabled]{ background:#eee; color:#999; border-color:#ddd; cursor:not-allowed; box-shadow:none; transform:none; }
 
-    section{ padding:58px 16px; background:transparent; position:relative; z-index:2; }
+    section{ padding:58px 16px; background:transparent; }
     .container{ max-width:980px; margin:0 auto; }
     .card{ background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
 
@@ -151,7 +148,6 @@
 
     .submit-wrap{ display:flex; flex-direction:column; gap:12px; }
 
-    /* Notice (validation) */
     .notice{
       background:#fff; border:1px solid #fde68a;
       padding:12px 14px; border-radius:12px; color:#92400e;
@@ -159,19 +155,18 @@
     }
     .muted{ color:var(--muted) }
 
-    /* Section title (same style as "RSVP") */
+    /* Section title style */
     .section-title{
       margin:0 0 8px; font-family:'Playfair Display',serif; font-size:clamp(22px,3.6vw,28px);
       color:#1f2937;
     }
 
-    /* Separator + spacers */
     .separator{ height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(184,144,23,.35), transparent); }
     .spacer-8{ height:8px }
     .spacer-16{ height:16px }
 
     .actions{ display:flex; flex-wrap:wrap; gap:10px; }
-    .footer{ text-align:center; color:#6b7280; padding:30px 16px 70px; background:transparent; position:relative; z-index:2; }
+    .footer{ text-align:center; color:#6b7280; padding:30px 16px 70px; background:transparent; }
 
     .toast{
       position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
@@ -183,7 +178,7 @@
 </head>
 <body>
 
-  <!-- Global particles (everywhere on page) -->
+  <!-- One global particle canvas across the whole site -->
   <canvas id="bg-particles" aria-hidden="true"></canvas>
 
   <!-- Top-right controls -->
@@ -192,7 +187,7 @@
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
   </div>
 
-  <!-- (COMMENTED OUT) Volume popover – we’ll revisit later
+  <!-- (COMMENTED OUT) Volume popover to revisit later
   <div id="volumePop" class="volume-pop" role="dialog" aria-label="Volume">
     <div class="vol-wrap">
       <div class="vol-slider-wrap">
@@ -205,10 +200,7 @@
   -->
 
   <header class="hero">
-    <!-- Extra hero particles so bubbles show over the JPG -->
-    <canvas id="hero-particles" aria-hidden="true"></canvas>
-
-    <div class="hero-inner">
+    <div>
       <!-- Basran ♡ Khairani -->
       <div class="heading" id="titleText">Will you attend our wedding?</div>
       <div class="sub" id="subtitleText">We'd love to celebrate with you. Please RSVP below.</div>
@@ -227,7 +219,6 @@
           <p class="muted" id="rsvpIntro">Please add up to four guest names and your main contact number.</p>
 
           <form id="rsvpForm" method="POST" target="hidden_iframe">
-            <!-- NOTE: backend expects guest1..guest4; MAX_GUESTS should stay ≤ 4 unless backend updated -->
             <input type="hidden" name="guest1" id="post_guest1">
             <input type="hidden" name="guest2" id="post_guest2">
             <input type="hidden" name="guest3" id="post_guest3">
@@ -250,18 +241,14 @@
                 <input class="input" id="phone" name="phone" autocomplete="tel" placeholder="e.g. +60 12 345 6789" required />
               </div>
 
-              <!-- separator before error + submit -->
               <div class="spacer-16"></div>
               <div class="separator"></div>
 
-              <!-- Error ABOVE submit -->
               <div class="notice tiny" id="validationMsg" style="display:none" aria-live="polite"></div>
 
-              <!-- Small space between error and submit -->
               <div class="spacer-8"></div>
               <button class="btn" id="submitBtn" type="submit" disabled>Submit RSVP</button>
 
-              <!-- Totals -->
               <div class="tiny total" id="totalGuests">Total: 0 guest(s)</div>
             </div>
           </form>
@@ -301,7 +288,6 @@
 
   <div id="toast" class="toast">Saved!</div>
 
-  <!-- Background music -->
   <audio id="bgm" src="maulaya.mp3" autoplay loop preload="auto" playsinline></audio>
 
   <script>
@@ -405,7 +391,7 @@
     let LANG = localStorage.getItem('rsvp_lang') || 'en';
     function refreshLangToggleLabel(){ langToggle.textContent = (LANG === 'en') ? 'Malay' : 'English'; }
 
-    // ===== Local state for confirmation & submission lock =====
+    // ===== Local state =====
     function getStoredNames(){ return JSON.parse(localStorage.getItem('rsvp_names')||'[]'); }
     function getStoredConfirmed(){ return JSON.parse(localStorage.getItem('rsvp_confirmed')||'[]'); }
     function setStoredNames(arr){ localStorage.setItem('rsvp_names', JSON.stringify(arr)); }
@@ -484,8 +470,7 @@
         const T = I18N[LANG];
         if(!input.readOnly){
           if(input.value.trim().length === 0){ input.focus(); return; }
-          input.readOnly = true;
-          input.blur();
+          input.readOnly = true; input.blur();
           btn.textContent = T.edit;
           btn.classList.remove('confirm-state'); btn.classList.add('edit-state');
           btn.disabled = false;
@@ -607,7 +592,7 @@
     window.addEventListener('pageshow', ensurePlayback);
     window.addEventListener('load', ensurePlayback);
 
-    // Mute/unmute only (slider commented out)
+    // Mute/unmute only
     muteBtn.addEventListener('click', async (e)=>{
       e.preventDefault();
       try{ await bgm.play(); }catch(_){}
@@ -629,7 +614,7 @@
     }
     handleSmoothLink(rsvpBtn, '#rsvp'); handleSmoothLink(locationBtn, '#location');
 
-    // ===== Subtle click/error sounds (WebAudio) =====
+    // ===== Click/error sounds =====
     let audioCtx;
     function initAudioCtx(){ if(!audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; audioCtx = new AC(); } }
     function playTone(freq=660, ms=60, type='sine', volume=0.05){
@@ -651,7 +636,7 @@
       playClick();
     }, true);
 
-    // ===== Render (order matters) =====
+    // ===== Render =====
     function renderContacts(){
       const contactList = document.getElementById('contactList');
       if(!contactList) return;
@@ -695,6 +680,7 @@
     }
 
     renderAll();
+
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
 
     // ===== Submit to Google Apps Script (hidden iframe) =====
@@ -730,7 +716,7 @@
       // posts to iframe
     });
 
-    // ===== Particle animation (your original function, unchanged) =====
+    // ===== Particles (global canvas across the page) =====
     (function initParticles(){
       const canvas = document.getElementById('bg-particles');
       const ctx = canvas.getContext('2d');
@@ -740,12 +726,10 @@
       if(prefersReduced) return;
 
       let w, h, particles=[], last=0, running=true;
-      function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-      resize(); window.addEventListener('resize', resize);
+      function resize(){ w = canvas.width = innerWidth; h = canvas.height = innerHeight; }
+      resize(); addEventListener('resize', resize);
 
-      // Tweak density here:
       const count = Math.min(90, Math.max(55, Math.floor((w*h)/52000)));
-
       const palettes = [
         { inner:'rgba(255,255,255,0.9)', outer:'rgba(255,255,255,0.0)' },
         { inner:'rgba(255,240,210,0.85)', outer:'rgba(255,240,210,0.0)' },
@@ -755,10 +739,9 @@
       ];
 
       for(let i=0;i<count;i++){
-        const p = palettes[Math.floor(Math.random()*palettes.length)];
+        const p = palettes[(Math.random()*palettes.length)|0];
         particles.push({
-          x: Math.random()*w,
-          y: Math.random()*h,
+          x: Math.random()*w, y: Math.random()*h,
           r: 1 + Math.random()*4 + (Math.random()<0.12?2:0),
           s: 12 + Math.random()*34,
           drift: (Math.random()*0.8 - 0.4),
@@ -769,8 +752,7 @@
 
       function step(ts){
         if(!last) last = ts;
-        const dt = Math.min(0.033, (ts - last)/1000);
-        last = ts;
+        const dt = Math.min(0.033, (ts - last)/1000); last = ts;
 
         ctx.clearRect(0,0,w,h);
         ctx.globalCompositeOperation = 'lighter';
@@ -786,62 +768,16 @@
           g.addColorStop(1, p.outer);
 
           ctx.fillStyle = g;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, rr, 0, Math.PI*2);
-          ctx.fill();
+          ctx.beginPath(); ctx.arc(p.x, p.y, rr, 0, Math.PI*2); ctx.fill();
         }
         if(running) requestAnimationFrame(step);
       }
       requestAnimationFrame(step);
 
-      document.addEventListener('visibilitychange', ()=>{
-        running = !document.hidden;
+      document.addEventListener('visibilitychange',()=>{
+        running=!document.hidden;
         if(running){ last=0; requestAnimationFrame(step); }
       });
-    })();
-
-    // ===== Extra hero overlay particles (small set; ensures visibility over JPG) =====
-    (function initHeroParticles(){
-      const canvas = document.getElementById('hero-particles');
-      const ctx = canvas.getContext('2d');
-      if(!canvas || !ctx) return;
-      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if(prefersReduced) return;
-
-      function size(){ canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
-      size(); addEventListener('resize', size);
-
-      let w=canvas.width, h=canvas.height, bubbles=[], last=0, running=true;
-      const palettes = [
-        { inner:'rgba(255,255,255,0.95)', outer:'rgba(255,255,255,0.0)' },
-        { inner:'rgba(255,247,236,0.95)', outer:'rgba(255,247,236,0.0)' },
-        { inner:'rgba(240,210,120,0.95)', outer:'rgba(240,210,120,0.0)' }
-      ];
-      const N = 36;
-      function reset(){ w=canvas.width; h=canvas.height; }
-      for(let i=0;i<N;i++){
-        const p = palettes[(Math.random()*palettes.length)|0];
-        bubbles.push({x:Math.random()*w,y:Math.random()*h,r:2+Math.random()*5,s:15+Math.random()*30,drift:(Math.random()*0.8-0.4),inner:p.inner,outer:p.outer,pulse:0.9+Math.random()*0.25});
-      }
-
-      function frame(ts){
-        if(!last) last=ts;
-        const dt=Math.min(0.033,(ts-last)/1000); last=ts;
-        reset();
-        ctx.clearRect(0,0,w,h);
-        ctx.globalCompositeOperation='lighter';
-        for(const b of bubbles){
-          b.y -= b.s*dt; b.x += b.drift*dt*60;
-          if(b.y<-12){ b.y=h+12; b.x=Math.random()*w; }
-          const rr=b.r*(b.pulse + Math.sin((ts/700)+(b.x+b.y))*0.04);
-          const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,rr*2.2);
-          g.addColorStop(0,b.inner); g.addColorStop(0.6,b.inner); g.addColorStop(1,b.outer);
-          ctx.fillStyle=g; ctx.beginPath(); ctx.arc(b.x,b.y,rr,0,Math.PI*2); ctx.fill();
-        }
-        if(running) requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
-      document.addEventListener('visibilitychange',()=>{ running=!document.hidden; if(running){ last=0; requestAnimationFrame(frame);} });
     })();
   </script>
 </body>
