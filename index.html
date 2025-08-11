@@ -15,7 +15,8 @@
       /* Palette */
       --gold:#d4af37;
       --gold-strong:#b89017;     /* darker gold for borders/active */
-      --gold-soft:#f6e7b8;       /* pale gold tint (backgrounds, locks) */
+      --gold-soft:#fff0c9;       /* light gold fill for confirm */
+      --gold-soft-2:#f6e7b8;     /* pale gold tint */
       --cream:#fff7ec;           /* page background */
       --white:#ffffff;
       --text:#1f2937;            /* cool dark text */
@@ -31,12 +32,12 @@
     }
 
     *{ box-sizing:border-box }
-    html{ scroll-behavior:smooth }
+    html{ scroll-behavior:auto } /* we'll do custom easing via JS */
     body{
       margin:0;
       font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
-      background:var(--cream); /* light, seamless */
+      background:var(--cream); /* light, seamless with hero */
     }
 
     /* Top-right minimalist controls */
@@ -56,13 +57,13 @@
     .icon-btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
     .icon-btn:active{ transform:translateY(0); }
 
-    /* Hero section: soft overlay on wallpaper, blending into page */
+    /* Hero: lighten overlay to reveal JPG more */
     .hero{
       position:relative;
       min-height:72vh;
       display:grid; place-items:center; text-align:center; color:#222;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.98)),
+        linear-gradient(180deg, rgba(255,255,255,.90), rgba(255,255,255,.94)),
         var(--wallpaper) center/cover no-repeat fixed;
     }
     .heading{ font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,52px); line-height:1.12; }
@@ -73,14 +74,23 @@
     .btn{
       appearance:none; cursor:pointer; display:inline-block; text-decoration:none;
       padding:14px 22px; border-radius:var(--radius);
-      background:#fff; color:#5a3d00; font-weight:600; letter-spacing:.3px;
+      background:#fff; color:#111; font-weight:600; letter-spacing:.3px;
       border:1px solid var(--gold-strong);
       box-shadow:var(--shadow-sm);
       transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
     }
     .btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
     .btn:active{ transform:translateY(0); }
-    .btn-outline{ background:#fff; color:#5a3d00; border:1px solid var(--gold-strong) }
+    .btn-outline{ background:#fff; color:#111; border:1px solid var(--gold-strong) }
+
+    /* Submit button special styles */
+    #submitBtn{
+      background:var(--gold); color:#111; border:1px solid var(--gold-strong);
+    }
+    #submitBtn[disabled]{
+      background:#eee; color:#999; border-color:#ddd; cursor:not-allowed;
+      box-shadow:none; transform:none;
+    }
 
     section{ padding:58px 16px; background:transparent; }
     .container{ max-width:980px; margin:0 auto; }
@@ -89,9 +99,8 @@
       border-radius:var(--radius); box-shadow:var(--shadow); padding:22px;
     }
 
+    /* Guest rows: always single column; each row is input (1fr) + button (auto) */
     .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
-    @media (min-width:720px){ .grid{ grid-template-columns:repeat(2,1fr) } }
-
     .row{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
 
     /* Inputs */
@@ -103,7 +112,7 @@
     }
     .input:focus:not([readonly]){
       border-color:var(--gold-strong);
-      box-shadow:0 0 0 3px rgba(212,175,55,.20);
+      box-shadow:0 0 0 3px rgba(212,175,55,.20); /* darker gold glow */
     }
     .input[readonly]{
       background:#fffdf7;          /* soft warm white */
@@ -118,10 +127,15 @@
     .confirm-btn{
       white-space:nowrap; border-radius:12px; padding:10px 14px;
       display:inline-flex; align-items:center; gap:8px;
-      border:1px solid var(--gold-strong); background:#fff; color:#5a3d00;
+      border:1px solid var(--gold-strong);
       box-shadow:var(--shadow-sm);
-      transition:opacity .12s ease;
+      transition:opacity .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
+      cursor:pointer;
     }
+    /* State: Confirm (editable) = light gold fill */
+    .confirm-btn.confirm-state{ background:var(--gold-soft); color:#111; }
+    /* State: Edit (locked) = white fill */
+    .confirm-btn.edit-state{ background:#fff; color:#111; }
     .confirm-btn[disabled]{ opacity:.45; cursor:not-allowed; }
 
     .submit-wrap{ display:flex; flex-direction:column; gap:12px; }
@@ -158,8 +172,8 @@
       <div class="heading" id="titleText">Will you attend our wedding?</div>
       <div class="sub" id="subtitleText">We'd love to celebrate with you. Please RSVP below.</div>
       <div class="cta-row">
-        <a class="btn" href="#rsvp" id="rsvpBtn">RSVP</a>
-        <a class="btn btn-outline" href="#location" id="locationBtn">Location</a>
+        <a class="btn" href="#rsvp" id="rsvpBtn" data-smooth>RSVP</a>
+        <a class="btn btn-outline" href="#location" id="locationBtn" data-smooth>Location</a>
       </div>
     </div>
   </header>
@@ -346,21 +360,11 @@
       setTimeout(()=>toast.classList.remove('show'), 1600);
     }
 
-    function getGuestInputs(){
-      return Array.from(document.querySelectorAll('.guest-name'));
-    }
-    function getGuestButtons(){
-      return Array.from(document.querySelectorAll('.guest-confirm'));
-    }
-    function getGuestNames(){
-      return getGuestInputs().map(i=>i.value.trim());
-    }
-    function getConfirmedCount(){
-      return getGuestInputs().filter(inp => inp.readOnly && inp.value.trim().length>0).length;
-    }
-    function anyUnconfirmedTyped(){
-      return getGuestInputs().some(inp => !inp.readOnly && inp.value.trim().length>0);
-    }
+    function getGuestInputs(){ return Array.from(document.querySelectorAll('.guest-name')); }
+    function getGuestButtons(){ return Array.from(document.querySelectorAll('.guest-confirm')); }
+    function getGuestNames(){ return getGuestInputs().map(i=>i.value.trim()); }
+    function getConfirmedCount(){ return getGuestInputs().filter(inp => inp.readOnly && inp.value.trim().length>0).length; }
+    function anyUnconfirmedTyped(){ return getGuestInputs().some(inp => !inp.readOnly && inp.value.trim().length>0); }
 
     function updateTotals(){
       const n = getGuestNames().filter(Boolean).length;
@@ -389,6 +393,8 @@
         const isConfirmed = !!confirmed[idx] && inp.value.trim().length>0;
         inp.readOnly = isConfirmed;
         btn.textContent = isConfirmed ? I18N[LANG].edit : I18N[LANG].confirm;
+        btn.classList.toggle('edit-state', isConfirmed);
+        btn.classList.toggle('confirm-state', !isConfirmed);
         btn.disabled = isConfirmed ? false : inp.value.trim().length === 0;
       });
 
@@ -403,7 +409,7 @@
       row.className = 'row';
       row.innerHTML = `
         <input class="input guest-name" placeholder="${placeholder}" aria-label="${placeholder}" />
-        <button class="confirm-btn guest-confirm" type="button" disabled>${T.confirm}</button>
+        <button class="confirm-btn guest-confirm confirm-state" type="button" disabled>${T.confirm}</button>
       `;
       const input = row.querySelector('input');
       const btn   = row.querySelector('button');
@@ -421,13 +427,17 @@
           // Confirm
           if(input.value.trim().length === 0){ input.focus(); return; }
           input.readOnly = true;
-          input.blur(); // remove focus highlight when locked
+          input.blur(); // remove focus when locked
           btn.textContent = T.edit;
+          btn.classList.remove('confirm-state');
+          btn.classList.add('edit-state');
           btn.disabled = false;
         }else{
           // Edit
           input.readOnly = false;
           btn.textContent = T.confirm;
+          btn.classList.remove('edit-state');
+          btn.classList.add('confirm-state');
           btn.disabled = input.value.trim().length === 0;
           input.focus();
         }
@@ -487,12 +497,16 @@
         const isConfirmed = !!savedConfirmed[idx] && inp.value.trim().length>0;
         inp.readOnly = isConfirmed;
         btn.textContent = isConfirmed ? T.edit : T.confirm;
+        btn.classList.toggle('edit-state', isConfirmed);
+        btn.classList.toggle('confirm-state', !isConfirmed);
         btn.disabled = isConfirmed ? false : inp.value.trim().length === 0;
       });
 
       updateTotals();
       refreshLangToggleLabel();
       document.getElementById('post_lang').value = LANG;
+      // refresh validation text in current language
+      maybeEnableSubmit();
     }
 
     function maybeEnableSubmit(){
@@ -510,7 +524,7 @@
       }else if(confirmedCount < 1){
         validationMsg.textContent = T.needOneName;
       }else if(hasUnconfirmedTyped){
-        validationMsg.textContent = T.needOneName; // same guidance covers "confirm first"
+        validationMsg.textContent = T.needOneName; // guide to confirm
       }else{
         validationMsg.textContent = '';
       }
@@ -521,30 +535,28 @@
       e.preventDefault();
       LANG = (LANG === 'en') ? 'ms' : 'en';
       localStorage.setItem('rsvp_lang', LANG);
-      i18n(); saveLocal();
+      i18n(); saveLocal(); maybeEnableSubmit();
     });
 
-    // ===== Music: aim for audible autoplay; retry & auto-unlock on first gesture if blocked; button toggles muted only =====
-    bgm.volume = 0.4;
+    // ===== Music: audible autoplay + volume 20%; retries & auto-unlock if blocked; button toggles muted only =====
+    bgm.volume = 0.2;  // 20%
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
 
     async function tryPlayAudible(){
       try{
-        bgm.muted = false;               // request audible
-        await bgm.play();                 // try once
+        bgm.muted = false;
+        await bgm.play();
         setMutedUI();
         return true;
       }catch(e){
         return false;
       }
     }
-
     async function ensurePlayback(){
-      // Immediate attempt when page is shown
       let ok = await tryPlayAudible();
       if(ok) return;
 
-      // Retry a few times shortly after load (helps some Android builds)
+      // retry a few times
       let tries = 0;
       const iv = setInterval(async ()=>{
         tries++;
@@ -552,24 +564,20 @@
         if(tries > 6){ clearInterval(iv); }
       }, 900);
 
-      // One-time auto-unlock on first user gesture
+      // auto-unlock on first gesture
       const unlock = async ()=>{
         if(await tryPlayAudible()){
-          removeUnlockers();
+          window.removeEventListener('pointerdown', unlock);
+          window.removeEventListener('keydown', unlock);
+          window.removeEventListener('scroll', unlock);
+          window.removeEventListener('touchstart', unlock);
         }
-      };
-      const removeUnlockers = ()=>{
-        window.removeEventListener('pointerdown', unlock);
-        window.removeEventListener('keydown', unlock);
-        window.removeEventListener('scroll', unlock);
-        window.removeEventListener('touchstart', unlock);
       };
       window.addEventListener('pointerdown', unlock, { once:true });
       window.addEventListener('keydown', unlock, { once:true });
       window.addEventListener('scroll', unlock, { once:true });
       window.addEventListener('touchstart', unlock, { once:true });
     }
-
     window.addEventListener('pageshow', ensurePlayback);
     window.addEventListener('load', ensurePlayback);
 
@@ -580,12 +588,121 @@
       setMutedUI();
     });
 
+    // ===== Smooth scrolling with ease-in/out =====
+    function easeInOutQuad(t){ return t<0.5 ? 2*t*t : -1+(4-2*t)*t; }
+    function smoothScrollTo(target, duration=700){
+      const start = window.scrollY || window.pageYOffset;
+      const end = (typeof target === 'number') ? target : (target.getBoundingClientRect().top + start);
+      const diff = end - start;
+      let startTime = null;
+
+      function step(ts){
+        if(startTime === null) startTime = ts;
+        const t = Math.min(1, (ts - startTime) / duration);
+        const eased = easeInOutQuad(t);
+        window.scrollTo(0, start + diff * eased);
+        if(t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // Intercept hero buttons for smooth scroll + click sound
+    function handleSmoothLink(link, selector){
+      link.addEventListener('click', (e)=>{
+        e.preventDefault();
+        playClick();
+        const el = document.querySelector(selector);
+        if(el){ smoothScrollTo(el, 750); }
+      });
+    }
+    handleSmoothLink(rsvpBtn, '#rsvp');
+    handleSmoothLink(locationBtn, '#location');
+
+    // ===== Subtle click/error sounds (WebAudio, no extra files) =====
+    let audioCtx;
+    function initAudioCtx(){
+      if(!audioCtx){
+        const AC = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AC();
+      }
+    }
+    function playTone(freq=660, ms=60, type='sine', volume=0.05){
+      initAudioCtx();
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = type; o.frequency.value = freq;
+      g.gain.value = volume;
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start();
+      // quick decay envelope
+      g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + ms/1000);
+      o.stop(audioCtx.currentTime + ms/1000 + 0.02);
+    }
+    function playClick(){ playTone(660, 50, 'sine', 0.05); }
+    function playError(){ playTone(220, 120, 'sine', 0.06); }
+
+    // Global click sounds for buttons/links (respect disabled)
+    document.addEventListener('click', (e)=>{
+      const el = e.target.closest('button, a');
+      if(!el) return;
+
+      // disabled?
+      const isDisabled = el.matches('button[disabled], .disabled') || el.getAttribute('aria-disabled') === 'true';
+      if(isDisabled){
+        e.preventDefault();
+        playError();
+        return;
+      }
+
+      // for anchors with href="#" but no handler, avoid jump
+      if(el.tagName === 'A' && el.getAttribute('href') === '#'){
+        e.preventDefault();
+      }
+      playClick();
+    }, true);
+
     // ===== Render (order matters) =====
-    i18n();               // sets text & rebuilds rows
-    renderContacts();
-    renderMaps();
-    loadLocal();
-    refreshLangToggleLabel();
+    function renderContacts(){
+      contactList.innerHTML = '';
+      CONTACTS.forEach(c=>{
+        const a = document.createElement('a');
+        a.className = 'btn btn-outline';
+        a.href = `tel:${c.phone.replace(/\s+/g,'')}`;
+        a.textContent = `${c.name} (${c.phone})`;
+        contactList.appendChild(a);
+      });
+    }
+    function renderMaps(){
+      const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
+      const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
+      btnGmaps.href = gq; btnWaze.href = wz;
+    }
+
+    function renderAll(){
+      i18n();               // sets text & rebuilds rows
+      renderContacts();
+      renderMaps();
+      // load & sync saved states
+      const names = getStoredNames();
+      const conf  = getStoredConfirmed();
+      getGuestInputs().forEach((inp, idx)=>{
+        if(names[idx]) inp.value = names[idx];
+        const btn = getGuestButtons()[idx];
+        const isConfirmed = !!conf[idx] && inp.value.trim().length>0;
+        inp.readOnly = isConfirmed;
+        btn.textContent = isConfirmed ? I18N[LANG].edit : I18N[LANG].confirm;
+        btn.classList.toggle('edit-state', isConfirmed);
+        btn.classList.toggle('confirm-state', !isConfirmed);
+        btn.disabled = isConfirmed ? false : inp.value.trim().length === 0;
+      });
+      updateTotals();
+      refreshLangToggleLabel();
+      phoneInput.value = localStorage.getItem('rsvp_phone') || '';
+      maybeEnableSubmit();
+    }
+
+    renderAll();
+
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
 
     // ===== Submit to Google Apps Script (hidden iframe) =====
@@ -606,11 +723,17 @@
 
     hiddenIframe.addEventListener('load', ()=>{
       showToast(I18N[LANG].thanks);
-      // Keep names & confirmation intact; no auto-clear to avoid confusion.
       saveLocal(); updateTotals(); maybeEnableSubmit();
     });
 
-    form.addEventListener('submit', ()=>{
+    form.addEventListener('submit', (e)=>{
+      // safety: prevent submit if disabled (just in case)
+      if(submitBtn.disabled){
+        e.preventDefault();
+        playError();
+        maybeEnableSubmit();
+        return;
+      }
       syncHiddenFields();
       saveLocal();
       // posts to iframe
