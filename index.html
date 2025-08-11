@@ -4,40 +4,33 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kak Ira Wedding RSVP</title>
-  <meta name="description" content="RSVP for Kak Ira's wedding — elegant, mobile‑first, bilingual (EN/MS)." />
+  <meta name="description" content="RSVP for Kak Ira's wedding — elegant, mobile-first, bilingual (EN/MS)." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root{
-      /* ===== THEME: edit these ===== */
-      --gold:#d4af37;              /* Primary gold */
-      --gold-strong:#c19b2e;       /* Darker gold for hover/focus */
+      --gold:#d4af37;
+      --gold-strong:#c19b2e;
       --white:#ffffff;
-      --bg:#0e0e0e;                /* page bg behind wallpaper */
+      --bg:#0e0e0e;
       --text:#1a1a1a;
       --muted:#6b7280;
       --radius:18px;
       --shadow:0 10px 30px rgba(0,0,0,.15);
-      --wallpaper:url('wallpaper.jpg'); /* CHANGE wallpaper image path */
-      --max-guests:4; /* edit JS too if you want a different number */
+      --wallpaper:url('wallpaper.jpg'); /* your wallpaper in same folder */
     }
-
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{
-      margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
-      background: var(--bg) fixed;
-    }
+    body{ margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--text); background:var(--bg) fixed; }
 
-    /* Soft gold/white hero with wallpaper overlay */
     .hero{
       position:relative; min-height:72vh; display:grid; place-items:center; text-align:center; color:#222;
       background:
         linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.88)),
         var(--wallpaper) center/cover no-repeat fixed;
     }
-    .brand{ position:absolute; top:14px; left:14px; display:flex; gap:8px; align-items:center; }
+    .brand{ position:absolute; top:14px; left:14px; display:flex; gap:8px; align-items:center; z-index:5; }
     .chip{display:inline-flex; align-items:center; gap:.5rem; border:1px solid rgba(0,0,0,.06); padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.8); backdrop-filter: blur(6px); box-shadow:var(--shadow)}
     .chip button{border:0;background:transparent;cursor:pointer;font:inherit}
     .chip .sep{width:1px;height:20px;background:rgba(0,0,0,.08)}
@@ -48,19 +41,15 @@
     .cta-row{ margin-top:26px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
     .btn{appearance:none; border:0; cursor:pointer; padding:14px 22px; border-radius:var(--radius);
          background:linear-gradient(135deg,var(--gold),#ffe9a5); color:#533; font-weight:600; letter-spacing:.3px; box-shadow:var(--shadow);
-         transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; }
+         transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; text-decoration:none; display:inline-block;}
     .btn:hover{ transform: translateY(-1px); filter:saturate(1.05) }
     .btn:active{ transform: translateY(0) }
     .btn-outline{ background:var(--white); border:1px solid var(--gold-strong); color:#6b4b00 }
 
-    /* Sections */
     section{ padding:58px 16px; }
     .container{ max-width:980px; margin:0 auto; }
-
-    /* Card */
     .card{ background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
 
-    /* RSVP form */
     .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
     @media(min-width:720px){ .grid{ grid-template-columns: repeat(2,1fr) } }
 
@@ -71,39 +60,20 @@
     .tiny{ font-size:12px; color:var(--muted) }
     .total{ text-align:center; margin-top:6px; color:#374151 }
 
-    .pill{ padding:8px 12px; border-radius:999px; background:#f3f4f6; display:inline-block; }
-
-    .confirm-btn{ white-space:nowrap; border-radius:12px; padding:10px 14px; display:inline-flex; align-items:center; gap:8px; }
-    .confirm-btn[data-state="confirmed"]{ background: #ecfdf5; color:#065f46; border:1px solid #10b981 }
-    .confirm-btn[data-state="edit"]{ background: #fff7ed; color:#9a3412; border:1px solid #fdba74 }
+    .confirm-btn{ white-space:nowrap; border-radius:12px; padding:10px 14px; display:inline-flex; align-items:center; gap:8px; border:1px solid #fdba74; background:#fff7ed; color:#9a3412; }
+    .confirm-btn[data-state="confirmed"]{ background:#ecfdf5; color:#065f46; border:1px solid #10b981 }
 
     .submit-wrap{ display:flex; flex-direction:column; gap:12px; }
-
-    .notice{ background: #fffbeb; border: 1px solid #fde68a; padding:12px 14px; border-radius:12px; color:#92400e; }
-
+    .notice{ background:#fffbeb; border:1px solid #fde68a; padding:12px 14px; border-radius:12px; color:#92400e; }
     .muted{ color:var(--muted) }
 
-    /* Map & contacts */
     .actions{ display:flex; flex-wrap:wrap; gap:10px; }
-
     .footer{ text-align:center; color:#6b7280; padding:30px 16px 70px; }
-
-    /* Toast */
     .toast{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:#111; color:#fff; padding:12px 16px; border-radius:12px; opacity:0; pointer-events:none; transition:.25s ease; box-shadow:0 8px 24px rgba(0,0,0,.3) }
     .toast.show{ opacity:1 }
   </style>
 </head>
 <body>
-  <!--
-    HOW TO CUSTOMIZE:
-    1) Colors & wallpaper: edit CSS variables in :root (top of file). Replace assets/wallpaper.jpg.
-    2) Background music: replace assets/music.mp3 below. Use the MUTE button to toggle.
-    3) Max guests: change const MAX_GUESTS in JS. (Default 4.)
-    4) Maps: set GMAPS_COORDS and WAZE_COORDS in JS (lat,lng). Buttons open directions.
-    5) Contacts: edit CONTACTS list in JS (name + phone). They become click-to-call links.
-    6) Google Sheet: paste your Apps Script Web App URL into APPS_SCRIPT_URL in JS.
-  -->
-
   <!-- Floating brand utility — language + mute -->
   <div class="brand">
     <div class="chip" id="langChip">
@@ -135,7 +105,6 @@
           <p class="muted" id="rsvpIntro">Please add up to four guest names and your main contact number.</p>
 
           <form id="rsvpForm" method="POST" target="hidden_iframe">
-            <!-- These hidden fields are what we actually POST to Google Apps Script -->
             <input type="hidden" name="guest1" id="post_guest1">
             <input type="hidden" name="guest2" id="post_guest2">
             <input type="hidden" name="guest3" id="post_guest3">
@@ -193,14 +162,14 @@
 
   <div id="toast" class="toast">Saved!</div>
 
-  <!-- Background music (autoplay will start after first user interaction) -->
-  <audio id="bgm" src="maulaya.mp3" loop preload="auto" playsinline></audio>
+  <!-- Background music (autoplay muted; unmute on interaction) -->
+  <audio id="bgm" src="maulaya.mp3" loop preload="auto" autoplay muted playsinline></audio>
 
   <script>
-    // ====== CONFIG (edit these) ======
-    const MAX_GUESTS = 4; // change to 7 etc.
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbWUzpJp8IH7eIJ4PorTtVFEJK9npyGY8HR6o0HfaNj9_Adin081iRrvof4V_LVMs/exec"; // <-- IMPORTANT
-    const GMAPS_COORDS = { lat: 5.975194, lng: 116.0688396 }; // Promanade Hotel KK lat,lang
+    // ====== CONFIG ======
+    const MAX_GUESTS = 4;
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbWUzpJp8IH7eIJ4PorTtVFEJK9npyGY8HR6o0HfaNj9_Adin081iRrvof4V_LVMs/exec";
+    const GMAPS_COORDS = { lat: 5.975194, lng: 116.0688396 }; // Promenade Hotel KK
     const WAZE_COORDS  = { lat: 5.975194, lng: 116.0688396 };
     const VENUE_LABEL  = encodeURIComponent("Kak Ira Wedding Venue");
     const CONTACTS = [
@@ -284,7 +253,6 @@
     const locNote = document.getElementById('locNote');
     const contactTitle = document.getElementById('contactTitle');
     const contactDesc = document.getElementById('contactDesc');
-    const langChip = document.getElementById('langChip');
     const langLabel = document.getElementById('langLabel');
     const langToggle = document.getElementById('langToggle');
 
@@ -295,7 +263,7 @@
     // Contacts
     const contactList = document.getElementById('contactList');
 
-    // ===== Render helpers =====
+    // ===== Helpers =====
     function i18n(){
       const T = I18N[LANG];
       titleText.textContent = T.title;
@@ -368,10 +336,8 @@
         btn.addEventListener('click',()=>{
           const state = btn.getAttribute('data-state');
           if(state==='edit'){
-            if(!input.value.trim()){
-              input.focus(); return;
-            }
-            input.readOnly = true; // still submitted with form
+            if(!input.value.trim()){ input.focus(); return; }
+            input.readOnly = true;
             btn.setAttribute('data-state','confirmed');
             btn.textContent = '✓ ' + I18N[LANG].confirm;
           }else{
@@ -391,10 +357,11 @@
       const hasPhone = phoneInput.value.trim().length>0;
       submitBtn.disabled = !(hasName && hasPhone);
       validationMsg.style.display = submitBtn.disabled ? 'block':'none';
-      if(!hasPhone) validationMsg.textContent = I18N[LANG].needPhone; else if(!hasName) validationMsg.textContent = I18N[LANG].needOneName; else validationMsg.style.display='none';
+      if(!hasPhone) validationMsg.textContent = I18N[LANG].needPhone;
+      else if(!hasName) validationMsg.textContent = I18N[LANG].needOneName;
+      else validationMsg.style.display='none';
     }
 
-    // Build contact buttons
     function renderContacts(){
       contactList.innerHTML = '';
       CONTACTS.forEach(c=>{
@@ -406,62 +373,58 @@
       })
     }
 
-    // Build map links
     function renderMaps(){
-      const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&destination_place_id=&travelmode=driving&destination=${VENUE_LABEL}`;
+      const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
       const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
       btnGmaps.href = gq; btnWaze.href = wz;
     }
 
+    // ===== Language toggle =====
+    langToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      LANG = (LANG === 'en') ? 'ms' : 'en';
+      localStorage.setItem('rsvp_lang', LANG);
+      i18n();
+      saveLocal();
+      startBgm(); // kick audio on interaction
+    });
 
-	// Language toggle
-	langToggle.addEventListener('click', (e) => {
-	e.preventDefault();
-	LANG = (LANG === 'en') ? 'ms' : 'en';
-	localStorage.setItem('rsvp_lang', LANG);
-	i18n();
-	saveLocal();
-	startBgm();
-	});
+    // ===== Music autoplay/unmute handling =====
+    const muteBtn = document.getElementById('muteBtn');
+    function startBgm() {
+      if (bgm.muted) bgm.muted = false;
+      if (bgm.paused) bgm.play().catch(()=>{});
+    }
+    window.addEventListener('load', () => {
+      // start silently to satisfy autoplay policies
+      bgm.muted = true;
+      bgm.play().catch(()=>{});
+    });
+    ['click','touchstart','keydown'].forEach(evt =>
+      window.addEventListener(evt, startBgm, { once: true })
+    );
+    muteBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (bgm.paused) bgm.play().catch(()=>{});
+      bgm.muted = !bgm.muted;
+      muteBtn.textContent = bgm.muted ? '🔇' : '🔊';
+    });
 
-    // Music toggle
-	const muteBtn = document.getElementById('muteBtn');
-	let userInteracted = false;
-	
-	function startBgm() {
-	userInteracted = true;
-	if (bgm.paused) {
-		bgm.play().catch(() => { /* ignore autoplay errors */ });
-	}
-	}
-	
-	// Any user gesture should try to start the music
-	['click', 'touchstart', 'keydown'].forEach(evt =>
-	window.addEventListener(evt, startBgm, { once: false })
-	);
-	
-	muteBtn.addEventListener('click', (e) => {
-	e.preventDefault();
-	startBgm();
-	bgm.muted = !bgm.muted;
-	muteBtn.textContent = bgm.muted ? '🔇' : '🔊';
-	});
-
-    // Render guests + contacts + maps + i18n
-    renderGuestRows();
+    // ===== Render (order matters) =====
+    i18n();               // set text first
+    renderGuestRows();    // then build rows with correct language
     renderContacts();
     renderMaps();
-    i18n();
     loadLocal();
     maybeEnableSubmit();
 
-    phoneInput.addEventListener('input',()=>{ saveLocal(); maybeEnableSubmit(); });
+    // start bgm on obvious taps too
+    rsvpBtn.addEventListener('click', startBgm);
+    locationBtn.addEventListener('click', startBgm);
 
-    // ====== FORM SUBMIT to Google Apps Script via hidden iframe (avoids CORS) ======
+    // ===== Submit to Google Apps Script (hidden iframe) =====
     const form = document.getElementById('rsvpForm');
     const hiddenIframe = document.getElementById('hidden_iframe');
-
-    // Prepare the form action (Apps Script URL) and keep hidden fields synced
     form.action = APPS_SCRIPT_URL;
 
     function syncHiddenFields(){
@@ -476,19 +439,15 @@
     }
 
     hiddenIframe.addEventListener('load', ()=>{
-      // When Apps Script responds, the iframe loads. Treat that as success.
       showToast(I18N[LANG].thanks);
-      // Optional: clear form but keep phone for convenience
-      // If you want to completely clear: set phoneInput.value='';
-      // names to blank:
       document.querySelectorAll('.guest-name').forEach(inp=>{inp.value=''; inp.readOnly=false;});
       saveLocal(); updateTotals(); maybeEnableSubmit();
     });
 
-    form.addEventListener('submit', (e)=>{
+    form.addEventListener('submit', ()=>{
       syncHiddenFields();
       saveLocal();
-      // form will POST to iframe automatically
+      // posts to iframe
     });
   </script>
 </body>
