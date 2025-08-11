@@ -46,9 +46,9 @@
       background:var(--cream);
     }
 
-    /* Background particles */
+    /* Background particles (global, full page) */
     #bg-particles{
-      position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.45;
+      position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.45;
     }
 
     /* Top-right controls */
@@ -68,41 +68,12 @@
     .icon-btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
     .icon-btn:active{ transform:translateY(0); }
 
-    /* Volume popover (under the mute button) */
-    .volume-pop{
-      position:fixed; z-index:9998; display:none;
-      background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:12px;
-      box-shadow:var(--shadow); padding:10px 10px 12px; width:56px;
-    }
-    .volume-pop.show{ display:block; }
-    .vol-wrap{ display:flex; flex-direction:column; align-items:center; gap:10px; }
-    .vol-slider-wrap{ width:28px; height:160px; position:relative; }
-    .vol-slider{
-      appearance:none;
-      position:absolute; top:50%; left:50%;
-      transform:translate(-50%,-50%) rotate(-90deg);
-      width:160px; height:28px;
-      outline:none; background:transparent;
-    }
-    .vol-slider::-webkit-slider-thumb{
-      appearance:none; width:16px; height:16px; border-radius:50%;
-      background:var(--gold); border:1px solid var(--gold-strong);
-      box-shadow:0 1px 3px rgba(0,0,0,.1);
-    }
-    .vol-slider::-webkit-slider-runnable-track{
-      height:6px; background:linear-gradient(#eee,#eee);
-      border-radius:999px; border:1px solid #ddd;
-    }
-    .vol-btn{
-      width:32px; height:32px; border-radius:999px;
-      display:grid; place-items:center; cursor:pointer;
-      border:1px solid var(--gold-strong); background:#fff; color:#111;
-      box-shadow:var(--shadow-sm); font-weight:700;
-    }
+    /* (COMMENTED OUT FEATURE) Volume popover – keep styles but hidden */
+    .volume-pop{ display:none !important; }
 
     /* Hero */
     .hero{
-      position:relative; z-index:1;
+      position:relative; /* allows hero overlay canvas */
       min-height:72vh;
       display:grid; place-items:center; text-align:center; color:#222;
       background:
@@ -113,7 +84,14 @@
           rgba(var(--hero-overlay-color), var(--hero-overlay-3)) 100%
         ),
         var(--wallpaper) center/cover no-repeat fixed;
+      z-index:2; /* above global canvas background */
     }
+    /* hero particles ABOVE the photo but BELOW the text */
+    #hero-particles{
+      position:absolute; inset:0; z-index:1; pointer-events:none; opacity:.7;
+    }
+    .hero-inner{ position:relative; z-index:2; }
+
     .heading{ font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,52px); line-height:1.12; }
     .sub{ color:var(--muted); margin-top:8px }
 
@@ -135,7 +113,7 @@
     #submitBtn{ background:var(--gold); color:#111; border:1px solid var(--gold-strong); }
     #submitBtn[disabled]{ background:#eee; color:#999; border-color:#ddd; cursor:not-allowed; box-shadow:none; transform:none; }
 
-    section{ padding:58px 16px; background:transparent; }
+    section{ padding:58px 16px; background:transparent; position:relative; z-index:2; }
     .container{ max-width:980px; margin:0 auto; }
     .card{ background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
 
@@ -143,9 +121,9 @@
     .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
     .row{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
 
-    /* Inputs */
+    /* Inputs – fixed height so buttons align perfectly */
     .input{
-      width:100%; padding:14px 16px; border-radius:12px;
+      width:100%; height:48px; padding:0 16px; border-radius:12px;
       border:1px solid #e5e7eb; font-size:16px; background:#fff;
       transition:border-color .12s ease, box-shadow .12s ease, background .12s ease;
       outline:none;
@@ -157,9 +135,10 @@
     .tiny{ font-size:12px; color:var(--muted) }
     .total{ text-align:center; margin-top:6px; color:#374151 }
 
-    /* Confirm/Edit pill */
+    /* Confirm/Edit pill – match input height */
     .confirm-btn{
-      white-space:nowrap; border-radius:12px; padding:10px 14px;
+      height:48px; padding:0 16px;
+      white-space:nowrap; border-radius:12px;
       display:inline-flex; align-items:center; gap:8px;
       border:1px solid var(--gold-strong);
       box-shadow:var(--shadow-sm);
@@ -180,13 +159,19 @@
     }
     .muted{ color:var(--muted) }
 
+    /* Section title (same style as "RSVP") */
+    .section-title{
+      margin:0 0 8px; font-family:'Playfair Display',serif; font-size:clamp(22px,3.6vw,28px);
+      color:#1f2937;
+    }
+
     /* Separator + spacers */
     .separator{ height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(184,144,23,.35), transparent); }
     .spacer-8{ height:8px }
     .spacer-16{ height:16px }
 
     .actions{ display:flex; flex-wrap:wrap; gap:10px; }
-    .footer{ text-align:center; color:#6b7280; padding:30px 16px 70px; background:transparent; }
+    .footer{ text-align:center; color:#6b7280; padding:30px 16px 70px; background:transparent; position:relative; z-index:2; }
 
     .toast{
       position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
@@ -198,7 +183,7 @@
 </head>
 <body>
 
-  <!-- Particles -->
+  <!-- Global particles (everywhere on page) -->
   <canvas id="bg-particles" aria-hidden="true"></canvas>
 
   <!-- Top-right controls -->
@@ -207,7 +192,7 @@
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
   </div>
 
-  <!-- Volume popover -->
+  <!-- (COMMENTED OUT) Volume popover – we’ll revisit later
   <div id="volumePop" class="volume-pop" role="dialog" aria-label="Volume">
     <div class="vol-wrap">
       <div class="vol-slider-wrap">
@@ -217,9 +202,13 @@
       <button id="volMinus" class="vol-btn" type="button" aria-label="Volume down -10">−</button>
     </div>
   </div>
+  -->
 
   <header class="hero">
-    <div>
+    <!-- Extra hero particles so bubbles show over the JPG -->
+    <canvas id="hero-particles" aria-hidden="true"></canvas>
+
+    <div class="hero-inner">
       <!-- Basran ♡ Khairani -->
       <div class="heading" id="titleText">Will you attend our wedding?</div>
       <div class="sub" id="subtitleText">We'd love to celebrate with you. Please RSVP below.</div>
@@ -234,7 +223,7 @@
     <section id="rsvp">
       <div class="container">
         <div class="card">
-          <h2 style="margin:0 0 8px;font-family:'Playfair Display',serif">RSVP</h2>
+          <h2 class="section-title">RSVP</h2>
           <p class="muted" id="rsvpIntro">Please add up to four guest names and your main contact number.</p>
 
           <form id="rsvpForm" method="POST" target="hidden_iframe">
@@ -257,7 +246,7 @@
 
             <div class="submit-wrap">
               <div>
-                <label for="phone" class="tiny" id="phoneLabel">Main contact number *</label>
+                <h2 class="section-title" id="phoneHeader">Phone Number</h2>
                 <input class="input" id="phone" name="phone" autocomplete="tel" placeholder="e.g. +60 12 345 6789" required />
               </div>
 
@@ -284,7 +273,7 @@
     <section id="location">
       <div class="container">
         <div class="card">
-          <h2 style="margin:0 0 8px;font-family:'Playfair Display',serif" id="locTitle">Location & Directions</h2>
+          <h2 class="section-title" id="locTitle">Location & Directions</h2>
           <p class="muted" id="locDesc">Tap a button below to open directions.</p>
           <div class="actions" style="margin:10px 0 18px">
             <a class="btn" id="btnGoogleMaps" target="_blank" rel="noopener">Google Maps</a>
@@ -298,7 +287,7 @@
     <section id="contact">
       <div class="container">
         <div class="card">
-          <h2 style="margin:0 0 8px;font-family:'Playfair Display',serif" id="contactTitle">Contact (Bride's family)</h2>
+          <h2 class="section-title" id="contactTitle">Contact (Bride's family)</h2>
           <p class="muted" id="contactDesc">Tap a name to call directly.</p>
           <div id="contactList" class="actions" style="margin-top:6px"></div>
         </div>
@@ -340,7 +329,7 @@
         fullNameOthers: "Attend with",
         confirm: "Confirm",
         edit: "Edit",
-        phoneLabel: "Main contact number *",
+        phoneHeader: "Phone Number",
         submit: "Submit RSVP",
         total: (n)=>`Total: ${n} guest(s)`,
         needPhone: "Please add your contact number.",
@@ -363,7 +352,7 @@
         fullNameOthers: "Hadir bersama",
         confirm: "Sahkan",
         edit: "Ubah",
-        phoneLabel: "Nombor telefon utama *",
+        phoneHeader: "Nombor Telefon",
         submit: "Hantar RSVP",
         total: (n)=>`Jumlah: ${n} tetamu`,
         needPhone: "Sila isi nombor telefon.",
@@ -395,7 +384,7 @@
     const rsvpBtn = document.getElementById('rsvpBtn');
     const locationBtn = document.getElementById('locationBtn');
     const rsvpIntro = document.getElementById('rsvpIntro');
-    const phoneLabel = document.getElementById('phoneLabel');
+    const phoneHeader = document.getElementById('phoneHeader');
     const locTitle = document.getElementById('locTitle');
     const locDesc = document.getElementById('locDesc');
     const locNote = document.getElementById('locNote');
@@ -405,11 +394,12 @@
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
 
-    // Volume controls
+    /* ===== (COMMENTED OUT) Volume controls =====
     const volumePop = document.getElementById('volumePop');
     const volumeSlider = document.getElementById('volumeSlider');
     const volPlus = document.getElementById('volPlus');
     const volMinus = document.getElementById('volMinus');
+    */
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'en';
@@ -470,7 +460,6 @@
 
       updateTotals();
       maybeEnableSubmit();
-
       if(isSubmitted()) lockSubmissionUI();
     }
 
@@ -545,7 +534,7 @@
       rsvpBtn.textContent = T.rsvp;
       locationBtn.textContent = T.location;
       rsvpIntro.textContent = T.rsvpIntro;
-      phoneLabel.textContent = T.phoneLabel;
+      phoneHeader.textContent = T.phoneHeader;
       submitBtn.textContent = (LANG === 'en' ? 'Submit RSVP' : 'Hantar RSVP');
       locTitle.textContent = T.locTitle;
       locDesc.textContent = T.locDesc;
@@ -600,7 +589,7 @@
       i18n(); saveLocal(); maybeEnableSubmit();
     });
 
-    // ===== Music: audible autoplay + volume 20% =====
+    // ===== Music: audible autoplay + fixed volume 20% =====
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -618,11 +607,12 @@
     window.addEventListener('pageshow', ensurePlayback);
     window.addEventListener('load', ensurePlayback);
 
+    // Mute/unmute only (slider commented out)
     muteBtn.addEventListener('click', async (e)=>{
       e.preventDefault();
       try{ await bgm.play(); }catch(_){}
-      bgm.muted = !bgm.muted; setMutedUI();
-      toggleVolumePop(true);
+      bgm.muted = !bgm.muted;
+      setMutedUI();
     });
 
     // ===== Smooth scrolling with ease-in/out =====
@@ -639,7 +629,7 @@
     }
     handleSmoothLink(rsvpBtn, '#rsvp'); handleSmoothLink(locationBtn, '#location');
 
-    // ===== Click/error sounds (WebAudio) =====
+    // ===== Subtle click/error sounds (WebAudio) =====
     let audioCtx;
     function initAudioCtx(){ if(!audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; audioCtx = new AC(); } }
     function playTone(freq=660, ms=60, type='sine', volume=0.05){
@@ -660,44 +650,6 @@
       if(el.tagName === 'A' && el.getAttribute('href') === '#'){ e.preventDefault(); }
       playClick();
     }, true);
-
-    // ===== Volume popover behaviour (desktop + mobile) =====
-    let hidePopTimer;
-    function positionVolumePop(){
-      const r = muteBtn.getBoundingClientRect();
-      const top = r.bottom + 8;               // below the button
-      const left = r.right - 56;              // right edge align
-      volumePop.style.top = `${top}px`;
-      volumePop.style.left = `${left}px`;
-    }
-    function showVolumePop(){ positionVolumePop(); volumePop.classList.add('show'); clearTimeout(hidePopTimer); }
-    function hideVolumePopSoon(){ hidePopTimer = setTimeout(()=>volumePop.classList.remove('show'), 140); }
-    function toggleVolumePop(forceShow=false){
-      if(forceShow){ showVolumePop(); return; }
-      if(volumePop.classList.contains('show')) volumePop.classList.remove('show'); else showVolumePop();
-    }
-
-    // Hover (desktop)
-    muteBtn.addEventListener('mouseenter', showVolumePop);
-    muteBtn.addEventListener('mouseleave', hideVolumePopSoon);
-    volumePop.addEventListener('mouseenter', ()=>clearTimeout(hidePopTimer));
-    volumePop.addEventListener('mouseleave', hideVolumePopSoon);
-
-    // Click / tap (desktop & mobile)
-    muteBtn.addEventListener('touchstart', ()=>toggleVolumePop(true), {passive:true});
-    document.addEventListener('pointerdown', (e)=>{
-      if(!volumePop.classList.contains('show')) return;
-      if(e.target === muteBtn || volumePop.contains(e.target)) return;
-      volumePop.classList.remove('show');
-    });
-    window.addEventListener('scroll', ()=>{ if(volumePop.classList.contains('show')) positionVolumePop(); });
-    window.addEventListener('resize', ()=>{ if(volumePop.classList.contains('show')) positionVolumePop(); });
-
-    function applyVolumeFromSlider(){ const v = Math.max(1, Math.min(100, parseInt(volumeSlider.value || '20', 10))); bgm.volume = v / 100; }
-    volumeSlider.addEventListener('input', applyVolumeFromSlider);
-    function adjustVolume(delta){ let v = parseInt(volumeSlider.value || '20', 10); v = Math.max(1, Math.min(100, v + delta)); volumeSlider.value = String(v); applyVolumeFromSlider(); }
-    volPlus.addEventListener('click', ()=>adjustVolume(+10));
-    volMinus.addEventListener('click', ()=>adjustVolume(-10));
 
     // ===== Render (order matters) =====
     function renderContacts(){
@@ -740,9 +692,6 @@
       phoneInput.value = localStorage.getItem('rsvp_phone') || '';
       if(isSubmitted()) lockSubmissionUI();
       else maybeEnableSubmit();
-
-      // Volume UI initial
-      volumeSlider.value = String(Math.round(bgm.volume * 100) || 20);
     }
 
     renderAll();
@@ -781,7 +730,7 @@
       // posts to iframe
     });
 
-    // ===== Particle animation (gold/cream/white bubbles with glow) =====
+    // ===== Particle animation (your original function, unchanged) =====
     (function initParticles(){
       const canvas = document.getElementById('bg-particles');
       const ctx = canvas.getContext('2d');
@@ -798,11 +747,11 @@
       const count = Math.min(90, Math.max(55, Math.floor((w*h)/52000)));
 
       const palettes = [
-        { inner:'rgba(255,255,255,0.9)', outer:'rgba(255,255,255,0.0)' },             // bright white
-        { inner:'rgba(255,240,210,0.85)', outer:'rgba(255,240,210,0.0)' },             // cream
-        { inner:'rgba(240,210,120,0.85)', outer:'rgba(240,210,120,0.0)' },             // soft gold
-        { inner:'rgba(212,175,55,0.85)',  outer:'rgba(212,175,55,0.0)'  },             // classic gold
-        { inner:'rgba(184,144,23,0.85)',  outer:'rgba(184,144,23,0.0)'  }              // dark gold
+        { inner:'rgba(255,255,255,0.9)', outer:'rgba(255,255,255,0.0)' },
+        { inner:'rgba(255,240,210,0.85)', outer:'rgba(255,240,210,0.0)' },
+        { inner:'rgba(240,210,120,0.85)', outer:'rgba(240,210,120,0.0)' },
+        { inner:'rgba(212,175,55,0.85)',  outer:'rgba(212,175,55,0.0)'  },
+        { inner:'rgba(184,144,23,0.85)',  outer:'rgba(184,144,23,0.0)'  }
       ];
 
       for(let i=0;i<count;i++){
@@ -810,11 +759,11 @@
         particles.push({
           x: Math.random()*w,
           y: Math.random()*h,
-          r: 1 + Math.random()*4 + (Math.random()<0.12?2:0), // a few bigger bubbles
-          s: 12 + Math.random()*34,                           // speed
-          drift: (Math.random()*0.8 - 0.4),                   // horizontal drift
+          r: 1 + Math.random()*4 + (Math.random()<0.12?2:0),
+          s: 12 + Math.random()*34,
+          drift: (Math.random()*0.8 - 0.4),
           inner: p.inner, outer: p.outer,
-          pulse: 0.85 + Math.random()*0.3,                    // tiny size pulse
+          pulse: 0.85 + Math.random()*0.3,
         });
       }
 
@@ -849,6 +798,50 @@
         running = !document.hidden;
         if(running){ last=0; requestAnimationFrame(step); }
       });
+    })();
+
+    // ===== Extra hero overlay particles (small set; ensures visibility over JPG) =====
+    (function initHeroParticles(){
+      const canvas = document.getElementById('hero-particles');
+      const ctx = canvas.getContext('2d');
+      if(!canvas || !ctx) return;
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(prefersReduced) return;
+
+      function size(){ canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
+      size(); addEventListener('resize', size);
+
+      let w=canvas.width, h=canvas.height, bubbles=[], last=0, running=true;
+      const palettes = [
+        { inner:'rgba(255,255,255,0.95)', outer:'rgba(255,255,255,0.0)' },
+        { inner:'rgba(255,247,236,0.95)', outer:'rgba(255,247,236,0.0)' },
+        { inner:'rgba(240,210,120,0.95)', outer:'rgba(240,210,120,0.0)' }
+      ];
+      const N = 36;
+      function reset(){ w=canvas.width; h=canvas.height; }
+      for(let i=0;i<N;i++){
+        const p = palettes[(Math.random()*palettes.length)|0];
+        bubbles.push({x:Math.random()*w,y:Math.random()*h,r:2+Math.random()*5,s:15+Math.random()*30,drift:(Math.random()*0.8-0.4),inner:p.inner,outer:p.outer,pulse:0.9+Math.random()*0.25});
+      }
+
+      function frame(ts){
+        if(!last) last=ts;
+        const dt=Math.min(0.033,(ts-last)/1000); last=ts;
+        reset();
+        ctx.clearRect(0,0,w,h);
+        ctx.globalCompositeOperation='lighter';
+        for(const b of bubbles){
+          b.y -= b.s*dt; b.x += b.drift*dt*60;
+          if(b.y<-12){ b.y=h+12; b.x=Math.random()*w; }
+          const rr=b.r*(b.pulse + Math.sin((ts/700)+(b.x+b.y))*0.04);
+          const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,rr*2.2);
+          g.addColorStop(0,b.inner); g.addColorStop(0.6,b.inner); g.addColorStop(1,b.outer);
+          ctx.fillStyle=g; ctx.beginPath(); ctx.arc(b.x,b.y,rr,0,Math.PI*2); ctx.fill();
+        }
+        if(running) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+      document.addEventListener('visibilitychange',()=>{ running=!document.hidden; if(running){ last=0; requestAnimationFrame(frame);} });
     })();
   </script>
 </body>
