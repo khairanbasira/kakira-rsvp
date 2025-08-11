@@ -16,72 +16,86 @@
       --bg:#0e0e0e;
       --text:#1a1a1a;
       --muted:#6b7280;
-      --radius:18px;
-      --shadow:0 10px 30px rgba(0,0,0,.15);
+      --radius:14px;
+      --shadow:0 10px 30px rgba(0,0,0,.12);
+      --shadow-sm:0 6px 16px rgba(0,0,0,.10);
       --wallpaper:url('wallpaper.jpg'); /* wallpaper in same folder as this HTML */
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{ margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--text); background:var(--bg) fixed; }
 
-    /* Top-left minimalist controls */
-    .top-left-controls{
+    /* Top-right minimalist controls */
+    .top-controls{
       position:fixed;
       top:15px;
-      left:15px;
+      right:15px;
       display:flex;
       gap:10px;
       z-index:9999;
     }
-    .top-left-controls button{
-      border:none;
-      background:none;
-      color:var(--gold-strong);
-      font-size:16px;
+    .ghost-btn{
+      border:1px solid rgba(0,0,0,.08);
+      background:#fff;
+      color:#6b4b00;
+      font-size:14px;
       font-weight:600;
       cursor:pointer;
-      padding:5px;
-      transition:color .2s ease;
+      padding:8px 12px;
+      border-radius:999px;
+      box-shadow:var(--shadow-sm);
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
     }
-    .top-left-controls button:hover{ color:#b89c37; }
+    .ghost-btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
+    .ghost-btn:active{ transform:translateY(0); }
 
     .hero{
       position:relative; min-height:72vh; display:grid; place-items:center; text-align:center; color:#222;
       background:
-        linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.88)),
+        linear-gradient(180deg,rgba(255,255,255,.94),rgba(255,255,255,.88)),
         var(--wallpaper) center/cover no-repeat fixed;
     }
 
     .heading{font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,52px); line-height:1.12;}
     .sub{color:var(--muted); margin-top:8px}
 
+    /* Flat buttons with subtle shadow */
     .cta-row{ margin-top:26px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
-    .btn{appearance:none; border:0; cursor:pointer; padding:14px 22px; border-radius:var(--radius);
-         background:linear-gradient(135deg,var(--gold),#ffe9a5); color:#533; font-weight:600; letter-spacing:.3px; box-shadow:var(--shadow);
-         transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; text-decoration:none; display:inline-block;}
-    .btn:hover{ transform: translateY(-1px); filter:saturate(1.05) }
-    .btn:active{ transform: translateY(0) }
-    .btn-outline{ background:var(--white); border:1px solid var(--gold-strong); color:#6b4b00 }
+    .btn{
+      appearance:none; border:1px solid rgba(0,0,0,.08); cursor:pointer;
+      padding:14px 22px; border-radius:var(--radius);
+      background:#fff; color:#6b4b00; font-weight:600; letter-spacing:.3px;
+      box-shadow:var(--shadow-sm);
+      text-decoration:none; display:inline-block;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+    .btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
+    .btn:active{ transform:translateY(0); }
+    .btn-outline{ background:#fff; border:1px solid var(--gold-strong); color:#6b4b00 }
 
     section{ padding:58px 16px; }
     .container{ max-width:980px; margin:0 auto; }
-    .card{ background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
+    .card{ background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
 
     .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
     @media(min-width:720px){ .grid{ grid-template-columns: repeat(2,1fr) } }
 
     .row{ display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:center; }
-    .input{ width:100%; padding:14px 16px; border-radius:12px; border:1px solid #e5e7eb; font-size:16px; }
+    .input{ width:100%; padding:14px 16px; border-radius:12px; border:1px solid #e5e7eb; font-size:16px; background:#fff; }
     .input[readonly]{ background:#fafafa }
 
     .tiny{ font-size:12px; color:var(--muted) }
     .total{ text-align:center; margin-top:6px; color:#374151 }
 
-    .confirm-btn{ white-space:nowrap; border-radius:12px; padding:10px 14px; display:inline-flex; align-items:center; gap:8px; border:1px solid #fdba74; background:#fff7ed; color:#9a3412; }
-    .confirm-btn[data-state="confirmed"]{ background:#ecfdf5; color:#065f46; border:1px solid #10b981 }
+    /* Flat confirm/edit pill */
+    .confirm-btn{
+      white-space:nowrap; border-radius:12px; padding:10px 14px; display:inline-flex; align-items:center; gap:8px;
+      border:1px solid #fdba74; background:#fff; color:#9a3412; box-shadow:var(--shadow-sm);
+    }
+    .confirm-btn[data-state="confirmed"]{ background:#fff; color:#065f46; border:1px solid #10b981; }
 
     .submit-wrap{ display:flex; flex-direction:column; gap:12px; }
-    .notice{ background:#fffbeb; border:1px solid #fde68a; padding:12px 14px; border-radius:12px; color:#92400e; }
+    .notice{ background:#fff; border:1px solid #fde68a; padding:12px 14px; border-radius:12px; color:#92400e; box-shadow:var(--shadow-sm); }
     .muted{ color:var(--muted) }
 
     .actions{ display:flex; flex-wrap:wrap; gap:10px; }
@@ -92,10 +106,10 @@
 </head>
 <body>
 
-  <!-- Top-left controls -->
-  <div class="top-left-controls">
-    <button id="langToggle" aria-label="Toggle language">MS</button>
-    <button id="muteBtn" aria-label="Toggle music">🔊</button>
+  <!-- Top-right controls -->
+  <div class="top-controls">
+    <button id="langToggle" class="ghost-btn" aria-label="Toggle language">English / Malay</button>
+    <button id="muteBtn" class="ghost-btn" aria-label="Toggle music">🔊</button>
   </div>
 
   <header class="hero">
@@ -175,7 +189,7 @@
   <div id="toast" class="toast">Saved!</div>
 
   <!-- Background music -->
-  <audio id="bgm" src="maulaya.mp3" loop preload="auto" autoplay muted playsinline></audio>
+  <audio id="bgm" src="maulaya.mp3" loop preload="auto" playsinline></audio>
 
   <script>
     // ====== CONFIG ======
@@ -213,8 +227,6 @@
         locNote: "Tip: You can share the link with friends who are carpooling.",
         contactTitle: "Contact (Bride's family)",
         contactDesc: "Tap a name to call directly.",
-        english: "English",
-        malay: "Bahasa Melayu"
       },
       ms: {
         title: "Adakah anda akan hadir ke majlis kami?",
@@ -237,8 +249,6 @@
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
         contactTitle: "Hubungi (keluarga pengantin perempuan)",
         contactDesc: "Tekan nama untuk terus membuat panggilan.",
-        english: "English",
-        malay: "Bahasa Melayu"
       }
     };
 
@@ -286,13 +296,13 @@
       locationBtn.textContent = T.location;
       rsvpIntro.textContent = T.rsvpIntro;
       phoneLabel.textContent = T.phoneLabel;
-      submitBtn.textContent = T.submit;
+      submitBtn.textContent = (LANG==='en' ? 'Submit RSVP' : 'Hantar RSVP');
       locTitle.textContent = T.locTitle;
       locDesc.textContent = T.locDesc;
       locNote.textContent = T.locNote;
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
-      langToggle.textContent = (LANG==='en'?'MS':'EN');
+      // Language button stays "English / Malay" for clarity
       updateTotals();
       Array.from(document.querySelectorAll('[data-i="fullname"]')).forEach(el=>{
         el.placeholder = T.fullName;
@@ -312,7 +322,9 @@
 
     function updateTotals(){
       const names = getGuestNames();
-      totalGuestsEl.textContent = I18N[LANG].total(names.filter(Boolean).length);
+      totalGuestsEl.textContent = (LANG==='en')
+        ? `Total: ${names.filter(Boolean).length} guest(s)`
+        : `Jumlah: ${names.filter(Boolean).length} tetamu`;
     }
 
     function getGuestNames(){
@@ -342,7 +354,7 @@
         row.className = 'row';
         row.innerHTML = `
           <input class="input guest-name" data-i="fullname" placeholder="Full name" aria-label="Full name" />
-          <button class="confirm-btn" type="button" data-i="confirm" data-state="edit">${I18N[LANG].confirm}</button>
+          <button class="confirm-btn" type="button" data-i="confirm" data-state="edit">${LANG==='en'?'Confirm':'Sahkan'}</button>
         `;
         const input = row.querySelector('input');
         const btn   = row.querySelector('button');
@@ -352,11 +364,11 @@
             if(!input.value.trim()){ input.focus(); return; }
             input.readOnly = true;
             btn.setAttribute('data-state','confirmed');
-            btn.textContent = '✓ ' + I18N[LANG].confirm;
+            btn.textContent = '✓ ' + (LANG==='en'?'Confirm':'Sahkan');
           }else{
             input.readOnly = false;
             btn.setAttribute('data-state','edit');
-            btn.textContent = I18N[LANG].edit;
+            btn.textContent = (LANG==='en'?'Edit':'Ubah');
           }
           saveLocal();
         });
@@ -370,9 +382,10 @@
       const hasPhone = phoneInput.value.trim().length>0;
       submitBtn.disabled = !(hasName && hasPhone);
       validationMsg.style.display = submitBtn.disabled ? 'block':'none';
-      if(!hasPhone) validationMsg.textContent = I18N[LANG].needPhone;
-      else if(!hasName) validationMsg.textContent = I18N[LANG].needOneName;
-      else validationMsg.style.display='none';
+      validationMsg.textContent = !hasPhone
+        ? (LANG==='en'?'Please add your contact number.':'Sila isi nombor telefon.')
+        : (!hasName ? (LANG==='en'?'Please add at least one guest name.':'Sila isi sekurang-kurangnya satu nama.') : '');
+      if(!submitBtn.disabled && validationMsg.textContent==='') validationMsg.style.display='none';
     }
 
     function renderContacts(){
@@ -399,28 +412,29 @@
       localStorage.setItem('rsvp_lang', LANG);
       i18n();
       saveLocal();
-      startBgm(); // kick audio on interaction
     });
 
-    // ===== Music autoplay/unmute + default volume =====
-    function startBgm() {
-      if (bgm.muted) bgm.muted = false;
-      if (bgm.paused) bgm.play().catch(()=>{});
-    }
-    // Set default volume to 40%
+    // ===== Music: autoplay on load (volume 40%); fallback to muted if blocked =====
     bgm.volume = 0.4;
 
-    window.addEventListener('load', () => {
-      // start silently to satisfy autoplay policies
-      bgm.muted = true;
-      bgm.play().catch(()=>{});
-    });
-    ['click','touchstart','keydown'].forEach(evt =>
-      window.addEventListener(evt, startBgm, { once: true })
-    );
+    async function tryAutoplayUnmuted(){
+      bgm.muted = false;
+      try{
+        await bgm.play();
+        muteBtn.textContent = '🔊';
+      }catch(err){
+        // Browser blocked unmuted autoplay -> play muted and hint user
+        bgm.muted = true;
+        try{ await bgm.play(); }catch(_){}
+        muteBtn.textContent = '🔇';
+        showToast(LANG==='en' ? 'Tap 🔊 to enable sound' : 'Tekan 🔊 untuk bunyi');
+      }
+    }
+    window.addEventListener('load', tryAutoplayUnmuted);
+
     muteBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      if (bgm.paused) bgm.play().catch(()=>{});
+      if (bgm.paused) { bgm.play().catch(()=>{}); }
       bgm.muted = !bgm.muted;
       muteBtn.textContent = bgm.muted ? '🔇' : '🔊';
     });
@@ -432,10 +446,6 @@
     renderMaps();
     loadLocal();
     maybeEnableSubmit();
-
-    // start bgm on obvious taps too
-    rsvpBtn.addEventListener('click', startBgm);
-    locationBtn.addEventListener('click', startBgm);
 
     // ===== Submit to Google Apps Script (hidden iframe) =====
     const form = document.getElementById('rsvpForm');
@@ -454,7 +464,7 @@
     }
 
     hiddenIframe.addEventListener('load', ()=>{
-      showToast(I18N[LANG].thanks);
+      showToast(LANG==='en' ? "Thank you! Your RSVP has been received." : "Terima kasih! RSVP anda telah diterima.");
       document.querySelectorAll('.guest-name').forEach(inp=>{inp.value=''; inp.readOnly=false;});
       saveLocal(); updateTotals(); maybeEnableSubmit();
     });
