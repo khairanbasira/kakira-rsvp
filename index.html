@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kak Ira Wedding RSVP</title>
+  <meta name="description" content="RSVP for Kak Ira's wedding — elegant, mobile‑first, bilingual (EN/MS)." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      /* ===== THEME: edit these ===== */
+      --gold:#d4af37;              /* Primary gold */
+      --gold-strong:#c19b2e;       /* Darker gold for hover/focus */
+      --white:#ffffff;
+      --bg:#0e0e0e;                /* page bg behind wallpaper */
+      --text:#1a1a1a;
+      --muted:#6b7280;
+      --radius:18px;
+      --shadow:0 10px 30px rgba(0,0,0,.15);
+      --wallpaper:url('assets/wallpaper.jpg'); /* CHANGE wallpaper image path */
+      --max-guests:4; /* edit JS too if you want a different number */
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
+      background: var(--bg) fixed;
+    }
+
+    /* Soft gold/white hero with wallpaper overlay */
+    .hero{
+      position:relative; min-height:72vh; display:grid; place-items:center; text-align:center; color:#222;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.88)),
+        var(--wallpaper) center/cover no-repeat fixed;
+    }
+    .brand{ position:absolute; top:14px; left:14px; display:flex; gap:8px; align-items:center; }
+    .chip{display:inline-flex; align-items:center; gap:.5rem; border:1px solid rgba(0,0,0,.06); padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.8); backdrop-filter: blur(6px); box-shadow:var(--shadow)}
+    .chip button{border:0;background:transparent;cursor:pointer;font:inherit}
+    .chip .sep{width:1px;height:20px;background:rgba(0,0,0,.08)}
+
+    .heading{font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,52px); line-height:1.12;}
+    .sub{color:var(--muted); margin-top:8px}
+
+    .cta-row{ margin-top:26px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .btn{appearance:none; border:0; cursor:pointer; padding:14px 22px; border-radius:var(--radius);
+         background:linear-gradient(135deg,var(--gold),#ffe9a5); color:#533; font-weight:600; letter-spacing:.3px; box-shadow:var(--shadow);
+         transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; }
+    .btn:hover{ transform: translateY(-1px); filter:saturate(1.05) }
+    .btn:active{ transform: translateY(0) }
+    .btn-outline{ background:var(--white); border:1px solid var(--gold-strong); color:#6b4b00 }
+
+    /* Sections */
+    section{ padding:58px 16px; }
+    .container{ max-width:980px; margin:0 auto; }
+
+    /* Card */
+    .card{ background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
+
+    /* RSVP form */
+    .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
+    @media(min-width:720px){ .grid{ grid-template-columns: repeat(2,1fr) } }
+
+    .row{ display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:center; }
+    .input{ width:100%; padding:14px 16px; border-radius:12px; border:1px solid #e5e7eb; font-size:16px; }
+    .input[readonly]{ background:#fafafa }
+
+    .tiny{ font-size:12px; color:var(--muted) }
+    .total{ text-align:center; margin-top:6px; color:#374151 }
+
+    .pill{ padding:8px 12px; border-radius:999px; background:#f3f4f6; display:inline-block; }
+
+    .confirm-btn{ white-space:nowrap; border-radius:12px; padding:10px 14px; display:inline-flex; align-items:center; gap:8px; }
+    .confirm-btn[data-state="confirmed"]{ background: #ecfdf5; color:#065f46; border:1px solid #10b981 }
+    .confirm-btn[data-state="edit"]{ background: #fff7ed; color:#9a3412; border:1px solid #fdba74 }
+
+    .submit-wrap{ display:flex; flex-direction:column; gap:12px; }
+
+    .notice{ background: #fffbeb; border: 1px solid #fde68a; padding:12px 14px; border-radius:12px; color:#92400e; }
+
+    .muted{ color:var(--muted) }
+
+    /* Map & contacts */
+    .actions{ display:flex; flex-wrap:wrap; gap:10px; }
+
+    .footer{ text-align:center; color:#6b7280; padding:30px 16px 70px; }
+
+    /* Toast */
+    .toast{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:#111; color:#fff; padding:12px 16px; border-radius:12px; opacity:0; pointer-events:none; transition:.25s ease; box-shadow:0 8px 24px rgba(0,0,0,.3) }
+    .toast.show{ opacity:1 }
+  </style>
+</head>
+<body>
+  <!--
+    HOW TO CUSTOMIZE:
+    1) Colors & wallpaper: edit CSS variables in :root (top of file). Replace assets/wallpaper.jpg.
+    2) Background music: replace assets/music.mp3 below. Use the MUTE button to toggle.
+    3) Max guests: change const MAX_GUESTS in JS. (Default 4.)
+    4) Maps: set GMAPS_COORDS and WAZE_COORDS in JS (lat,lng). Buttons open directions.
+    5) Contacts: edit CONTACTS list in JS (name + phone). They become click-to-call links.
+    6) Google Sheet: paste your Apps Script Web App URL into APPS_SCRIPT_URL in JS.
+  -->
+
+  <!-- Floating brand utility — language + mute -->
+  <div class="brand">
+    <div class="chip" id="langChip">
+      <span id="langLabel">English</span>
+      <div class="sep"></div>
+      <button id="langToggle" aria-label="Toggle language">MS</button>
+    </div>
+    <div class="chip" id="muteChip">
+      <button id="muteBtn" aria-label="Toggle music">🔊</button>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div>
+      <div class="heading" id="titleText">Will you attend our wedding?</div>
+      <div class="sub" id="subtitleText">We'd love to celebrate with you. Please RSVP below.</div>
+      <div class="cta-row">
+        <a class="btn" href="#rsvp" id="rsvpBtn">RSVP</a>
+        <a class="btn btn-outline" href="#location" id="locationBtn">Location</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="rsvp">
+      <div class="container">
+        <div class="card">
+          <h2 style="margin:0 0 8px;font-family:'Playfair Display',serif">RSVP</h2>
+          <p class="muted" id="rsvpIntro">Please add up to four guest names and your main contact number.</p>
+
+          <form id="rsvpForm" method="POST" target="hidden_iframe">
+            <!-- These hidden fields are what we actually POST to Google Apps Script -->
+            <input type="hidden" name="guest1" id="post_guest1">
+            <input type="hidden" name="guest2" id="post_guest2">
+            <input type="hidden" name="guest3" id="post_guest3">
+            <input type="hidden" name="guest4" id="post_guest4">
+            <input type="hidden" name="lang" id="post_lang" value="en">
+            <input type="hidden" name="guestsCount" id="post_count" value="0">
+            <input type="hidden" name="ua" id="post_ua">
+            <input type="hidden" name="note" id="post_note">
+
+            <div id="guestRows" class="grid" aria-live="polite"></div>
+
+            <div class="submit-wrap">
+              <div>
+                <label for="phone" class="tiny" id="phoneLabel">Main contact number *</label>
+                <input class="input" id="phone" name="phone" autocomplete="tel" placeholder="e.g. +60 12 345 6789" required />
+              </div>
+              <button class="btn" id="submitBtn" type="submit" disabled>Submit RSVP</button>
+              <div class="tiny total" id="totalGuests">Total: 0 guest(s)</div>
+              <div class="notice tiny" id="validationMsg" style="display:none"></div>
+            </div>
+          </form>
+          <iframe name="hidden_iframe" id="hidden_iframe" style="display:none"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section id="location">
+      <div class="container">
+        <div class="card">
+          <h2 style="margin:0 0 8px;font-family:'Playfair Display',serif" id="locTitle">Location & Directions</h2>
+          <p class="muted" id="locDesc">Tap a button below to open directions.</p>
+          <div class="actions" style="margin:10px 0 18px">
+            <a class="btn" id="btnGoogleMaps" target="_blank" rel="noopener">Google Maps</a>
+            <a class="btn btn-outline" id="btnWaze" target="_blank" rel="noopener">Waze</a>
+          </div>
+          <div class="muted tiny" id="locNote">Tip: You can share the link with friends who are carpooling.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="card">
+          <h2 style="margin:0 0 8px;font-family:'Playfair Display',serif" id="contactTitle">Contact (Bride's family)</h2>
+          <p class="muted" id="contactDesc">Tap a name to call directly.</p>
+          <div id="contactList" class="actions" style="margin-top:6px"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="tiny">Made with ♥ for Kak Ira — gold & white theme</div>
+  </footer>
+
+  <div id="toast" class="toast">Saved!</div>
+
+  <!-- Background music (autoplay will start after first user interaction) -->
+  <audio id="bgm" src="assets/music.mp3" loop preload="auto"></audio>
+
+  <script>
+    // ====== CONFIG (edit these) ======
+    const MAX_GUESTS = 4; // change to 7 etc.
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbWUzpJp8IH7eIJ4PorTtVFEJK9npyGY8HR6o0HfaNj9_Adin081iRrvof4V_LVMs/exec"; // <-- IMPORTANT
+    const GMAPS_COORDS = { lat: 5.975194, lng: 116.0688396 }; // Promanade Hotel KK lat,lang
+    const WAZE_COORDS  = { lat: 5.975194, lng: 116.0688396 };
+    const VENUE_LABEL  = encodeURIComponent("Kak Ira Wedding Venue");
+    const CONTACTS = [
+      { name: "Muhammad Basri", phone: "+60 12 345 6789" },
+      { name: "Samsah Suda", phone: "+60 13 222 1111" },
+      { name: "Anyone", phone: "+60 19 121 2121" },
+    ];
+
+    // ====== i18n strings ======
+    const I18N = {
+      en: {
+        title: "Will you attend our wedding?",
+        subtitle: "We'd love to celebrate with you. Please RSVP below.",
+        rsvp: "RSVP",
+        location: "Location",
+        rsvpIntro: "Please add up to four guest names and your main contact number.",
+        fullName: "Full name",
+        confirm: "Confirm",
+        edit: "Edit",
+        phoneLabel: "Main contact number *",
+        submit: "Submit RSVP",
+        total: n => `Total: ${n} guest(s)`,
+        needPhone: "Please add your contact number.",
+        needOneName: "Please add at least one guest name.",
+        saved: "Saved!",
+        thanks: "Thank you! Your RSVP has been received.",
+        locTitle: "Location & Directions",
+        locDesc: "Tap a button below to open directions.",
+        locNote: "Tip: You can share the link with friends who are carpooling.",
+        contactTitle: "Contact (Bride's family)",
+        contactDesc: "Tap a name to call directly.",
+        english: "English",
+        malay: "Bahasa Melayu"
+      },
+      ms: {
+        title: "Adakah anda akan hadir ke majlis kami?",
+        subtitle: "Jemput RSVP di bawah ya.",
+        rsvp: "RSVP",
+        location: "Lokasi",
+        rsvpIntro: "Sila isi sehingga empat nama tetamu dan nombor telefon utama.",
+        fullName: "Nama penuh",
+        confirm: "Sahkan",
+        edit: "Ubah",
+        phoneLabel: "Nombor telefon utama *",
+        submit: "Hantar RSVP",
+        total: n => `Jumlah: ${n} tetamu`,
+        needPhone: "Sila isi nombor telefon.",
+        needOneName: "Sila isi sekurang-kurangnya satu nama.",
+        saved: "Disimpan!",
+        thanks: "Terima kasih! RSVP anda telah diterima.",
+        locTitle: "Lokasi & Arah",
+        locDesc: "Tekan butang untuk buka arah ke lokasi.",
+        locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
+        contactTitle: "Hubungi (keluarga pengantin perempuan)",
+        contactDesc: "Tekan nama untuk terus membuat panggilan.",
+        english: "English",
+        malay: "Bahasa Melayu"
+      }
+    };
+
+    let LANG = localStorage.getItem('rsvp_lang') || 'en';
+
+    // ====== DOM refs ======
+    const guestRowsEl = document.getElementById('guestRows');
+    const totalGuestsEl = document.getElementById('totalGuests');
+    const validationMsg = document.getElementById('validationMsg');
+    const submitBtn = document.getElementById('submitBtn');
+    const phoneInput = document.getElementById('phone');
+    const toast = document.getElementById('toast');
+    const bgm = document.getElementById('bgm');
+
+    // Top texts
+    const titleText = document.getElementById('titleText');
+    const subtitleText = document.getElementById('subtitleText');
+    const rsvpBtn = document.getElementById('rsvpBtn');
+    const locationBtn = document.getElementById('locationBtn');
+    const rsvpIntro = document.getElementById('rsvpIntro');
+    const phoneLabel = document.getElementById('phoneLabel');
+    const locTitle = document.getElementById('locTitle');
+    const locDesc = document.getElementById('locDesc');
+    const locNote = document.getElementById('locNote');
+    const contactTitle = document.getElementById('contactTitle');
+    const contactDesc = document.getElementById('contactDesc');
+    const langChip = document.getElementById('langChip');
+    const langLabel = document.getElementById('langLabel');
+    const langToggle = document.getElementById('langToggle');
+
+    // Map buttons
+    const btnGmaps = document.getElementById('btnGoogleMaps');
+    const btnWaze  = document.getElementById('btnWaze');
+
+    // Contacts
+    const contactList = document.getElementById('contactList');
+
+    // ===== Render helpers =====
+    function i18n(){
+      const T = I18N[LANG];
+      titleText.textContent = T.title;
+      subtitleText.textContent = T.subtitle;
+      rsvpBtn.textContent = T.rsvp;
+      locationBtn.textContent = T.location;
+      rsvpIntro.textContent = T.rsvpIntro;
+      phoneLabel.textContent = T.phoneLabel;
+      submitBtn.textContent = T.submit;
+      locTitle.textContent = T.locTitle;
+      locDesc.textContent = T.locDesc;
+      locNote.textContent = T.locNote;
+      contactTitle.textContent = T.contactTitle;
+      contactDesc.textContent = T.contactDesc;
+      langLabel.textContent = (LANG==='en'?T.english:T.malay);
+      langToggle.textContent = (LANG==='en'?'MS':'EN');
+      updateTotals();
+      Array.from(document.querySelectorAll('[data-i="fullname"]')).forEach(el=>{
+        el.placeholder = T.fullName;
+        el.setAttribute('aria-label', T.fullName);
+      });
+      Array.from(document.querySelectorAll('[data-i="confirm"]')).forEach(btn=>{
+        btn.textContent = btn.dataset.state==='confirmed' ? '✓ ' + T.confirm : T.confirm;
+      });
+      document.getElementById('post_lang').value = LANG;
+    }
+
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'), 1600);
+    }
+
+    function updateTotals(){
+      const names = getGuestNames();
+      totalGuestsEl.textContent = I18N[LANG].total(names.filter(Boolean).length);
+    }
+
+    function getGuestNames(){
+      return Array.from(document.querySelectorAll('.guest-name')).map(i=>i.value.trim());
+    }
+
+    function saveLocal(){
+      localStorage.setItem('rsvp_phone', phoneInput.value.trim());
+      localStorage.setItem('rsvp_names', JSON.stringify(getGuestNames()));
+      localStorage.setItem('rsvp_lang', LANG);
+    }
+
+    function loadLocal(){
+      const phone = localStorage.getItem('rsvp_phone') || '';
+      const names = JSON.parse(localStorage.getItem('rsvp_names')||'[]');
+      phoneInput.value = phone;
+      document.querySelectorAll('.guest-name').forEach((inp,idx)=>{
+        if(names[idx]) inp.value = names[idx];
+      });
+      updateTotals();
+    }
+
+    function renderGuestRows(){
+      guestRowsEl.innerHTML = '';
+      for(let i=0;i<MAX_GUESTS;i++){
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.innerHTML = `
+          <input class="input guest-name" data-i="fullname" placeholder="Full name" aria-label="Full name" />
+          <button class="confirm-btn" type="button" data-i="confirm" data-state="edit">${I18N[LANG].confirm}</button>
+        `;
+        const input = row.querySelector('input');
+        const btn   = row.querySelector('button');
+        btn.addEventListener('click',()=>{
+          const state = btn.getAttribute('data-state');
+          if(state==='edit'){
+            if(!input.value.trim()){
+              input.focus(); return;
+            }
+            input.readOnly = true; // still submitted with form
+            btn.setAttribute('data-state','confirmed');
+            btn.textContent = '✓ ' + I18N[LANG].confirm;
+          }else{
+            input.readOnly = false;
+            btn.setAttribute('data-state','edit');
+            btn.textContent = I18N[LANG].edit;
+          }
+          saveLocal();
+        });
+        input.addEventListener('input',()=>{ updateTotals(); saveLocal(); maybeEnableSubmit(); });
+        guestRowsEl.appendChild(row);
+      }
+    }
+
+    function maybeEnableSubmit(){
+      const hasName = getGuestNames().some(n=>n.length>0);
+      const hasPhone = phoneInput.value.trim().length>0;
+      submitBtn.disabled = !(hasName && hasPhone);
+      validationMsg.style.display = submitBtn.disabled ? 'block':'none';
+      if(!hasPhone) validationMsg.textContent = I18N[LANG].needPhone; else if(!hasName) validationMsg.textContent = I18N[LANG].needOneName; else validationMsg.style.display='none';
+    }
+
+    // Build contact buttons
+    function renderContacts(){
+      contactList.innerHTML = '';
+      CONTACTS.forEach(c=>{
+        const a = document.createElement('a');
+        a.className = 'btn btn-outline';
+        a.href = `tel:${c.phone.replace(/\s+/g,'')}`;
+        a.textContent = `${c.name} (${c.phone})`;
+        contactList.appendChild(a);
+      })
+    }
+
+    // Build map links
+    function renderMaps(){
+      const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&destination_place_id=&travelmode=driving&destination=${VENUE_LABEL}`;
+      const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
+      btnGmaps.href = gq; btnWaze.href = wz;
+    }
+
+    // Language toggle
+    langToggle.addEventListener('click',()=>{
+      LANG = (LANG==='en') ? 'ms':'en';
+      localStorage.setItem('rsvp_lang', LANG);
+      i18n(); saveLocal();
+    });
+
+    // Music toggle
+    const muteBtn = document.getElementById('muteBtn');
+    let userInteracted = false;
+    function startBgm(){ if(!userInteracted){ userInteracted = true; bgm.play().catch(()=>{}); } }
+    ['click','touchstart','keydown'].forEach(evt=>window.addEventListener(evt,startBgm,{once:true}));
+    muteBtn.addEventListener('click',()=>{ bgm.muted = !bgm.muted; muteBtn.textContent = bgm.muted? '🔇':'🔊'; });
+
+    // Render guests + contacts + maps + i18n
+    renderGuestRows();
+    renderContacts();
+    renderMaps();
+    i18n();
+    loadLocal();
+    maybeEnableSubmit();
+
+    phoneInput.addEventListener('input',()=>{ saveLocal(); maybeEnableSubmit(); });
+
+    // ====== FORM SUBMIT to Google Apps Script via hidden iframe (avoids CORS) ======
+    const form = document.getElementById('rsvpForm');
+    const hiddenIframe = document.getElementById('hidden_iframe');
+
+    // Prepare the form action (Apps Script URL) and keep hidden fields synced
+    form.action = APPS_SCRIPT_URL;
+
+    function syncHiddenFields(){
+      const names = getGuestNames();
+      document.getElementById('post_guest1').value = names[0]||'';
+      document.getElementById('post_guest2').value = names[1]||'';
+      document.getElementById('post_guest3').value = names[2]||'';
+      document.getElementById('post_guest4').value = names[3]||'';
+      document.getElementById('post_count').value = names.filter(Boolean).length;
+      document.getElementById('post_ua').value = navigator.userAgent;
+      document.getElementById('post_lang').value = LANG;
+    }
+
+    hiddenIframe.addEventListener('load', ()=>{
+      // When Apps Script responds, the iframe loads. Treat that as success.
+      showToast(I18N[LANG].thanks);
+      // Optional: clear form but keep phone for convenience
+      // If you want to completely clear: set phoneInput.value='';
+      // names to blank:
+      document.querySelectorAll('.guest-name').forEach(inp=>{inp.value=''; inp.readOnly=false;});
+      saveLocal(); updateTotals(); maybeEnableSubmit();
+    });
+
+    form.addEventListener('submit', (e)=>{
+      syncHiddenFields();
+      saveLocal();
+      // form will POST to iframe automatically
+    });
+  </script>
+</body>
+</html>
