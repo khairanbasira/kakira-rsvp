@@ -194,7 +194,7 @@
   <div id="toast" class="toast">Saved!</div>
 
   <!-- Background music (autoplay will start after first user interaction) -->
-  <audio id="bgm" src="assets/music.mp3" loop preload="auto"></audio>
+  <audio id="bgm" src="assets/music.mp3" loop preload="auto" playsinline></audio>
 
   <script>
     // ====== CONFIG (edit these) ======
@@ -413,19 +413,39 @@
       btnGmaps.href = gq; btnWaze.href = wz;
     }
 
-    // Language toggle
-    langToggle.addEventListener('click',()=>{
-      LANG = (LANG==='en') ? 'ms':'en';
-      localStorage.setItem('rsvp_lang', LANG);
-      i18n(); saveLocal();
-    });
+
+	// Language toggle
+	langToggle.addEventListener('click', (e) => {
+	e.preventDefault();
+	LANG = (LANG === 'en') ? 'ms' : 'en';
+	localStorage.setItem('rsvp_lang', LANG);
+	i18n();
+	saveLocal();
+	startBgm();
+	});
 
     // Music toggle
-    const muteBtn = document.getElementById('muteBtn');
-    let userInteracted = false;
-    function startBgm(){ if(!userInteracted){ userInteracted = true; bgm.play().catch(()=>{}); } }
-    ['click','touchstart','keydown'].forEach(evt=>window.addEventListener(evt,startBgm,{once:true}));
-    muteBtn.addEventListener('click',()=>{ bgm.muted = !bgm.muted; muteBtn.textContent = bgm.muted? '🔇':'🔊'; });
+	const muteBtn = document.getElementById('muteBtn');
+	let userInteracted = false;
+	
+	function startBgm() {
+	userInteracted = true;
+	if (bgm.paused) {
+		bgm.play().catch(() => { /* ignore autoplay errors */ });
+	}
+	}
+	
+	// Any user gesture should try to start the music
+	['click', 'touchstart', 'keydown'].forEach(evt =>
+	window.addEventListener(evt, startBgm, { once: false })
+	);
+	
+	muteBtn.addEventListener('click', (e) => {
+	e.preventDefault();
+	startBgm();
+	bgm.muted = !bgm.muted;
+	muteBtn.textContent = bgm.muted ? '🔇' : '🔊';
+	});
 
     // Render guests + contacts + maps + i18n
     renderGuestRows();
