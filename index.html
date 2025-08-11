@@ -55,6 +55,7 @@
     .cta-row,
     .card,
     .footer,
+    #schedule,
     #countdown { position:relative; z-index:10; }
 
     /* Top-right controls */
@@ -92,7 +93,7 @@
         var(--wallpaper) center/cover no-repeat fixed;
     }
 
-    /* Couple title */
+    /* (9) Couple title */
     .couple-title{
       font-family:'Playfair Display',serif;
       font-weight:700;
@@ -107,7 +108,6 @@
     .couple-inline{ font-size:clamp(38px,7vw,76px); line-height:1.05; }
     .couple-stack{ display:none; font-size:clamp(34px,10vw,70px); line-height:1.05; }
     .couple-heart{ display:block; line-height:1; }
-
     @media(max-width:520px){
       .couple-inline{ display:none; }
       .couple-stack{ display:block; }
@@ -153,7 +153,7 @@
     .input:focus:not([readonly]){ border-color:var(--gold-strong); box-shadow:0 0 0 3px rgba(212,175,55,.20); }
     .input[readonly]{ background:#fffdf7; border-color:#ead79a; color:#6b4b00; }
 
-    .tiny{ font-size:12px; color:var(--muted) }
+    .tiny{ font-size:12px; color:#6b7280 }
     .total{ text-align:center; margin-top:6px; color:#374151 }
 
     /* Confirm/Edit pill – match input height */
@@ -177,9 +177,7 @@
       padding:12px 14px; border-radius:12px; color:#92400e;
       box-shadow:var(--shadow-sm);
     }
-    .muted{ color:var(--muted) }
 
-    /* Section title style */
     .section-title{
       margin:0 0 8px; font-family:'Playfair Display',serif; font-size:clamp(22px,3.6vw,28px);
       color:#1f2937;
@@ -199,37 +197,89 @@
     }
     .toast.show{ opacity:1 }
 
-    /* ==== COUNTDOWN ==== */
+    /* (11) Schedule */
+    #schedule .sched-title{
+      font-family:'Playfair Display',serif;
+      color:#b78727;
+      text-align:center;
+      font-size:clamp(26px,5.2vw,46px);
+      margin:0 0 18px;
+    }
+    .sched-grid{
+      display:grid;
+      grid-template-columns:280px 1fr;
+      gap:26px;
+      align-items:start;
+    }
+    .sched-date{
+      font-size:clamp(18px,3.4vw,28px);
+      color:#1f2937;
+      line-height:1.35;
+    }
+    .sched-day{
+      color:#2563eb;
+      margin-top:6px;
+      font-size:clamp(14px,2.8vw,18px);
+    }
+    .tl{
+      position:relative;
+      padding-left:26px;
+    }
+    .tl::before{
+      content:'';
+      position:absolute; left:8px; top:0; bottom:0;
+      width:2px; background:linear-gradient(180deg,rgba(184,144,23,.3),rgba(184,144,23,.7));
+      border-radius:2px;
+    }
+    .tl-item{
+      display:grid; grid-template-columns:120px auto; align-items:center;
+      gap:14px; padding:18px 0; position:relative;
+    }
+    .tl-item::before{
+      content:''; position:absolute; left:0; top:28px;
+      width:12px; height:12px; border-radius:999px;
+      background:#fff; border:2px solid #d4af37; box-shadow:0 2px 6px rgba(0,0,0,.08);
+      transform:translate(-50%,-50%);
+    }
+    .tl-time{ color:#1f2937; font-weight:600; font-size:clamp(15px,2.8vw,20px) }
+    .tl-text{ color:#1f2937; letter-spacing:.02em; font-size:clamp(15px,3vw,22px) }
+
+    @media(max-width:720px){
+      .sched-grid{ grid-template-columns:1fr; }
+      .tl{ padding-left:20px; }
+      .tl-item{ grid-template-columns:100px auto; }
+      .tl-item::before{ left:2px; }
+    }
+
+    /* (10) Countdown */
     #countdown{ padding:64px 16px 86px; }
     .cd-title{
       font-family:'Playfair Display',serif;
-      font-size:clamp(26px,5.5vw,48px);
+      font-size:clamp(26px,5.5vw,42px);
       text-align:center;
-      margin:0 0 10px;
+      margin:0 0 18px;
       color:#b78727;
     }
-    .cd-sub{
-      text-align:center; color:#374151;
-      margin:0 0 28px; font-size:clamp(14px,2.8vw,18px);
-    }
-    .cd-grid{
-      display:grid; grid-template-columns:repeat(4, minmax(70px, 180px));
-      gap:26px; justify-content:center;
+    .cd-row{
+      display:flex; justify-content:center; gap:16px; flex-wrap:nowrap;
     }
     .cd-box{
       background:#fff; border:1px solid rgba(0,0,0,.06);
-      border-radius:18px; box-shadow:var(--shadow); padding:22px 18px;
-      text-align:center;
+      border-radius:16px; box-shadow:var(--shadow); padding:16px 14px;
+      min-width:70px; text-align:center;
     }
     .cd-num{
-      font-size:clamp(28px,6vw,44px);
-      font-weight:600; color:#111;
+      font-size:clamp(18px,6vw,34px);
+      font-weight:700; color:#111; line-height:1.1;
     }
     .cd-label{
-      margin-top:8px; letter-spacing:.38em; font-size:12px; color:#9CA3AF;
+      margin-top:6px; letter-spacing:.36em; font-size:10px; color:#9CA3AF;
     }
-    @media(max-width:520px){
-      .cd-grid{ grid-template-columns:repeat(2, minmax(120px, 1fr)); gap:18px; }
+    @media(max-width:420px){
+      .cd-row{ gap:10px; }
+      .cd-box{ min-width:62px; padding:12px 10px; }
+      .cd-num{ font-size:clamp(16px,6vw,28px); }
+      .cd-label{ letter-spacing:.28em; font-size:9px; }
     }
   </style>
 </head>
@@ -244,19 +294,18 @@
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
   </div>
 
-  <!-- (COMMENTED OUT) Volume popover kept for future
-  <div id="volumePop" class="volume-pop" role="dialog" aria-label="Volume"> ... </div>
-  -->
+  <!-- (COMMENTED OUT) Volume popover to revisit later -->
+  <!-- ... -->
 
   <header class="hero">
     <div>
-      <!-- Couple title -->
+      <!-- (9) Couple title -->
       <div class="couple-title couple-inline">Basran&nbsp;♡&nbsp;Khairani</div>
       <div class="couple-title couple-stack">
         Basran<br><span class="couple-heart">♡</span><br>Khairani
       </div>
 
-      <!-- Heading -->
+      <!-- Basran ♡ Khairani -->
       <div class="heading" id="titleText">Will you attend our wedding?</div>
       <div class="sub" id="subtitleText">We'd love to celebrate with you. Please RSVP below.</div>
       <div class="cta-row">
@@ -293,14 +342,14 @@
             <div class="submit-wrap">
               <div>
                 <h2 class="section-title" id="phoneHeader">Phone Number</h2>
-                <p class="tiny muted" id="phoneNote">We’ll use this number if we need to confirm details or share any updates.</p>
+                <!-- (8) Small note under phone header -->
+                <p class="tiny" id="phoneNote">We’ll use this number if we need to confirm details or share any updates.</p>
                 <input class="input" id="phone" name="phone" autocomplete="tel" placeholder="e.g. +60 12 345 6789" required />
               </div>
 
               <div class="spacer-16"></div>
               <div class="separator"></div>
 
-              <!-- Error ABOVE submit -->
               <div class="notice tiny" id="validationMsg" style="display:none" aria-live="polite"></div>
 
               <div class="spacer-8"></div>
@@ -338,13 +387,27 @@
       </div>
     </section>
 
-    <!-- COUNTDOWN -->
+    <!-- (11) Schedule -->
+    <section id="schedule">
+      <div class="container">
+        <h2 class="sched-title" id="schedTitle">Schedule</h2>
+        <div class="sched-grid">
+          <div>
+            <div class="sched-date" id="schedDate">November 22, 2025</div>
+            <div class="sched-day" id="schedDay">Saturday</div>
+          </div>
+          <div class="tl" id="scheduleList">
+            <!-- items injected -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- (10) Countdown -->
     <section id="countdown">
       <div class="container">
-        <h2 class="cd-title" id="cdTitle">Countdown timer</h2>
-        <p class="cd-sub" id="cdSub">Our big day is coming soon!</p>
-
-        <div class="cd-grid">
+        <h2 class="cd-title" id="cdTitle">Countdown</h2>
+        <div class="cd-row">
           <div class="cd-box">
             <div class="cd-num" id="cdDays">0</div>
             <div class="cd-label" id="cdLabelDays">DAYS</div>
@@ -377,8 +440,9 @@
   <script>
     // ====== CONFIG ======
     const MAX_GUESTS = 4;
-    // Countdown date (EASY TO CHANGE)
-    const WEDDING_DATE = new Date('2025-11-22T10:00:00+08:00'); // Malaysia time (UTC+8)
+    // (10) Change this once to update countdown + schedule date & weekday
+    const WEDDING_DATE = new Date('2025-11-22T10:00:00+08:00'); // 22 Nov 2025, 10:00am MYT
+
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbWUzpJp8IH7eIJ4PorTtVFEJK9npyGY8HR6o0HfaNj9_Adin081iRrvof4V_LVMs/exec";
     const GMAPS_COORDS = { lat: 5.975194, lng: 116.0688396 };
     const WAZE_COORDS  = { lat: 5.975194, lng: 116.0688396 };
@@ -387,6 +451,22 @@
       { name: "Muhammad Basri", phone: "+60 12 345 6789" },
       { name: "Samsah Suda", phone: "+60 13 222 1111" },
       { name: "Anyone", phone: "+60 19 121 2121" },
+    ];
+
+    // (11) Agenda items (EN + MS)
+    const SCHEDULE_EN = [
+      { time:"10:00am", title:"GUEST ARRIVAL" },
+      { time:"12:00pm", title:"NIKAH" },
+      { time:"1:00pm",  title:"WEDDING CEREMONY" },
+      { time:"2:00pm",  title:"LUNCH" },
+      { time:"3:00pm",  title:"PHOTO SESSION" },
+    ];
+    const SCHEDULE_MS = [
+      { time:"10:00 pagi",         title:"KETIBAAN TETAMU" },
+      { time:"12:00 tengah hari",  title:"NIKAH" },
+      { time:"1:00 petang",        title:"MAJLIS PERNIKAHAN" },
+      { time:"2:00 petang",        title:"JAMUAN" },
+      { time:"3:00 petang",        title:"SESI FOTO" },
     ];
 
     // ====== i18n strings ======
@@ -414,8 +494,9 @@
         locNote: "Tip: You can share the link with friends who are carpooling.",
         contactTitle: "Contact (Bride's family)",
         contactDesc: "Tap a name to call directly.",
-        cdTitle: "Countdown timer",
-        cdSub: "Our big day is coming soon!",
+        // schedule + countdown
+        schedTitle: "Schedule",
+        cdTitle: "Countdown",
         DAYS:"DAYS", HOURS:"HOURS", MINS:"MINS", SECS:"SECS",
       },
       ms: {
@@ -441,8 +522,9 @@
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
         contactTitle: "Hubungi (keluarga pengantin perempuan)",
         contactDesc: "Tekan nama untuk terus membuat panggilan.",
-        cdTitle: "Pemasa kira detik",
-        cdSub: "Hari bahagia kami semakin hampir!",
+        // schedule + countdown
+        schedTitle: "Jadual",
+        cdTitle: "Kiraan Detik",
         DAYS:"HARI", HOURS:"JAM", MINS:"MIN", SECS:"SAAT",
       }
     };
@@ -453,6 +535,7 @@
     const validationMsg = document.getElementById('validationMsg');
     const submitBtn = document.getElementById('submitBtn');
     const phoneInput = document.getElementById('phone');
+    const phoneNote = document.getElementById('phoneNote');
     const toast = document.getElementById('toast');
     const bgm = document.getElementById('bgm');
 
@@ -465,15 +548,21 @@
     const locationBtn = document.getElementById('locationBtn');
     const rsvpIntro = document.getElementById('rsvpIntro');
     const phoneHeader = document.getElementById('phoneHeader');
-    const phoneNote = document.getElementById('phoneNote');
     const locTitle = document.getElementById('locTitle');
     const locDesc = document.getElementById('locDesc');
     const locNote = document.getElementById('locNote');
     const contactTitle = document.getElementById('contactTitle');
     const contactDesc = document.getElementById('contactDesc');
 
+    const btnGmaps = document.getElementById('btnGoogleMaps');
+    const btnWaze  = document.getElementById('btnWaze');
+
+    // schedule + countdown refs
+    const schedTitle = document.getElementById('schedTitle');
+    const schedDate = document.getElementById('schedDate');
+    const schedDay = document.getElementById('schedDay');
+    const scheduleList = document.getElementById('scheduleList');
     const cdTitle = document.getElementById('cdTitle');
-    const cdSub = document.getElementById('cdSub');
     const cdDays = document.getElementById('cdDays');
     const cdHours = document.getElementById('cdHours');
     const cdMins = document.getElementById('cdMins');
@@ -482,9 +571,6 @@
     const cdLabelHours = document.getElementById('cdLabelHours');
     const cdLabelMins = document.getElementById('cdLabelMins');
     const cdLabelSecs = document.getElementById('cdLabelSecs');
-
-    const btnGmaps = document.getElementById('btnGoogleMaps');
-    const btnWaze  = document.getElementById('btnWaze');
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'en';
@@ -611,6 +697,49 @@
       btnGmaps.href = gq; btnWaze.href = wz;
     }
 
+    // format date & day according to LANG
+    function renderScheduleHeader(){
+      const loc = LANG === 'en' ? 'en-MY' : 'ms-MY';
+      const d = WEDDING_DATE;
+      schedDate.textContent = d.toLocaleDateString(loc, { year:'numeric', month:'long', day:'numeric' });
+      schedDay.textContent  = d.toLocaleDateString(loc, { weekday:'long' });
+    }
+    function renderScheduleItems(){
+      const items = (LANG === 'en') ? SCHEDULE_EN : SCHEDULE_MS;
+      scheduleList.innerHTML = '';
+      items.forEach(it=>{
+        const div = document.createElement('div');
+        div.className = 'tl-item';
+        div.innerHTML = `<div class="tl-time">${it.time}</div><div class="tl-text">${it.title}</div>`;
+        scheduleList.appendChild(div);
+      });
+    }
+
+    // Countdown
+    let cdTimer;
+    function pad2(n){ return n<10 ? '0'+n : ''+n; }
+    function updateCountdown(){
+      const now = Date.now();
+      const target = WEDDING_DATE.getTime();
+      let diff = Math.max(0, Math.floor((target - now)/1000)); // seconds
+      const days = Math.floor(diff / 86400); diff -= days*86400;
+      const hours = Math.floor(diff / 3600); diff -= hours*3600;
+      const mins = Math.floor(diff / 60); diff -= mins*60;
+      const secs = diff;
+
+      cdDays.textContent = days;
+      cdHours.textContent = pad2(hours);
+      cdMins.textContent = pad2(mins);
+      cdSecs.textContent = pad2(secs);
+
+      if(target <= now && cdTimer){ clearInterval(cdTimer); }
+    }
+    function initCountdown(){
+      updateCountdown();
+      if(cdTimer) clearInterval(cdTimer);
+      cdTimer = setInterval(updateCountdown, 1000);
+    }
+
     function i18n(){
       const T = I18N[LANG];
       titleText.textContent = T.title;
@@ -627,8 +756,9 @@
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
 
+      // schedule + countdown labels
+      schedTitle.textContent = T.schedTitle;
       cdTitle.textContent = T.cdTitle;
-      cdSub.textContent = T.cdSub;
       cdLabelDays.textContent = T.DAYS;
       cdLabelHours.textContent = T.HOURS;
       cdLabelMins.textContent = T.MINS;
@@ -651,6 +781,13 @@
       updateTotals();
       refreshLangToggleLabel();
       document.getElementById('post_lang').value = LANG;
+
+      // schedule header + items
+      renderScheduleHeader();
+      renderScheduleItems();
+
+      // countdown
+      initCountdown();
 
       maybeEnableSubmit();
       if(isSubmitted()) lockSubmissionUI();
@@ -682,6 +819,7 @@
     });
 
     // ===== Music: audible autoplay + fixed volume 20% =====
+    const bgm = document.getElementById('bgm');
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -699,7 +837,6 @@
     window.addEventListener('pageshow', ensurePlayback);
     window.addEventListener('load', ensurePlayback);
 
-    // Mute/unmute only
     muteBtn.addEventListener('click', async (e)=>{
       e.preventDefault();
       try{ await bgm.play(); }catch(_){}
@@ -717,7 +854,7 @@
       requestAnimationFrame(step);
     }
     function handleSmoothLink(link, selector){
-      link.addEventListener('click', (e)=>{ e.preventDefault(); playClick(); const el = document.querySelector(selector); if(el){ smoothScrollTo(el, 750); } });
+      link.addEventListener('click', (e)=>{ e.preventDefault(); const el = document.querySelector(selector); if(el){ smoothScrollTo(el, 750); } });
     }
     handleSmoothLink(rsvpBtn, '#rsvp'); handleSmoothLink(locationBtn, '#location');
 
@@ -744,24 +881,6 @@
     }, true);
 
     // ===== Render =====
-    function renderContacts(){
-      const contactList = document.getElementById('contactList');
-      if(!contactList) return;
-      contactList.innerHTML = '';
-      CONTACTS.forEach(c=>{
-        const a = document.createElement('a');
-        a.className = 'btn btn-outline';
-        a.href = `tel:${c.phone.replace(/\s+/g,'')}`;
-        a.textContent = `${c.name} (${c.phone})`;
-        contactList.appendChild(a);
-      });
-    }
-    function renderMaps(){
-      const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
-      const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
-      btnGmaps.href = gq; btnWaze.href = wz;
-    }
-
     function renderAll(){
       i18n();
       renderContacts();
@@ -784,8 +903,6 @@
       phoneInput.value = localStorage.getItem('rsvp_phone') || '';
       if(isSubmitted()) lockSubmissionUI();
       else maybeEnableSubmit();
-
-      initCountdown(); // start countdown once
     }
 
     renderAll();
@@ -825,7 +942,7 @@
       // posts to iframe
     });
 
-    // ===== Particles (global canvas) =====
+    // ===== Particles (global canvas across the page) =====
     (function initParticles(){
       const canvas = document.getElementById('bg-particles');
       const ctx = canvas.getContext('2d');
@@ -838,7 +955,7 @@
       function resize(){ w = canvas.width = innerWidth; h = canvas.height = innerHeight; }
       resize(); addEventListener('resize', resize);
 
-      const count = Math.min(90, Math.max(55, Math.floor((w*h)/52000)));
+      const count = Math.min(90, Math.max(55, Math.floor((w*h)/32000)));
       const palettes = [
         { inner:'rgba(255,255,255,0.9)', outer:'rgba(255,255,255,0.0)' },
         { inner:'rgba(255,240,210,0.85)', outer:'rgba(255,240,210,0.0)' },
@@ -888,31 +1005,6 @@
         if(running){ last=0; requestAnimationFrame(step); }
       });
     })();
-
-    // ===== Countdown =====
-    let cdTimer;
-    function pad2(n){ return n<10 ? '0'+n : ''+n; }
-    function updateCountdown(){
-      const now = new Date().getTime();
-      const target = WEDDING_DATE.getTime();
-      let diff = Math.max(0, Math.floor((target - now)/1000)); // seconds
-      const days = Math.floor(diff / 86400); diff -= days*86400;
-      const hours = Math.floor(diff / 3600); diff -= hours*3600;
-      const mins = Math.floor(diff / 60); diff -= mins*60;
-      const secs = diff;
-
-      cdDays.textContent = days;
-      cdHours.textContent = pad2(hours);
-      cdMins.textContent = pad2(mins);
-      cdSecs.textContent = pad2(secs);
-
-      if(target <= now && cdTimer){ clearInterval(cdTimer); }
-    }
-    function initCountdown(){
-      updateCountdown();
-      if(cdTimer) clearInterval(cdTimer);
-      cdTimer = setInterval(updateCountdown, 1000);
-    }
   </script>
 </body>
 </html>
