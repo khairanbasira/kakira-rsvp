@@ -34,6 +34,15 @@
       --hero-overlay-3: .65;
     }
 
+    /* === Lucy Said OK font (provide local file or swap src to a CDN URL) === */
+    @font-face{
+      font-family:"Lucy Said Ok";
+      src:url("LucySaidOk.woff2") format("woff2");
+      font-weight:400;
+      font-style:normal;
+      font-display:swap;
+    }
+
     /* Orientation-based wallpaper */
     @media (orientation: portrait){
       :root{ --wallpaper:url('rsvpwallpaper_mob.png'); }
@@ -62,7 +71,10 @@
     .hero .sub,
     .cta-row,
     .card,
-    .footer { position:relative; z-index:10; }
+    .footer,
+    .hero .invite-label,
+    .hero .wedding-date,
+    .hero .couple-title { position:relative; z-index:10; }
 
     /* Top-right controls */
     .top-controls{
@@ -105,15 +117,23 @@
       background-attachment: scroll, scroll;
     }
 
-    /* Decorative couple title */
+    /* New small invite label */
+    .invite-label{
+      font-size:12px;
+      letter-spacing:.25em;
+      text-transform:uppercase;
+      color:#7a5a10;
+      margin-bottom:10px;
+    }
+
+    /* Decorative couple title with LucySaidOK */
     .couple-title{
       display:flex; align-items:center; justify-content:center; gap:18px;
-      margin-bottom:16px;
-      font-family:'Playfair Display',serif;
-      font-weight:700;
+      margin-bottom:8px;
+      font-family:'Lucy Said Ok','Playfair Display',serif;
+      font-weight:400;
       font-size:clamp(34px,8vw,84px);
       line-height:1;
-      letter-spacing:.5px;
       color:var(--gold-strong);
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
     }
@@ -123,11 +143,21 @@
       .couple-title .heart{ transform:none; }
     }
 
+    /* Wedding date under the names */
+    .wedding-date{
+      font-family:'Playfair Display',serif;
+      font-weight:600;
+      color:#5c4510;
+      margin:8px 0 14px;
+      font-size:clamp(16px,2.8vw,22px);
+      letter-spacing:.04em;
+    }
+
     .heading{ font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,52px); line-height:1.12; }
     .sub{ color:var(--muted); margin-top:8px }
 
     /* Buttons */
-    .cta-row{ margin-top:26px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .cta-row{ margin-top:20px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
     .btn{
       appearance:none; cursor:pointer; display:inline-block; text-decoration:none;
       padding:14px 22px; border-radius:var(--radius);
@@ -147,6 +177,45 @@
     section{ padding:58px 16px; background:transparent; }
     .container{ max-width:980px; margin:0 auto; }
     .card{ background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
+
+    /* New ornament frame (for the text-only section) */
+    .ornament{
+      position:relative;
+      background:linear-gradient(180deg,#ffffff, #fffaf1);
+      border:1.5px solid var(--gold-strong);
+      border-radius:28px;
+      padding:28px 22px;
+      box-shadow: 0 10px 30px rgba(184,144,23,.08), inset 0 0 0 6px rgba(212,175,55,.08);
+      overflow:hidden;
+    }
+    .ornament::before,
+    .ornament::after{
+      content:"";
+      position:absolute;
+      pointer-events:none;
+      border-radius:50%;
+      filter:blur(10px);
+      opacity:.28;
+      background:radial-gradient(circle at 30% 30%, #f9e9bf, transparent 60%),
+                 radial-gradient(circle at 70% 70%, #fff6da, transparent 55%),
+                 radial-gradient(circle at 40% 70%, #f1d277, transparent 50%);
+    }
+    .ornament::before{ width:420px; height:420px; top:-140px; left:-120px; }
+    .ornament::after{  width:380px; height:380px; bottom:-130px; right:-110px; }
+
+    .ornament h2{
+      margin:0 0 8px;
+      font-family:'Playfair Display',serif;
+      font-size:clamp(22px,3.6vw,28px);
+      color:#1f2937;
+      text-align:center;
+    }
+    .ornament p{
+      margin:8px 0;
+      color:#444;
+      text-align:center;
+      line-height:1.6;
+    }
 
     /* Guest rows */
     .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
@@ -300,11 +369,17 @@
   <!-- Hero (now identifiable for layout) -->
   <header class="hero" id="hero" data-card="hero">
     <div>
+      <!-- NEW: invite label -->
+      <div class="invite-label" id="inviteLabel">Wedding Invitation</div>
+
       <div class="couple-title" aria-label="Basran love Khairani">
         <span class="name">Basran</span>
         <span class="heart">♡</span>
         <span class="name">Khairani</span>
       </div>
+
+      <!-- NEW: wedding date under names -->
+      <div class="wedding-date" id="weddingDate">22 November 2025</div>
 
       <div class="heading" id="titleText">Will you attend our wedding?</div>
       <div class="sub" id="subtitleText">We'd love to celebrate with you. Please RSVP below.</div>
@@ -316,6 +391,21 @@
   </header>
 
   <main>
+    <!-- NEW: Text-only section after hero with gold/white abstract frame -->
+    <section id="about" data-card="about">
+      <div class="container">
+        <div class="ornament">
+          <h2 id="aboutTitle">A Note From Us</h2>
+          <p id="aboutBody1">
+            We are overjoyed to share this special day with our beloved family and friends.
+          </p>
+          <p id="aboutBody2">
+            Your presence is the greatest gift. Thank you for your love, prayers, and support.
+          </p>
+        </div>
+      </div>
+    </section>
+
     <section id="rsvp" data-card="rsvp">
       <div class="container">
         <div class="card">
@@ -500,11 +590,11 @@
     const BGM_STOP_AFTER_LOOPS = 1;  // loop only once
 
     /* ===== LAYOUT CONFIG (reorder cards here) =====
-       Valid keys: 'hero','rsvp','location','contact','schedule','countdown'
+       Valid keys: 'hero','about','rsvp','location','contact','schedule','countdown'
     */
-    const CARD_ORDER = ['hero','rsvp','location','contact','schedule','countdown'];
+    const CARD_ORDER = ['hero','about','rsvp','location','contact','schedule','countdown'];
     const CARD_VISIBLE = {
-      hero:true, rsvp:true, location:true, contact:true, schedule:true, countdown:true
+      hero:true, about:true, rsvp:true, location:true, contact:true, schedule:true, countdown:true
     };
 
     function applyCardLayout(){
@@ -549,6 +639,7 @@
     // ====== i18n strings ======
     const I18N = {
       en: {
+        invite: "Wedding Invitation",
         title: "Will you attend our wedding?",
         subtitle: "We'd love to celebrate with you. Please RSVP below.",
         rsvp: "RSVP",
@@ -571,8 +662,12 @@
         locNote: "Tip: You can share the link with friends who are carpooling.",
         contactTitle: "Contact (Bride's family)",
         contactDesc: "Tap a name to call directly.",
+        aboutTitle: "A Note From Us",
+        aboutBody1: "We are overjoyed to share this special day with our beloved family and friends.",
+        aboutBody2: "Your presence is the greatest gift. Thank you for your love, prayers, and support.",
       },
       ms: {
+        invite: "Undangan Majlis Perkahwinan",
         title: "Adakah anda akan hadir ke majlis kami?",
         subtitle: "Jemput RSVP di bawah ya.",
         rsvp: "RSVP",
@@ -595,6 +690,9 @@
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
         contactTitle: "Hubungi (keluarga pengantin perempuan)",
         contactDesc: "Tekan nama untuk terus membuat panggilan.",
+        aboutTitle: "Ucapan Ringkas",
+        aboutBody1: "Kami bersyukur dapat berkongsi hari istimewa ini bersama keluarga dan rakan tersayang.",
+        aboutBody2: "Kehadiran anda adalah hadiah paling bermakna. Terima kasih atas doa dan sokongan.",
       }
     };
 
@@ -610,6 +708,7 @@
     const langToggle = document.getElementById('langToggle');
     const muteBtn = document.getElementById('muteBtn');
 
+    const inviteLabel = document.getElementById('inviteLabel');
     const titleText = document.getElementById('titleText');
     const subtitleText = document.getElementById('subtitleText');
     const rsvpBtn = document.getElementById('rsvpBtn');
@@ -622,6 +721,11 @@
     const locNote = document.getElementById('locNote');
     const contactTitle = document.getElementById('contactTitle');
     const contactDesc = document.getElementById('contactDesc');
+
+    const aboutTitle = document.getElementById('aboutTitle');
+    const aboutBody1 = document.getElementById('aboutBody1');
+    const aboutBody2 = document.getElementById('aboutBody2');
+    const weddingDateEl = document.getElementById('weddingDate');
 
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
@@ -752,6 +856,7 @@
 
     function i18n(){
       const T = I18N[LANG];
+      inviteLabel.textContent = T.invite;
       titleText.textContent = T.title;
       subtitleText.textContent = T.subtitle;
       rsvpBtn.textContent = T.rsvp;
@@ -765,6 +870,11 @@
       locNote.textContent = T.locNote;
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
+
+      // New section copy
+      aboutTitle.textContent = T.aboutTitle;
+      aboutBody1.textContent = T.aboutBody1;
+      aboutBody2.textContent = T.aboutBody2;
 
       const savedNames = getStoredNames();
       const savedConfirmed = getStoredConfirmed();
