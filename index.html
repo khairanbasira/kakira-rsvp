@@ -90,7 +90,7 @@
         var(--wallpaper) center/cover no-repeat fixed;
     }
 
-    /* (2) NEW: decorative couple title */
+    /* Decorative couple title */
     .couple-title{
       display:flex; align-items:center; justify-content:center; gap:18px;
       margin-bottom:16px;
@@ -194,12 +194,13 @@
     }
     .toast.show{ opacity:1 }
 
-    /* (3) NEW: countdown */
+    /* ===== COUNTDOWN (improved for phones) ===== */
     #countdown .cd-sub{ margin:6px 0 16px; }
 
-    /* CHANGE 2: make countdown a responsive grid and hard-center content in perfect squares */
     .countdown-row{
-      display:grid; gap:12px; grid-template-columns:repeat(4, minmax(0,1fr));
+      display:grid;
+      gap:12px;
+      grid-template-columns:repeat(4, minmax(100px, 1fr));
       align-items:stretch;
     }
     .cd-box{
@@ -207,24 +208,40 @@
       box-shadow:var(--shadow-sm); padding:16px 12px;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       text-align:center;
-      aspect-ratio:1/1;            /* square box regardless of screen */
-      min-width:0;                 /* prevent overflow */
+      aspect-ratio:1/1;     /* square; drops on very tight phones via media query */
+      min-width:0;
     }
     .cd-num{
       font-family:'Playfair Display',serif; font-weight:700; line-height:1;
-      font-size:clamp(22px,8vw,48px);
+      font-size:clamp(22px, 7.2vw, 48px);
     }
     .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:var(--muted); }
 
-    /* (4) NEW: agenda schedule */
-    /* CHANGE 3A: use CSS variables so the dot aligns exactly with the vertical line */
+    @media (max-width:520px){
+      .countdown-row{ grid-template-columns:repeat(2, minmax(120px, 1fr)); }
+    }
+    @media (max-width:400px){
+      .countdown-row{ grid-template-columns:repeat(2, minmax(110px, 1fr)); }
+      .cd-box{ aspect-ratio:auto; }  /* allow taller than wide to prevent squeeze */
+      .cd-num{ font-size:clamp(22px, 9vw, 42px); }
+      .cd-label{ letter-spacing:.28em; }
+    }
+
+    /* ===== AGENDA / TIMELINE (dot alignment with tweak vars) ===== */
+    /* You can edit these later:
+       --tl-line-x     : horizontal position of the vertical line (from .timeline left)
+       --timeline-pad  : left padding inside .timeline
+       --tl-dot-nudge  : fine-tune the dot +/- px if device rounding nudges it
+    */
     .agenda{
       display:grid; grid-template-columns: 240px 1fr; gap:24px;
-      --timeline-pad:28px;           /* left padding inside .timeline */
-      --tl-line-x:11px;              /* x position (from .timeline left) for the vertical line */
+      --timeline-pad:28px;
+      --tl-line-x:11px;
+      --tl-dot-nudge:0px; /* <— EDIT HERE to nudge dot left/right */
     }
     .agenda-date{ font-family:'Playfair Display',serif; font-size:clamp(18px,2.6vw,24px); }
     .agenda-day{ color:var(--muted); margin-top:6px; }
+
     .timeline{
       position:relative; padding-left:var(--timeline-pad);
     }
@@ -232,24 +249,26 @@
       content:''; position:absolute; left:var(--tl-line-x); top:6px; bottom:6px; width:2px; background:var(--gold-strong);
     }
 
-    /* CHANGE 3B: hide the middle bullet column and align the pseudo dot to the line */
     .tl-item{
-      position:relative; display:grid; grid-template-columns: 120px 1fr; align-items:center;
+      position:relative;
+      display:grid; grid-template-columns: 120px 1fr; align-items:center;
       gap:10px; margin:20px 0;
     }
-    .tl-mid{ display:none; } /* keep DOM as-is, but no stray bullet */
+    .tl-mid{ display:none; }
+
+    /* Dot centered exactly on the vertical line */
     .tl-item::before{
       content:''; position:absolute;
-      /* place the circle on top of the vertical line (line is at 11px from .timeline; item starts after 28px pad) */
-      left: calc(var(--tl-line-x) - var(--timeline-pad));
+      left: calc( (var(--tl-line-x) - var(--timeline-pad)) + var(--tl-dot-nudge) );
+      top:50%;
       width:14px; height:14px; border-radius:50%;
-      background:var(--gold-strong); top:50%; transform:translate(-50%,-50%);
+      background:var(--gold-strong);
+      transform:translate(-50%, -50%);
       box-shadow:0 0 0 3px var(--gold-soft);
     }
 
     .tl-time{ font-weight:600; color:#0f172a; }
     .tl-what{ color:#0f172a; }
-    /* CHANGE 3C: two-line child description styling */
     .tl-title{ font-weight:700; letter-spacing:.02em; }
     .tl-desc{ margin-top:4px; font-size:12px; line-height:1.35; color:var(--muted); }
 
@@ -284,7 +303,6 @@
 
   <header class="hero">
     <div>
-      <!-- (2) NEW decorative couple title -->
       <div class="couple-title" aria-label="Basran love Khairani">
         <span class="name">Basran</span>
         <span class="heart">♡</span>
@@ -325,7 +343,6 @@
             <div class="spacer-8"></div>
 
             <div class="submit-wrap">
-              <!-- (1) UPDATED header + hint text -->
               <div>
                 <h2 class="section-title" id="phoneHeader">Phone Number</h2>
                 <p class="tiny muted" id="phoneHint">We’ll use this to contact you if there are any updates or changes.</p>
@@ -372,7 +389,7 @@
       </div>
     </section>
 
-    <!-- (4) NEW: Event agenda schedule -->
+    <!-- Event agenda schedule -->
     <section id="schedule">
       <div class="container">
         <div class="card">
@@ -383,7 +400,6 @@
               <div class="agenda-day tiny">Saturday</div>
             </div>
             <div class="timeline">
-              <!-- CHANGE 3D: keep your same structure but add two-line child descriptions -->
               <div class="tl-item">
                 <div class="tl-time">10:00am</div>
                 <div class="tl-what">
@@ -420,7 +436,7 @@
                 </div>
               </div>
 
-              <!-- (kept for compatibility; visually hidden by CSS) -->
+              <!-- kept for compatibility; visually hidden by CSS -->
               <div class="tl-mid">•</div>
             </div>
           </div>
@@ -428,7 +444,7 @@
       </div>
     </section>
 
-    <!-- (3) NEW: Live countdown at the very bottom -->
+    <!-- Live countdown -->
     <section id="countdown">
       <div class="container">
         <div class="card">
@@ -463,7 +479,7 @@
 
   <div id="toast" class="toast">Saved!</div>
 
-  <!-- CHANGE 1: remove `loop` attribute; loop count is controlled by JS below -->
+  <!-- BGM: no loop attribute; loop count controlled by JS -->
   <audio id="bgm" src="maulaya.mp3" autoplay preload="auto" playsinline></audio>
 
   <script>
@@ -479,17 +495,14 @@
       { name: "Anyone", phone: "+60 19 121 2121" },
     ];
 
-    // (3) COUNTDOWN TARGET — easy to change
-    // Uses local time. Change date/time below as needed.
+    // COUNTDOWN TARGET — local time
     const COUNTDOWN_TARGET = new Date("2025-11-22T10:00:00");
 
-    /* CHANGE 1 (config): set how many times the background music should play.
-       - 1 = play once (no repeat)
-       - 2 = play twice (stop after 2nd finish)
-       - 5 = play five times
-       - Infinity = loop forever (like old behavior)
+    /* ===== BGM LOOP CONTROL =====
+       Set how many times the background music should play.
+       1 = play once, 2 = twice, 5 = five times, Infinity = loop forever
     */
-    const BGM_STOP_AFTER_LOOPS = 2;  // <— adjust this value when you want 2 / 5 loops, etc.
+    const BGM_STOP_AFTER_LOOPS = 1;  // <<< loop only once as requested
 
     // ====== i18n strings ======
     const I18N = {
@@ -561,7 +574,7 @@
     const locationBtn = document.getElementById('locationBtn');
     const rsvpIntro = document.getElementById('rsvpIntro');
     const phoneHeader = document.getElementById('phoneHeader');
-    const phoneHint = document.getElementById('phoneHint'); // (1) NEW
+    const phoneHint = document.getElementById('phoneHint');
     const locTitle = document.getElementById('locTitle');
     const locDesc = document.getElementById('locDesc');
     const locNote = document.getElementById('locNote');
@@ -758,7 +771,7 @@
       i18n(); saveLocal(); maybeEnableSubmit();
     });
 
-    // ===== Music: audible autoplay + fixed volume 20% =====
+    // ===== Music: autoplay + 20% volume, loop control =====
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -776,15 +789,14 @@
     window.addEventListener('pageshow', ensurePlayback);
     window.addEventListener('load', ensurePlayback);
 
-    /* CHANGE 1 (logic): loop control using ended event */
-    let _bgmLoops = 0; // counts how many times the track has COMPLETED
-    bgm.loop = false;  // important: we control repeat manually
+    // Loop control via 'ended' event
+    let _bgmLoops = 0;  // how many times completed
+    bgm.loop = false;
     bgm.addEventListener('ended', async () => {
       _bgmLoops++;
-      // If Infinity, it will never compare true and keep looping
       if (_bgmLoops < BGM_STOP_AFTER_LOOPS || BGM_STOP_AFTER_LOOPS === Infinity) {
         try { bgm.currentTime = 0; await bgm.play(); } catch(_) {}
-      } // else: stop naturally after finishing
+      }
     });
 
     // Mute/unmute only
@@ -795,7 +807,7 @@
       setMutedUI();
     });
 
-    // ===== Smooth scrolling with ease-in/out =====
+    // ===== Smooth scrolling =====
     function easeInOutQuad(t){ return t<0.5 ? 2*t*t : -1+(4-2*t)*t; }
     function smoothScrollTo(target, duration=700){
       const start = window.scrollY || window.pageYOffset;
@@ -975,7 +987,7 @@
       });
     })();
 
-    // ===== (3) Countdown logic =====
+    // ===== Countdown logic =====
     (function initCountdown(){
       const dEl = document.getElementById('cdDays');
       const hEl = document.getElementById('cdHours');
