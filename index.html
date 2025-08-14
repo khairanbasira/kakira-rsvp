@@ -820,57 +820,41 @@
       setMutedUI();
     });
 
-	// ===== Smooth scrolling (longer ease-in/out with simple tuning knobs) =====
-	
-	// TUNING KNOBS — edit these later to taste
-	const SCROLL_MIN_MS   = 700;   // minimum duration for very short jumps
-	const SCROLL_MAX_MS   = 1800;  // cap for very long jumps
-	const SCROLL_PX_FACTOR = 0.35; // extra ms per pixel of distance (higher = slower/longer)
-	
-	// EASING: quint has longer, smoother tails than cubic.
-	// If you prefer the previous feel, swap to easeInOutCubic below.
-	function easeInOutQuint(t){
-	return t < 0.5
-		? 16 * t * t * t * t * t
-		: 1 - Math.pow(-2 * t + 2, 5) / 2;
-	}
-	// function easeInOutCubic(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
-	
-	function smoothScrollTo(target, baseDuration = 700){
-	const start = window.scrollY || window.pageYOffset;
-	const end = (typeof target === 'number')
-		? target
-		: (target.getBoundingClientRect().top + start);
-	
-	const diff = end - start;
-	
-	// Longer, gentler duration
-	const duration = Math.max(
-		SCROLL_MIN_MS,
-		Math.min(SCROLL_MAX_MS, baseDuration + Math.abs(diff) * SCROLL_PX_FACTOR)
-	);
-	
-	let startTime = null;
-	function step(ts){
-		if(startTime === null) startTime = ts;
-		const t = Math.min(1, (ts - startTime) / duration);
-		const eased = easeInOutQuint(t); // <- swap to easeInOutCubic if you want snappier ends
-		window.scrollTo(0, start + diff * eased);
-		if(t < 1) requestAnimationFrame(step);
-	}
-	requestAnimationFrame(step);
-	}
-	
-	function handleSmoothLink(link, selector){
-	link.addEventListener('click', (e)=>{
-		e.preventDefault();
-		playClick();
-		const el = document.querySelector(selector);
-		if(el){ smoothScrollTo(el, 800); } // baseDuration is optional seed; tuning uses knobs above
-	});
-	}
-	handleSmoothLink(rsvpBtn, '#rsvp');
-	handleSmoothLink(locationBtn, '#location');
+    // ===== Smooth scrolling (stronger ease-in/out, adaptive duration) =====
+    function easeInOutCubic(t){
+      return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
+    }
+    function smoothScrollTo(target, baseDuration=700){
+      const start = window.scrollY || window.pageYOffset;
+      const end = (typeof target === 'number')
+        ? target
+        : (target.getBoundingClientRect().top + start);
+
+      const diff = end - start;
+      // Adaptive duration: longer distance → a bit longer, capped for sanity
+      const duration = Math.max(500, Math.min(1400, baseDuration + Math.abs(diff) * 0.25));
+      let startTime = null;
+
+      function step(ts){
+        if(startTime === null) startTime = ts;
+        const t = Math.min(1, (ts - startTime) / duration);
+        const eased = easeInOutCubic(t); // slower start/end, quicker middle
+        window.scrollTo(0, start + diff * eased);
+        if(t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function handleSmoothLink(link, selector){
+      link.addEventListener('click', (e)=>{
+        e.preventDefault();
+        playClick();
+        const el = document.querySelector(selector);
+        if(el){ smoothScrollTo(el, 700); }
+      });
+    }
+    handleSmoothLink(rsvpBtn, '#rsvp');
+    handleSmoothLink(locationBtn, '#location');
 
     // ===== Click/error sounds =====
     let audioCtx;
