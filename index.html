@@ -25,10 +25,7 @@
       --shadow:0 10px 30px rgba(0,0,0,.10);
       --shadow-sm:0 6px 16px rgba(0,0,0,.08);
 
-      /* HERO WALLPAPER (responsive)
-         - Default (desktop/web): web image
-         - Mobile (≤700px): overridden below
-      */
+      /* Default to web image; media queries below will swap based on orientation */
       --wallpaper:url('rsvpwallpaper_web.png');
 
       --hero-overlay-color: 255,247,236;
@@ -37,11 +34,12 @@
       --hero-overlay-3: .65;
     }
 
-    /* Swap hero image on smartphones. Adjust 700px if you prefer a different breakpoint. */
-    @media (max-width:700px){
-      :root{
-        --wallpaper:url('rsvpwallpaper_mob.png');
-      }
+    /* Orientation-based wallpaper */
+    @media (orientation: portrait){
+      :root{ --wallpaper:url('rsvpwallpaper_mob.png'); }
+    }
+    @media (orientation: landscape){
+      :root{ --wallpaper:url('rsvpwallpaper_web.png'); }
     }
 
     *{ box-sizing:border-box }
@@ -219,31 +217,26 @@
       box-shadow:var(--shadow-sm); padding:16px 12px;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       text-align:center;
-      aspect-ratio:1/1;     /* square; drops on very tight phones via media query */
+      aspect-ratio:1/1;
       min-width:0;
     }
     .cd-num{
       font-family:'Playfair Display',serif; font-weight:700; line-height:1;
       font-size:clamp(22px, 7.2vw, 48px);
     }
-    .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:#muted; }
+    .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:var(--muted); }
 
     @media (max-width:520px){
       .countdown-row{ grid-template-columns:repeat(2, minmax(120px, 1fr)); }
     }
     @media (max-width:400px){
       .countdown-row{ grid-template-columns:repeat(2, minmax(110px, 1fr)); }
-      .cd-box{ aspect-ratio:auto; }  /* allow taller than wide to prevent squeeze */
+      .cd-box{ aspect-ratio:auto; }
       .cd-num{ font-size:clamp(22px, 9vw, 42px); }
       .cd-label{ letter-spacing:.28em; }
     }
 
     /* ===== AGENDA / TIMELINE (dot alignment with tweak vars) ===== */
-    /* You can edit these later:
-       --tl-line-x     : horizontal position of the vertical line (from .timeline left)
-       --timeline-pad  : left padding inside .timeline
-       --tl-dot-nudge  : fine-tune the dot +/- px if device rounding nudges it
-    */
     .agenda{
       display:grid; grid-template-columns: 240px 1fr; gap:24px;
       --timeline-pad:28px;
@@ -267,7 +260,6 @@
     }
     .tl-mid{ display:none; }
 
-    /* Dot centered exactly on the vertical line */
     .tl-item::before{
       content:''; position:absolute;
       left: calc( (var(--tl-line-x) - var(--timeline-pad)) + var(--tl-dot-nudge) );
@@ -510,7 +502,6 @@
     const COUNTDOWN_TARGET = new Date("2025-11-22T10:00:00");
 
     /* ===== BGM LOOP CONTROL =====
-       Set how many times the background music should play.
        1 = play once, 2 = twice, 5 = five times, Infinity = loop forever
     */
     const BGM_STOP_AFTER_LOOPS = 1;  // loop only once
@@ -818,19 +809,41 @@
       setMutedUI();
     });
 
-    // ===== Smooth scrolling =====
-    function easeInOutQuad(t){ return t<0.5 ? 2*t*t : -1+(4-2*t)*t; }
-    function smoothScrollTo(target, duration=700){
+    // ===== Smooth scrolling (stronger ease-in/out, adaptive duration) =====
+    function easeInOutCubic(t){
+      return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
+    }
+    function smoothScrollTo(target, baseDuration=700){
       const start = window.scrollY || window.pageYOffset;
-      const end = (typeof target === 'number') ? target : (target.getBoundingClientRect().top + start);
-      const diff = end - start; let startTime = null;
-      function step(ts){ if(startTime === null) startTime = ts; const t = Math.min(1, (ts - startTime) / duration); const eased = easeInOutQuad(t); window.scrollTo(0, start + diff * eased); if(t < 1) requestAnimationFrame(step); }
+      const end = (typeof target === 'number')
+        ? target
+        : (target.getBoundingClientRect().top + start);
+
+      const diff = end - start;
+      // Adaptive duration: longer distance → a bit longer, capped for sanity
+      const duration = Math.max(500, Math.min(1400, baseDuration + Math.abs(diff) * 0.25));
+      let startTime = null;
+
+      function step(ts){
+        if(startTime === null) startTime = ts;
+        const t = Math.min(1, (ts - startTime) / duration);
+        const eased = easeInOutCubic(t); // slower start/end, quicker middle
+        window.scrollTo(0, start + diff * eased);
+        if(t < 1) requestAnimationFrame(step);
+      }
       requestAnimationFrame(step);
     }
+
     function handleSmoothLink(link, selector){
-      link.addEventListener('click', (e)=>{ e.preventDefault(); playClick(); const el = document.querySelector(selector); if(el){ smoothScrollTo(el, 750); } });
+      link.addEventListener('click', (e)=>{
+        e.preventDefault();
+        playClick();
+        const el = document.querySelector(selector);
+        if(el){ smoothScrollTo(el, 700); }
+      });
     }
-    handleSmoothLink(rsvpBtn, '#rsvp'); handleSmoothLink(locationBtn, '#location');
+    handleSmoothLink(rsvpBtn, '#rsvp');
+    handleSmoothLink(locationBtn, '#location');
 
     // ===== Click/error sounds =====
     let audioCtx;
@@ -979,14 +992,14 @@
           p.x += p.drift * dt * 60;
           if(p.y < -10){ p.y = h + 10; p.x = Math.random()*w; }
 
-          const rr = p.r * (p.pulse + Math.sin((ts/600)+(p.x+p.y))*0.03);
-          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr*2.2);
-          g.addColorStop(0, p.inner);
-          g.addColorStop(0.5, p.inner);
-          g.addColorStop(1, p.outer);
+        const rr = p.r * (p.pulse + Math.sin((ts/600)+(p.x+p.y))*0.03);
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr*2.2);
+        g.addColorStop(0, p.inner);
+        g.addColorStop(0.5, p.inner);
+        g.addColorStop(1, p.outer);
 
-          ctx.fillStyle = g;
-          ctx.beginPath(); ctx.arc(p.x, p.y, rr, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(p.x, p.y, rr, 0, Math.PI*2); ctx.fill();
         }
         if(running) requestAnimationFrame(step);
       }
@@ -1021,6 +1034,20 @@
         sEl.textContent = pad(secs);
       }
       tick(); setInterval(tick, 1000);
+    })();
+
+    // ===== Orientation fallback (ensures swap on rotate in stubborn browsers) =====
+    (function ensureWallpaperOnRotate(){
+      const m = window.matchMedia('(orientation: portrait)');
+      function apply(){
+        const url = m.matches ? "url('rsvpwallpaper_mob.png')" : "url('rsvpwallpaper_web.png')";
+        document.documentElement.style.setProperty('--wallpaper', url);
+      }
+      apply();
+      if (m.addEventListener) m.addEventListener('change', apply);
+      else if (m.addListener) m.addListener(apply); // older Safari
+      window.addEventListener('orientationchange', apply);
+      window.addEventListener('resize', apply);
     })();
   </script>
 </body>
