@@ -85,19 +85,30 @@
     .volume-pop{ display:none !important; }
 
     /* Hero */
-    .hero{
-      position:relative;
-      min-height:72vh;
-      display:grid; place-items:center; text-align:center; color:#222;
-      background:
-        linear-gradient(
-          180deg,
-          rgba(var(--hero-overlay-color), var(--hero-overlay-1)) 0%,
-          rgba(var(--hero-overlay-color), var(--hero-overlay-2)) 55%,
-          rgba(var(--hero-overlay-color), var(--hero-overlay-3)) 100%
-        ),
-        var(--wallpaper) center/cover no-repeat fixed;
-    }
+	.hero{
+	position:relative;
+	min-height:72vh;              /* keep your height – change to 100svh if you want full screen */
+	display:grid; place-items:center; text-align:center; color:#222;
+	
+	/* Explicit multi-layer background to prevent mobile 'framing' */
+	background-image:
+		linear-gradient(
+		180deg,
+		rgba(var(--hero-overlay-color), var(--hero-overlay-1)) 0%,
+		rgba(var(--hero-overlay-color), var(--hero-overlay-2)) 55%,
+		rgba(var(--hero-overlay-color), var(--hero-overlay-3)) 100%
+		),
+		var(--wallpaper);
+	
+	/* Make BOTH layers cover, centered, no-repeat */
+	background-position: center center, center center;
+	background-repeat: no-repeat, no-repeat;
+	background-size: cover, cover;
+	
+	/* Disable 'fixed' — it causes the crop/frame on iOS/Android */
+	background-attachment: scroll, scroll;
+	}
+
 
     /* Decorative couple title */
     .couple-title{
