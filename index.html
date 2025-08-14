@@ -85,30 +85,25 @@
     .volume-pop{ display:none !important; }
 
     /* Hero */
-	.hero{
-	position:relative;
-	min-height:100svh;              /* keep your height – change to 100svh if you want full screen - now is 72vh*/
-	display:grid; place-items:center; text-align:center; color:#222;
-	
-	/* Explicit multi-layer background to prevent mobile 'framing' */
-	background-image:
-		linear-gradient(
-		180deg,
-		rgba(var(--hero-overlay-color), var(--hero-overlay-1)) 0%,
-		rgba(var(--hero-overlay-color), var(--hero-overlay-2)) 55%,
-		rgba(var(--hero-overlay-color), var(--hero-overlay-3)) 100%
-		),
-		var(--wallpaper);
-	
-	/* Make BOTH layers cover, centered, no-repeat */
-	background-position: center center, center center;
-	background-repeat: no-repeat, no-repeat;
-	background-size: cover, cover;
-	
-	/* Disable 'fixed' — it causes the crop/frame on iOS/Android */
-	background-attachment: scroll, scroll;
-	}
+    .hero{
+      position:relative;
+      min-height:100svh;
+      display:grid; place-items:center; text-align:center; color:#222;
 
+      background-image:
+        linear-gradient(
+          180deg,
+          rgba(var(--hero-overlay-color), var(--hero-overlay-1)) 0%,
+          rgba(var(--hero-overlay-color), var(--hero-overlay-2)) 55%,
+          rgba(var(--hero-overlay-color), var(--hero-overlay-3)) 100%
+        ),
+        var(--wallpaper);
+
+      background-position: center center, center center;
+      background-repeat: no-repeat, no-repeat;
+      background-size: cover, cover;
+      background-attachment: scroll, scroll;
+    }
 
     /* Decorative couple title */
     .couple-title{
@@ -157,7 +152,7 @@
     .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
     .row{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
 
-    /* Inputs – fixed height so buttons align perfectly */
+    /* Inputs */
     .input{
       width:100%; height:48px; padding:0 16px; border-radius:12px;
       border:1px solid #e5e7eb; font-size:16px; background:#fff;
@@ -171,7 +166,7 @@
     .tiny{ font-size:12px; color:var(--muted) }
     .total{ text-align:center; margin-top:6px; color:#374151 }
 
-    /* Confirm/Edit pill – match input height */
+    /* Confirm/Edit pill */
     .confirm-btn{
       height:48px; padding:0 16px;
       white-space:nowrap; border-radius:12px;
@@ -194,7 +189,6 @@
     }
     .muted{ color:#6b7280 }
 
-    /* Section title style */
     .section-title{
       margin:0 0 8px; font-family:'Playfair Display',serif; font-size:clamp(22px,3.6vw,28px);
       color:#1f2937;
@@ -214,7 +208,7 @@
     }
     .toast.show{ opacity:1 }
 
-    /* ===== COUNTDOWN (improved for phones) ===== */
+    /* ===== COUNTDOWN ===== */
     #countdown .cd-sub{ margin:6px 0 16px; }
 
     .countdown-row{
@@ -235,7 +229,7 @@
       font-family:'Playfair Display',serif; font-weight:700; line-height:1;
       font-size:clamp(22px, 7.2vw, 48px);
     }
-    .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:var(--muted); }
+    .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:#6b7280; }
 
     @media (max-width:520px){
       .countdown-row{ grid-template-columns:repeat(2, minmax(120px, 1fr)); }
@@ -247,7 +241,7 @@
       .cd-label{ letter-spacing:.28em; }
     }
 
-    /* ===== AGENDA / TIMELINE (dot alignment with tweak vars) ===== */
+    /* ===== AGENDA / TIMELINE ===== */
     .agenda{
       display:grid; grid-template-columns: 240px 1fr; gap:24px;
       --timeline-pad:28px;
@@ -303,19 +297,8 @@
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
   </div>
 
-  <!-- (COMMENTED OUT) Volume popover to revisit later
-  <div id="volumePop" class="volume-pop" role="dialog" aria-label="Volume">
-    <div class="vol-wrap">
-      <div class="vol-slider-wrap">
-        <input id="volumeSlider" class="vol-slider" type="range" min="1" max="100" step="1" value="20" aria-label="Volume slider">
-      </div>
-      <button id="volPlus" class="vol-btn" type="button" aria-label="Volume up +10">+</button>
-      <button id="volMinus" class="vol-btn" type="button" aria-label="Volume down -10">−</button>
-    </div>
-  </div>
-  -->
-
-  <header class="hero">
+  <!-- Hero (now identifiable for layout) -->
+  <header class="hero" id="hero" data-card="hero">
     <div>
       <div class="couple-title" aria-label="Basran love Khairani">
         <span class="name">Basran</span>
@@ -333,7 +316,7 @@
   </header>
 
   <main>
-    <section id="rsvp">
+    <section id="rsvp" data-card="rsvp">
       <div class="container">
         <div class="card">
           <h2 class="section-title">RSVP</h2>
@@ -352,7 +335,6 @@
             <!-- Guest names -->
             <div id="guestRows" class="grid" aria-live="polite"></div>
 
-            <!-- Phone section separated from names -->
             <div class="separator"></div>
             <div class="spacer-8"></div>
 
@@ -379,7 +361,7 @@
       </div>
     </section>
 
-    <section id="location">
+    <section id="location" data-card="location">
       <div class="container">
         <div class="card">
           <h2 class="section-title" id="locTitle">Location & Directions</h2>
@@ -393,7 +375,7 @@
       </div>
     </section>
 
-    <section id="contact">
+    <section id="contact" data-card="contact">
       <div class="container">
         <div class="card">
           <h2 class="section-title" id="contactTitle">Contact (Bride's family)</h2>
@@ -404,7 +386,7 @@
     </section>
 
     <!-- Event agenda schedule -->
-    <section id="schedule">
+    <section id="schedule" data-card="schedule">
       <div class="container">
         <div class="card">
           <h2 class="section-title">Schedule</h2>
@@ -459,7 +441,7 @@
     </section>
 
     <!-- Live countdown -->
-    <section id="countdown">
+    <section id="countdown" data-card="countdown">
       <div class="container">
         <div class="card">
           <h2 class="section-title">Countdown timer</h2>
@@ -516,6 +498,53 @@
        1 = play once, 2 = twice, 5 = five times, Infinity = loop forever
     */
     const BGM_STOP_AFTER_LOOPS = 1;  // loop only once
+
+    /* ===== LAYOUT CONFIG (reorder cards here) =====
+       Valid keys: 'hero','rsvp','location','contact','schedule','countdown'
+    */
+    const CARD_ORDER = ['hero','rsvp','location','contact','schedule','countdown'];
+    const CARD_VISIBLE = {
+      hero:true, rsvp:true, location:true, contact:true, schedule:true, countdown:true
+    };
+
+    function applyCardLayout(){
+      const main = document.querySelector('main');
+      if(!main) return;
+
+      // collect
+      const map = new Map();
+      document.querySelectorAll('[data-card]').forEach(el=>{
+        map.set(el.getAttribute('data-card'), el);
+      });
+
+      // toggle visibility
+      for(const [key, el] of map){
+        el.style.display = (CARD_VISIBLE[key] === false) ? 'none' : '';
+      }
+
+      // ensure hero sits above main
+      const hero = map.get('hero');
+      if(hero && hero.parentElement !== document.body){
+        document.body.insertBefore(hero, main);
+      }
+
+      // reinsert others inside main in configured order
+      CARD_ORDER.forEach(key=>{
+        if(key === 'hero') return;
+        const el = map.get(key);
+        if(el && CARD_VISIBLE[key] !== false){
+          main.appendChild(el); // appending moves it to end in this order
+        }
+      });
+
+      // append any cards not listed in CARD_ORDER but present
+      map.forEach((el, key)=>{
+        if(key === 'hero') return;
+        if(!CARD_ORDER.includes(key) && el.style.display !== 'none'){
+          main.appendChild(el);
+        }
+      });
+    }
 
     // ====== i18n strings ======
     const I18N = {
@@ -820,42 +849,6 @@
       setMutedUI();
     });
 
-    // ===== Smooth scrolling (stronger ease-in/out, adaptive duration) =====
-    function easeInOutCubic(t){
-      return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
-    }
-    function smoothScrollTo(target, baseDuration=700){
-      const start = window.scrollY || window.pageYOffset;
-      const end = (typeof target === 'number')
-        ? target
-        : (target.getBoundingClientRect().top + start);
-
-      const diff = end - start;
-      // Adaptive duration: longer distance → a bit longer, capped for sanity
-      const duration = Math.max(500, Math.min(1400, baseDuration + Math.abs(diff) * 0.25));
-      let startTime = null;
-
-      function step(ts){
-        if(startTime === null) startTime = ts;
-        const t = Math.min(1, (ts - startTime) / duration);
-        const eased = easeInOutCubic(t); // slower start/end, quicker middle
-        window.scrollTo(0, start + diff * eased);
-        if(t < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }
-
-    function handleSmoothLink(link, selector){
-      link.addEventListener('click', (e)=>{
-        e.preventDefault();
-        playClick();
-        const el = document.querySelector(selector);
-        if(el){ smoothScrollTo(el, 700); }
-      });
-    }
-    handleSmoothLink(rsvpBtn, '#rsvp');
-    handleSmoothLink(locationBtn, '#location');
-
     // ===== Click/error sounds =====
     let audioCtx;
     function initAudioCtx(){ if(!audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; audioCtx = new AC(); } }
@@ -922,6 +915,7 @@
     }
 
     renderAll();
+    applyCardLayout(); // <— apply your CARD_ORDER / CARD_VISIBLE here
 
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
 
@@ -1003,14 +997,14 @@
           p.x += p.drift * dt * 60;
           if(p.y < -10){ p.y = h + 10; p.x = Math.random()*w; }
 
-        const rr = p.r * (p.pulse + Math.sin((ts/600)+(p.x+p.y))*0.03);
-        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr*2.2);
-        g.addColorStop(0, p.inner);
-        g.addColorStop(0.5, p.inner);
-        g.addColorStop(1, p.outer);
+          const rr = p.r * (p.pulse + Math.sin((ts/600)+(p.x+p.y))*0.03);
+          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr*2.2);
+          g.addColorStop(0, p.inner);
+          g.addColorStop(0.5, p.inner);
+          g.addColorStop(1, p.outer);
 
-        ctx.fillStyle = g;
-        ctx.beginPath(); ctx.arc(p.x, p.y, rr, 0, Math.PI*2); ctx.fill();
+          ctx.fillStyle = g;
+          ctx.beginPath(); ctx.arc(p.x, p.y, rr, 0, Math.PI*2); ctx.fill();
         }
         if(running) requestAnimationFrame(step);
       }
@@ -1047,7 +1041,7 @@
       tick(); setInterval(tick, 1000);
     })();
 
-    // ===== Orientation fallback (ensures swap on rotate in stubborn browsers) =====
+    // ===== Orientation fallback for wallpaper =====
     (function ensureWallpaperOnRotate(){
       const m = window.matchMedia('(orientation: portrait)');
       function apply(){
