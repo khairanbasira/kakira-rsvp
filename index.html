@@ -196,40 +196,66 @@
 
     /* (3) NEW: countdown */
     #countdown .cd-sub{ margin:6px 0 16px; }
-    .countdown-row{ display:flex; gap:12px; align-items:stretch; flex-wrap:nowrap; }
+
+    /* CHANGE 2: make countdown a responsive grid and hard-center content in perfect squares */
+    .countdown-row{
+      display:grid; gap:12px; grid-template-columns:repeat(4, minmax(0,1fr));
+      align-items:stretch;
+    }
     .cd-box{
-      flex:1 1 0; min-width:0; text-align:center;
       background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius);
       box-shadow:var(--shadow-sm); padding:16px 12px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center;
+      aspect-ratio:1/1;            /* square box regardless of screen */
+      min-width:0;                 /* prevent overflow */
     }
-    .cd-num{ font-family:'Playfair Display',serif; font-weight:700; line-height:1;
-      font-size:clamp(22px,8vw,48px); }
+    .cd-num{
+      font-family:'Playfair Display',serif; font-weight:700; line-height:1;
+      font-size:clamp(22px,8vw,48px);
+    }
     .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:var(--muted); }
 
     /* (4) NEW: agenda schedule */
-    .agenda{ display:grid; grid-template-columns: 240px 1fr; gap:24px; }
+    /* CHANGE 3A: use CSS variables so the dot aligns exactly with the vertical line */
+    .agenda{
+      display:grid; grid-template-columns: 240px 1fr; gap:24px;
+      --timeline-pad:28px;           /* left padding inside .timeline */
+      --tl-line-x:11px;              /* x position (from .timeline left) for the vertical line */
+    }
     .agenda-date{ font-family:'Playfair Display',serif; font-size:clamp(18px,2.6vw,24px); }
     .agenda-day{ color:var(--muted); margin-top:6px; }
-    .timeline{ position:relative; padding-left:28px; }
-    .timeline::before{
-      content:''; position:absolute; left:11px; top:6px; bottom:6px; width:2px; background:var(--gold-strong);
+    .timeline{
+      position:relative; padding-left:var(--timeline-pad);
     }
+    .timeline::before{
+      content:''; position:absolute; left:var(--tl-line-x); top:6px; bottom:6px; width:2px; background:var(--gold-strong);
+    }
+
+    /* CHANGE 3B: hide the middle bullet column and align the pseudo dot to the line */
     .tl-item{
-      position:relative; display:grid; grid-template-columns: 120px 12px 1fr; align-items:center;
+      position:relative; display:grid; grid-template-columns: 120px 1fr; align-items:center;
       gap:10px; margin:20px 0;
     }
+    .tl-mid{ display:none; } /* keep DOM as-is, but no stray bullet */
     .tl-item::before{
-      content:''; position:absolute; left:4px; width:14px; height:14px; border-radius:50%;
-      background:var(--gold-strong); top:50%; transform:translateY(-50%);
+      content:''; position:absolute;
+      /* place the circle on top of the vertical line (line is at 11px from .timeline; item starts after 28px pad) */
+      left: calc(var(--tl-line-x) - var(--timeline-pad));
+      width:14px; height:14px; border-radius:50%;
+      background:var(--gold-strong); top:50%; transform:translate(-50%,-50%);
       box-shadow:0 0 0 3px var(--gold-soft);
     }
+
     .tl-time{ font-weight:600; color:#0f172a; }
-    .tl-mid{ text-align:center; color:#0f172a; font-weight:700; }
     .tl-what{ color:#0f172a; }
+    /* CHANGE 3C: two-line child description styling */
+    .tl-title{ font-weight:700; letter-spacing:.02em; }
+    .tl-desc{ margin-top:4px; font-size:12px; line-height:1.35; color:var(--muted); }
 
     @media (max-width:700px){
       .agenda{ grid-template-columns:1fr; }
-      .tl-item{ grid-template-columns: 96px 8px 1fr; }
+      .tl-item{ grid-template-columns: 96px 1fr; }
     }
   </style>
 </head>
@@ -279,7 +305,7 @@
       <div class="container">
         <div class="card">
           <h2 class="section-title">RSVP</h2>
-          <p class="muted" id="rsvpIntro">Please add up to four guest names and your main contact number.</p>
+          <p class="muted" id="rsvpIntro">Kindly share your full name, so we may welcome you with joy on our special day.</p>
 
           <form id="rsvpForm" method="POST" target="hidden_iframe">
             <input type="hidden" name="guest1" id="post_guest1">
@@ -357,21 +383,45 @@
               <div class="agenda-day tiny">Saturday</div>
             </div>
             <div class="timeline">
+              <!-- CHANGE 3D: keep your same structure but add two-line child descriptions -->
               <div class="tl-item">
-                <div class="tl-time">10:00am</div><div class="tl-mid">•</div><div class="tl-what">GUEST ARRIVAL</div>
+                <div class="tl-time">10:00am</div>
+                <div class="tl-what">
+                  <div class="tl-title">GUEST ARRIVAL</div>
+                  <div class="tl-desc">Registration & welcome drinks<br/>Find your seat, mingle</div>
+                </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">12:00pm</div><div class="tl-mid">•</div><div class="tl-what">NIKAH</div>
+                <div class="tl-time">12:00pm</div>
+                <div class="tl-what">
+                  <div class="tl-title">NIKAH</div>
+                  <div class="tl-desc">Akad nikah ceremony<br/>Family blessings</div>
+                </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">1:00pm</div><div class="tl-mid">•</div><div class="tl-what">WEDDING CEREMONY</div>
+                <div class="tl-time">1:00pm</div>
+                <div class="tl-what">
+                  <div class="tl-title">WEDDING CEREMONY</div>
+                  <div class="tl-desc">Procession & doa<br/>Couple entrance</div>
+                </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">2:00pm</div><div class="tl-mid">•</div><div class="tl-what">LUNCH</div>
+                <div class="tl-time">2:00pm</div>
+                <div class="tl-what">
+                  <div class="tl-title">LUNCH</div>
+                  <div class="tl-desc">Buffet opens<br/>Please enjoy the meal</div>
+                </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">3:00pm</div><div class="tl-mid">•</div><div class="tl-what">PHOTO SESSION</div>
+                <div class="tl-time">3:00pm</div>
+                <div class="tl-what">
+                  <div class="tl-title">PHOTO SESSION</div>
+                  <div class="tl-desc">Group photos on stage<br/>Friends & family shots</div>
+                </div>
               </div>
+
+              <!-- (kept for compatibility; visually hidden by CSS) -->
+              <div class="tl-mid">•</div>
             </div>
           </div>
         </div>
@@ -413,7 +463,8 @@
 
   <div id="toast" class="toast">Saved!</div>
 
-  <audio id="bgm" src="maulaya.mp3" autoplay loop preload="auto" playsinline></audio>
+  <!-- CHANGE 1: remove `loop` attribute; loop count is controlled by JS below -->
+  <audio id="bgm" src="maulaya.mp3" autoplay preload="auto" playsinline></audio>
 
   <script>
     // ====== CONFIG ======
@@ -432,6 +483,14 @@
     // Uses local time. Change date/time below as needed.
     const COUNTDOWN_TARGET = new Date("2025-11-22T10:00:00");
 
+    /* CHANGE 1 (config): set how many times the background music should play.
+       - 1 = play once (no repeat)
+       - 2 = play twice (stop after 2nd finish)
+       - 5 = play five times
+       - Infinity = loop forever (like old behavior)
+    */
+    const BGM_STOP_AFTER_LOOPS = 2;  // <— adjust this value when you want 2 / 5 loops, etc.
+
     // ====== i18n strings ======
     const I18N = {
       en: {
@@ -439,15 +498,15 @@
         subtitle: "We'd love to celebrate with you. Please RSVP below.",
         rsvp: "RSVP",
         location: "Location",
-        rsvpIntro: "Please add up to four guest names and your main contact number.",
+        rsvpIntro: "Kindly share your full name, so we may welcome you with joy on our special day.",
         fullNameFirst: "Your Full Name",
-        fullNameOthers: "Attend with",
+        fullNameOthers: "Attend With",
         confirm: "Confirm",
         edit: "Edit",
-        phoneHeader: "Phone Number",                 // (1) keep simple labels
-        phoneHint: "We’ll use this to inform you if anything changes.", // (1) NEW
+        phoneHeader: "Contact Number",
+        phoneHint: "We’ll use this to inform you if anything changes.",
         submit: "Submit RSVP",
-        total: (n)=>`Total: ${n} guest(s)`,
+        total: (n)=>`Total: ${n} Guest(s)`,
         needPhone: "Please add your contact number.",
         needOneName: "At least one name must be confirmed before submitting.",
         thanks: "Thank you! Your RSVP has been received.",
@@ -463,18 +522,18 @@
         subtitle: "Jemput RSVP di bawah ya.",
         rsvp: "RSVP",
         location: "Lokasi",
-        rsvpIntro: "Sila isi sehingga empat nama tetamu dan nombor telefon utama.",
+        rsvpIntro: "Sila isi nama penuh anda, agar kami dapat menyambut kehadiran anda dengan penuh gembira pada hari istimewa kami.",
         fullNameFirst: "Nama Penuh Anda",
-        fullNameOthers: "Hadir bersama",
-        confirm: "Sahkan",
+        fullNameOthers: "Hadir Bersama",
+        confirm: "Hadir",
         edit: "Ubah",
-        phoneHeader: "Nombor Telephone",            // (1) EXACT wording requested
-        phoneHint: "Nombor ini untuk dihubungi jika ada makluman/perubahan.", // (1) NEW
-        submit: "Hantar RSVP",
-        total: (n)=>`Jumlah: ${n} tetamu`,
-        needPhone: "Sila isi nombor telefon.",
-        needOneName: "Sekurang-kurangnya satu nama perlu disahkan sebelum hantar.",
-        thanks: "Terima kasih! RSVP anda telah diterima.",
+        phoneHeader: "Nombor Untuk Dihubungi",
+        phoneHint: "Nombor ini untuk dihubungi jika ada makluman/perubahan.",
+        submit: "Hantar Respon",
+        total: (n)=>`Jumlah: ${n} Tetamu`,
+        needPhone: "Sila isi nombor telefon untuk dihubungi",
+        needOneName: "Sekurang-kurangnya satu nama perlu disahkan hadir sebelum hantar.",
+        thanks: "Terima kasih! Respon anda telah diterima.",
         already: "RSVP telah dihantar. Penyuntingan dimatikan.",
         locTitle: "Lokasi & Arah",
         locDesc: "Tekan butang untuk buka arah ke lokasi.",
@@ -643,8 +702,8 @@
       rsvpBtn.textContent = T.rsvp;
       locationBtn.textContent = T.location;
       rsvpIntro.textContent = T.rsvpIntro;
-      phoneHeader.textContent = T.phoneHeader;            // (1)
-      phoneHint.textContent = T.phoneHint;                // (1)
+      phoneHeader.textContent = T.phoneHeader;
+      phoneHint.textContent = T.phoneHint;
       submitBtn.textContent = (LANG === 'en' ? 'Submit RSVP' : 'Hantar RSVP');
       locTitle.textContent = T.locTitle;
       locDesc.textContent = T.locDesc;
@@ -716,6 +775,17 @@
     }
     window.addEventListener('pageshow', ensurePlayback);
     window.addEventListener('load', ensurePlayback);
+
+    /* CHANGE 1 (logic): loop control using ended event */
+    let _bgmLoops = 0; // counts how many times the track has COMPLETED
+    bgm.loop = false;  // important: we control repeat manually
+    bgm.addEventListener('ended', async () => {
+      _bgmLoops++;
+      // If Infinity, it will never compare true and keep looping
+      if (_bgmLoops < BGM_STOP_AFTER_LOOPS || BGM_STOP_AFTER_LOOPS === Infinity) {
+        try { bgm.currentTime = 0; await bgm.play(); } catch(_) {}
+      } // else: stop naturally after finishing
+    });
 
     // Mute/unmute only
     muteBtn.addEventListener('click', async (e)=>{
