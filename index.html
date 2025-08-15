@@ -8,8 +8,7 @@
   <meta name="theme-color" content="#fff7ec" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Added a script-style font for the couple names (LucySaidOK-like) -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -26,6 +25,7 @@
       --shadow:0 10px 30px rgba(0,0,0,.10);
       --shadow-sm:0 6px 16px rgba(0,0,0,.08);
 
+      /* Default to web image; media queries below will swap based on orientation */
       --wallpaper:url('rsvpwallpaper_web.png');
 
       --hero-overlay-color: 255,247,236;
@@ -34,6 +34,7 @@
       --hero-overlay-3: .65;
     }
 
+    /* Orientation-based wallpaper */
     @media (orientation: portrait){
       :root{ --wallpaper:url('rsvpwallpaper_mob.png'); }
     }
@@ -50,10 +51,12 @@
       background:var(--cream);
     }
 
+    /* Global particles ABOVE everything */
     #bg-particles{
       position:fixed; inset:0; z-index:9; pointer-events:none; opacity:.45;
     }
 
+    /* Lift only the important UI above particles */
     .top-controls,
     .hero .heading,
     .hero .sub,
@@ -61,6 +64,7 @@
     .card,
     .footer { position:relative; z-index:10; }
 
+    /* Top-right controls */
     .top-controls{
       position:fixed; top:15px; right:15px;
       display:flex; gap:10px; z-index:9999;
@@ -77,6 +81,7 @@
     .icon-btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
     .icon-btn:active{ transform:translateY(0); }
 
+    /* (DISABLED) Volume popover kept for future */
     .volume-pop{ display:none !important; }
 
     /* Hero */
@@ -84,6 +89,7 @@
       position:relative;
       min-height:100svh;
       display:grid; place-items:center; text-align:center; color:#222;
+
       background-image:
         linear-gradient(
           180deg,
@@ -92,52 +98,36 @@
           rgba(var(--hero-overlay-color), var(--hero-overlay-3)) 100%
         ),
         var(--wallpaper);
+
       background-position: center center, center center;
       background-repeat: no-repeat, no-repeat;
       background-size: cover, cover;
       background-attachment: scroll, scroll;
-      padding: 24px 14px;
     }
 
-    /* Small pre-heading above names */
-    .preheading{
-      font-size:14px;
-      letter-spacing:.08em;
-      color:#6b4b00;
-      text-transform:uppercase;
-      margin-bottom:8px;
-    }
-
-    /* Couple title now uses the script font */
+    /* Decorative couple title */
     .couple-title{
       display:flex; align-items:center; justify-content:center; gap:18px;
-      margin-bottom:8px;
-      font-family:'Great Vibes', cursive;
-      font-weight:400;
-      font-size:clamp(42px,10vw,96px);
+      margin-bottom:16px;
+      font-family:'Playfair Display',serif;
+      font-weight:700;
+      font-size:clamp(34px,8vw,84px);
       line-height:1;
+      letter-spacing:.5px;
       color:var(--gold-strong);
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
     }
     .couple-title .heart{ font-size:1.05em; transform:translateY(-2px); }
     @media (max-width:520px){
-      .couple-title{ flex-direction:column; gap:2px; }
+      .couple-title{ flex-direction:column; gap:6px; }
       .couple-title .heart{ transform:none; }
     }
 
-    /* Wedding date line under names */
-    .wedding-date{
-      font-family:'Playfair Display',serif;
-      font-size:clamp(16px,3.6vw,22px);
-      letter-spacing:.04em;
-      color:#5a3d00;
-      margin:6px 0 14px;
-    }
-
-    .heading{ font-family:'Playfair Display',serif; font-size:clamp(24px,5vw,40px); line-height:1.12; }
+    .heading{ font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,52px); line-height:1.12; }
     .sub{ color:var(--muted); margin-top:8px }
 
-    .cta-row{ margin-top:20px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    /* Buttons */
+    .cta-row{ margin-top:26px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
     .btn{
       appearance:none; cursor:pointer; display:inline-block; text-decoration:none;
       padding:14px 22px; border-radius:var(--radius);
@@ -150,6 +140,7 @@
     .btn:active{ transform:translateY(0); }
     .btn-outline{ background:#fff; color:#111; border:1px solid var(--gold-strong) }
 
+    /* Submit button */
     #submitBtn{ background:var(--gold); color:#111; border:1px solid var(--gold-strong); }
     #submitBtn[disabled]{ background:#eee; color:#999; border-color:#ddd; cursor:not-allowed; box-shadow:none; transform:none; }
 
@@ -157,9 +148,11 @@
     .container{ max-width:980px; margin:0 auto; }
     .card{ background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
 
+    /* Guest rows */
     .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
     .row{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
 
+    /* Inputs */
     .input{
       width:100%; height:48px; padding:0 16px; border-radius:12px;
       border:1px solid #e5e7eb; font-size:16px; background:#fff;
@@ -173,8 +166,10 @@
     .tiny{ font-size:12px; color:var(--muted) }
     .total{ text-align:center; margin-top:6px; color:#374151 }
 
+    /* Confirm/Edit pill */
     .confirm-btn{
-      height:48px; padding:0 16px; white-space:nowrap; border-radius:12px;
+      height:48px; padding:0 16px;
+      white-space:nowrap; border-radius:12px;
       display:inline-flex; align-items:center; gap:8px;
       border:1px solid var(--gold-strong);
       box-shadow:var(--shadow-sm);
@@ -213,60 +208,32 @@
     }
     .toast.show{ opacity:1 }
 
-    /* ===== New INTRO CARD (gold abstract frame) ===== */
-    .invite-card{
-      position:relative;
-      background:#fff;
-      border-radius:20px;
-      padding:32px 22px;
-      box-shadow:var(--shadow);
-      border:1px solid rgba(184,144,23,.25);
-      /* subtle gradient border sheen */
-      background-image:
-        radial-gradient(150% 100% at 0% 0%, rgba(246,231,184,.35), transparent 60%),
-        radial-gradient(120% 90% at 100% 100%, rgba(255,240,201,.45), transparent 60%);
-      overflow:hidden;
-    }
-    /* gold corner flourishes */
-    .invite-card::before,
-    .invite-card::after{
-      content:"";
-      position:absolute; inset:-2px;
-      border-radius:22px;
-      pointer-events:none;
-      background:
-        conic-gradient(from 30deg, rgba(212,175,55,.25), rgba(255,240,201,0) 20% 80%, rgba(212,175,55,.25));
-      mask:
-        radial-gradient(24px 24px at 8% 10%, #000 96%, transparent 100%),
-        radial-gradient(24px 24px at 92% 90%, #000 96%, transparent 100%),
-        linear-gradient(#000,#000);
-      -webkit-mask-composite: xor;
-              mask-composite: exclude;
-      opacity:.45;
-    }
-
-    .invite-line{ text-align:center; margin:8px 0; }
-    .invite-small{ color:#6b7280; font-size:14px; }
-    .invite-parents{ font-family:'Playfair Display',serif; font-size:18px; }
-    .invite-couple{ font-family:'Playfair Display',serif; font-size:clamp(24px,5vw,36px); font-weight:700; }
-    .invite-and{ font-size:20px; margin:2px 0; color:#6b7280; }
-    .invite-section-title{ font-weight:700; margin-top:16px; }
-    .invite-strong{ font-weight:600; }
-
     /* ===== COUNTDOWN ===== */
     #countdown .cd-sub{ margin:6px 0 16px; }
+
     .countdown-row{
-      display:grid; gap:12px; grid-template-columns:repeat(4, minmax(100px, 1fr)); align-items:stretch;
+      display:grid;
+      gap:12px;
+      grid-template-columns:repeat(4, minmax(100px, 1fr));
+      align-items:stretch;
     }
     .cd-box{
       background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius);
       box-shadow:var(--shadow-sm); padding:16px 12px;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
-      text-align:center; aspect-ratio:1/1; min-width:0;
+      text-align:center;
+      aspect-ratio:1/1;
+      min-width:0;
     }
-    .cd-num{ font-family:'Playfair Display',serif; font-weight:700; line-height:1; font-size:clamp(22px, 7.2vw, 48px); }
+    .cd-num{
+      font-family:'Playfair Display',serif; font-weight:700; line-height:1;
+      font-size:clamp(22px, 7.2vw, 48px);
+    }
     .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:#6b7280; }
-    @media (max-width:520px){ .countdown-row{ grid-template-columns:repeat(2, minmax(120px, 1fr)); } }
+
+    @media (max-width:520px){
+      .countdown-row{ grid-template-columns:repeat(2, minmax(120px, 1fr)); }
+    }
     @media (max-width:400px){
       .countdown-row{ grid-template-columns:repeat(2, minmax(110px, 1fr)); }
       .cd-box{ aspect-ratio:auto; }
@@ -279,26 +246,35 @@
       display:grid; grid-template-columns: 240px 1fr; gap:24px;
       --timeline-pad:28px;
       --tl-line-x:11px;
-      --tl-dot-nudge:1px;
+      --tl-dot-nudge:1px; /* <— EDIT HERE to nudge dot left/right */
     }
     .agenda-date{ font-family:'Playfair Display',serif; font-size:clamp(18px,2.6vw,24px); }
     .agenda-day{ color:#6b7280; margin-top:6px; }
 
-    .timeline{ position:relative; padding-left:var(--timeline-pad); }
+    .timeline{
+      position:relative; padding-left:var(--timeline-pad);
+    }
     .timeline::before{
       content:''; position:absolute; left:var(--tl-line-x); top:6px; bottom:6px; width:2px; background:var(--gold-strong);
     }
+
     .tl-item{
-      position:relative; display:grid; grid-template-columns: 120px 1fr; align-items:center;
+      position:relative;
+      display:grid; grid-template-columns: 120px 1fr; align-items:center;
       gap:10px; margin:20px 0;
     }
     .tl-mid{ display:none; }
+
     .tl-item::before{
       content:''; position:absolute;
       left: calc( (var(--tl-line-x) - var(--timeline-pad)) + var(--tl-dot-nudge) );
-      top:50%; width:14px; height:14px; border-radius:50%;
-      background:var(--gold-strong); transform:translate(-50%, -50%); box-shadow:0 0 0 3px var(--gold-soft);
+      top:50%;
+      width:14px; height:14px; border-radius:50%;
+      background:var(--gold-strong);
+      transform:translate(-50%, -50%);
+      box-shadow:0 0 0 3px var(--gold-soft);
     }
+
     .tl-time{ font-weight:600; color:#0f172a; }
     .tl-what{ color:#0f172a; }
     .tl-title{ font-weight:700; letter-spacing:.02em; }
@@ -312,29 +288,24 @@
 </head>
 <body>
 
+  <!-- One global particle canvas across the whole site -->
   <canvas id="bg-particles" aria-hidden="true"></canvas>
 
+  <!-- Top-right controls -->
   <div class="top-controls">
     <button id="langToggle" class="icon-btn" aria-label="Toggle language">Malay</button>
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
   </div>
 
-  <!-- HERO -->
+  <!-- Hero (now identifiable for layout) -->
   <header class="hero" id="hero" data-card="hero">
     <div>
-      <!-- new small text -->
-      <div class="preheading" id="preHeading">Undangan Majlis Perkahwinan • Wedding Invitation</div>
-
       <div class="couple-title" aria-label="Basran love Khairani">
         <span class="name">Basran</span>
         <span class="heart">♡</span>
         <span class="name">Khairani</span>
       </div>
 
-      <!-- new wedding date line -->
-      <div class="wedding-date" id="weddingDate">22 November 2025</div>
-
-      <!-- existing question kept but moved below date -->
       <div class="heading" id="titleText">Will you attend our wedding?</div>
       <div class="sub" id="subtitleText">We'd love to celebrate with you. Please RSVP below.</div>
       <div class="cta-row">
@@ -345,52 +316,6 @@
   </header>
 
   <main>
-    <!-- NEW INTRO SECTION (after hero) -->
-    <section id="intro" data-card="intro">
-      <div class="container">
-        <div class="invite-card">
-          <!-- English block -->
-          <div class="invite en-block">
-            <div class="invite-line invite-small">Wedding Invitation</div>
-            <div class="invite-line invite-parents">With gratitude, we warmly invite you to the wedding reception of</div>
-            <div class="invite-line invite-couple">Basran &amp; Khairani</div>
-
-            <div class="invite-line invite-section-title">Date</div>
-            <div class="invite-line">Saturday, 22 November 2025</div>
-
-            <div class="invite-line invite-section-title">Time</div>
-            <div class="invite-line">11:00 AM – 4:00 PM</div>
-
-            <div class="invite-line invite-section-title">Venue</div>
-            <div class="invite-line">Dewan Masjid Al-Umm (Aras Bawah), Bandar Baru Bangi, Selangor</div>
-
-            <div class="invite-line invite-section-title">Dress Code</div>
-            <div class="invite-line">Modest attire appreciated</div>
-          </div>
-
-          <!-- Malay block -->
-          <div class="invite ms-block" style="display:none">
-            <div class="invite-line invite-small">Undangan Majlis Perkahwinan</div>
-            <div class="invite-line invite-parents">Dengan penuh kesyukuran, kami menjemput ke Majlis Perkahwinan</div>
-            <div class="invite-line invite-couple">Basran &amp; Khairani</div>
-
-            <div class="invite-line invite-section-title">Tarikh</div>
-            <div class="invite-line">Sabtu, 22 November 2025</div>
-
-            <div class="invite-line invite-section-title">Masa</div>
-            <div class="invite-line">11:00 pagi – 4:00 petang</div>
-
-            <div class="invite-line invite-section-title">Tempat</div>
-            <div class="invite-line">Dewan Masjid Al-Umm (Aras Bawah), Bandar Baru Bangi, Selangor</div>
-
-            <div class="invite-line invite-section-title">Kod Pakaian</div>
-            <div class="invite-line">Sopan dan menutup aurat</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- EXISTING SECTIONS (unchanged) -->
     <section id="rsvp" data-card="rsvp">
       <div class="container">
         <div class="card">
@@ -407,6 +332,7 @@
             <input type="hidden" name="ua" id="post_ua">
             <input type="hidden" name="note" id="post_note">
 
+            <!-- Guest names -->
             <div id="guestRows" class="grid" aria-live="polite"></div>
 
             <div class="separator"></div>
@@ -459,6 +385,7 @@
       </div>
     </section>
 
+    <!-- Event agenda schedule -->
     <section id="schedule" data-card="schedule">
       <div class="container">
         <div class="card">
@@ -504,6 +431,8 @@
                   <div class="tl-desc">Group photos on stage<br/>Friends & family shots</div>
                 </div>
               </div>
+
+              <!-- kept for compatibility; visually hidden by CSS -->
               <div class="tl-mid">•</div>
             </div>
           </div>
@@ -511,6 +440,7 @@
       </div>
     </section>
 
+    <!-- Live countdown -->
     <section id="countdown" data-card="countdown">
       <div class="container">
         <div class="card">
@@ -545,9 +475,11 @@
 
   <div id="toast" class="toast">Saved!</div>
 
+  <!-- BGM: no loop attribute; loop count controlled by JS -->
   <audio id="bgm" src="maulaya.mp3" autoplay preload="auto" playsinline></audio>
 
   <script>
+    // ====== CONFIG ======
     const MAX_GUESTS = 4;
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbWUzpJp8IH7eIJ4PorTtVFEJK9npyGY8HR6o0HfaNj9_Adin081iRrvof4V_LVMs/exec";
     const GMAPS_COORDS = { lat: 5.975194, lng: 116.0688396 };
@@ -558,36 +490,54 @@
       { name: "Samsah Suda", phone: "+60 13 222 1111" },
       { name: "Anyone", phone: "+60 19 121 2121" },
     ];
-    const COUNTDOWN_TARGET = new Date("2025-11-22T10:00:00");
-    const BGM_STOP_AFTER_LOOPS = 1;
 
-    /* Reorder: put the new intro right after hero */
-    const CARD_ORDER = ['hero','intro','rsvp','location','contact','schedule','countdown'];
+    // COUNTDOWN TARGET — local time
+    const COUNTDOWN_TARGET = new Date("2025-11-22T10:00:00");
+
+    /* ===== BGM LOOP CONTROL =====
+       1 = play once, 2 = twice, 5 = five times, Infinity = loop forever
+    */
+    const BGM_STOP_AFTER_LOOPS = 1;  // loop only once
+
+    /* ===== LAYOUT CONFIG (reorder cards here) =====
+       Valid keys: 'hero','rsvp','location','contact','schedule','countdown'
+    */
+    const CARD_ORDER = ['hero','rsvp','location','contact','schedule','countdown'];
     const CARD_VISIBLE = {
-      hero:true, intro:true, rsvp:true, location:true, contact:true, schedule:true, countdown:true
+      hero:true, rsvp:true, location:true, contact:true, schedule:true, countdown:true
     };
 
     function applyCardLayout(){
       const main = document.querySelector('main');
       if(!main) return;
+
+      // collect
       const map = new Map();
       document.querySelectorAll('[data-card]').forEach(el=>{
         map.set(el.getAttribute('data-card'), el);
       });
+
+      // toggle visibility
       for(const [key, el] of map){
         el.style.display = (CARD_VISIBLE[key] === false) ? 'none' : '';
       }
+
+      // ensure hero sits above main
       const hero = map.get('hero');
       if(hero && hero.parentElement !== document.body){
         document.body.insertBefore(hero, main);
       }
+
+      // reinsert others inside main in configured order
       CARD_ORDER.forEach(key=>{
         if(key === 'hero') return;
         const el = map.get(key);
         if(el && CARD_VISIBLE[key] !== false){
-          main.appendChild(el);
+          main.appendChild(el); // appending moves it to end in this order
         }
       });
+
+      // append any cards not listed in CARD_ORDER but present
       map.forEach((el, key)=>{
         if(key === 'hero') return;
         if(!CARD_ORDER.includes(key) && el.style.display !== 'none'){
@@ -596,10 +546,9 @@
       });
     }
 
+    // ====== i18n strings ======
     const I18N = {
       en: {
-        preHeading: "Wedding Invitation",
-        dateLine: "22 November 2025",
         title: "Will you attend our wedding?",
         subtitle: "We'd love to celebrate with you. Please RSVP below.",
         rsvp: "RSVP",
@@ -624,8 +573,6 @@
         contactDesc: "Tap a name to call directly.",
       },
       ms: {
-        preHeading: "Undangan Majlis Perkahwinan",
-        dateLine: "22 November 2025",
         title: "Adakah anda akan hadir ke majlis kami?",
         subtitle: "Jemput RSVP di bawah ya.",
         rsvp: "RSVP",
@@ -651,6 +598,7 @@
       }
     };
 
+    // ====== DOM refs ======
     const guestRowsEl = document.getElementById('guestRows');
     const totalGuestsEl = document.getElementById('totalGuests');
     const validationMsg = document.getElementById('validationMsg');
@@ -662,8 +610,6 @@
     const langToggle = document.getElementById('langToggle');
     const muteBtn = document.getElementById('muteBtn');
 
-    const preHeading = document.getElementById('preHeading');
-    const weddingDate = document.getElementById('weddingDate');
     const titleText = document.getElementById('titleText');
     const subtitleText = document.getElementById('subtitleText');
     const rsvpBtn = document.getElementById('rsvpBtn');
@@ -680,9 +626,11 @@
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
 
+    // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'en';
     function refreshLangToggleLabel(){ langToggle.textContent = (LANG === 'en') ? 'Malay' : 'English'; }
 
+    // ===== Local state =====
     function getStoredNames(){ return JSON.parse(localStorage.getItem('rsvp_names')||'[]'); }
     function getStoredConfirmed(){ return JSON.parse(localStorage.getItem('rsvp_confirmed')||'[]'); }
     function setStoredNames(arr){ localStorage.setItem('rsvp_names', JSON.stringify(arr)); }
@@ -690,6 +638,7 @@
     function isSubmitted(){ return localStorage.getItem('rsvp_submitted') === '1'; }
     function markSubmitted(){ localStorage.setItem('rsvp_submitted','1'); }
 
+    // ===== Helpers =====
     function showToast(msg){ toast.textContent = msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1600); }
 
     function getGuestInputs(){ return Array.from(document.querySelectorAll('.guest-name')); }
@@ -715,6 +664,28 @@
       submitBtn.disabled = true;
       validationMsg.style.display = 'block';
       validationMsg.textContent = I18N[LANG].already;
+    }
+
+    function loadLocal(){
+      const phone = localStorage.getItem('rsvp_phone') || '';
+      const names = getStoredNames();
+      const confirmed = getStoredConfirmed();
+      phoneInput.value = phone;
+
+      getGuestInputs().forEach((inp, idx)=>{
+        if(names[idx]) inp.value = names[idx];
+        const btn = getGuestButtons()[idx];
+        const isConfirmed = !!confirmed[idx] && inp.value.trim().length>0;
+        inp.readOnly = isConfirmed;
+        btn.textContent = isConfirmed ? I18N[LANG].edit : I18N[LANG].confirm;
+        btn.classList.toggle('edit-state', isConfirmed);
+        btn.classList.toggle('confirm-state', !isConfirmed);
+        btn.disabled = isConfirmed ? false : inp.value.trim().length === 0;
+      });
+
+      updateTotals();
+      maybeEnableSubmit();
+      if(isSubmitted()) lockSubmissionUI();
     }
 
     function makeGuestRow(idx){
@@ -781,10 +752,6 @@
 
     function i18n(){
       const T = I18N[LANG];
-      preHeading.textContent = (LANG==='en')
-        ? "Wedding Invitation • Undangan Majlis Perkahwinan"
-        : "Undangan Majlis Perkahwinan • Wedding Invitation";
-      weddingDate.textContent = T.dateLine;
       titleText.textContent = T.title;
       subtitleText.textContent = T.subtitle;
       rsvpBtn.textContent = T.rsvp;
@@ -798,10 +765,6 @@
       locNote.textContent = T.locNote;
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
-
-      // Switch the new intro blocks
-      document.querySelector('.en-block').style.display = (LANG==='en') ? '' : 'none';
-      document.querySelector('.ms-block').style.display = (LANG==='ms') ? '' : 'none';
 
       const savedNames = getStoredNames();
       const savedConfirmed = getStoredConfirmed();
@@ -825,17 +788,12 @@
       if(isSubmitted()) lockSubmissionUI();
     }
 
-    function getGuestButtons(){ return Array.from(document.querySelectorAll('.guest-confirm')); }
-    function anyUnconfirmedTyped(){ return getGuestInputs().some(inp => !inp.readOnly && inp.value.trim().length>0); }
-    function getGuestInputs(){ return Array.from(document.querySelectorAll('.guest-name')); }
-    function getGuestNames(){ return getGuestInputs().map(i=>i.value.trim()); }
-    function getConfirmedCount(){ return getGuestInputs().filter(inp => inp.readOnly && inp.value.trim().length>0).length; }
-
     function maybeEnableSubmit(){
       if(isSubmitted()){ submitBtn.disabled = true; return; }
       const hasPhone = phoneInput.value.trim().length > 0;
       const confirmedCount = getConfirmedCount();
       const hasUnconfirmedTyped = anyUnconfirmedTyped();
+
       const ok = hasPhone && confirmedCount >= 1 && !hasUnconfirmedTyped;
       submitBtn.disabled = !ok;
 
@@ -847,6 +805,7 @@
       else{ validationMsg.textContent = ''; }
     }
 
+    // ===== Language toggle =====
     langToggle.addEventListener('click', (e)=>{
       e.preventDefault();
       LANG = (LANG === 'en') ? 'ms' : 'en';
@@ -854,10 +813,7 @@
       i18n(); saveLocal(); maybeEnableSubmit();
     });
 
-    const toast = document.getElementById('toast');
-    function showToast(msg){ toast.textContent = msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1600); }
-
-    const bgm = document.getElementById('bgm');
+    // ===== Music: autoplay + 20% volume, loop control =====
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -875,7 +831,8 @@
     window.addEventListener('pageshow', ensurePlayback);
     window.addEventListener('load', ensurePlayback);
 
-    let _bgmLoops = 0;
+    // Loop control via 'ended' event
+    let _bgmLoops = 0;  // how many times completed
     bgm.loop = false;
     bgm.addEventListener('ended', async () => {
       _bgmLoops++;
@@ -884,6 +841,7 @@
       }
     });
 
+    // Mute/unmute only
     muteBtn.addEventListener('click', async (e)=>{
       e.preventDefault();
       try{ await bgm.play(); }catch(_){}
@@ -891,7 +849,7 @@
       setMutedUI();
     });
 
-    // (kept) click tones...
+    // ===== Click/error sounds =====
     let audioCtx;
     function initAudioCtx(){ if(!audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; audioCtx = new AC(); } }
     function playTone(freq=660, ms=60, type='sine', volume=0.05){
@@ -913,7 +871,7 @@
       playClick();
     }, true);
 
-    // ===== minimal duplicates kept =====
+    // ===== Render (keep existing duplicates intact) =====
     function renderContacts(){
       const contactList = document.getElementById('contactList');
       if(!contactList) return;
@@ -939,7 +897,6 @@
 
       const names = getStoredNames();
       const conf  = getStoredConfirmed();
-      renderGuestRows();
       getGuestInputs().forEach((inp, idx)=>{
         if(names[idx]) inp.value = names[idx];
         const btn = getGuestButtons()[idx];
@@ -958,10 +915,11 @@
     }
 
     renderAll();
-    applyCardLayout();
+    applyCardLayout(); // <— apply your CARD_ORDER / CARD_VISIBLE here
 
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
 
+    // ===== Submit to Google Apps Script (hidden iframe) =====
     const form = document.getElementById('rsvpForm');
     const hiddenIframe = document.getElementById('hidden_iframe');
     form.action = APPS_SCRIPT_URL;
@@ -994,10 +952,12 @@
       // posts to iframe
     });
 
+    // ===== Particles (global canvas across the page) =====
     (function initParticles(){
       const canvas = document.getElementById('bg-particles');
       const ctx = canvas.getContext('2d');
       if(!canvas || !ctx) return;
+
       const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if(prefersReduced) return;
 
@@ -1056,6 +1016,7 @@
       });
     })();
 
+    // ===== Countdown logic =====
     (function initCountdown(){
       const dEl = document.getElementById('cdDays');
       const hEl = document.getElementById('cdHours');
@@ -1080,6 +1041,7 @@
       tick(); setInterval(tick, 1000);
     })();
 
+    // ===== Orientation fallback for wallpaper =====
     (function ensureWallpaperOnRotate(){
       const m = window.matchMedia('(orientation: portrait)');
       function apply(){
@@ -1088,7 +1050,7 @@
       }
       apply();
       if (m.addEventListener) m.addEventListener('change', apply);
-      else if (m.addListener) m.addListener(apply);
+      else if (m.addListener) m.addListener(apply); // older Safari
       window.addEventListener('orientationchange', apply);
       window.addEventListener('resize', apply);
     })();
