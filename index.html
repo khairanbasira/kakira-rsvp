@@ -125,18 +125,17 @@
       margin-bottom:30px;
       font-family:'Great Vibes', cursive;  /* keep the script */
       font-weight:400;
-      font-size:clamp(68px,12vw,120px);
+      font-size:clamp(120px,12vw,80px);
       line-height:1;
       color:var(--gold-strong);
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
     }
 	
-    /*.couple-title .heart{ font-size:1.05em; transform:translateY(-2px); }*/
 	/* Nudge the heart left/right with --heart-shift (e.g. 6px or -6px) */
 	.couple-title .heart{
-	font-size:1.05em;
-	display:inline-block;
-	transform: translateX(var(--heart-shift, 10px)) translateY(-2px);
+	  font-size:1.05em;
+	  display:inline-block;
+	  transform: translateX(var(--heart-shift, 10px)) translateY(-2px);
 	}
     @media (max-width:520px){
       .couple-title{ flex-direction:column; gap:6px; }
@@ -147,7 +146,7 @@
       font-size:clamp(16px,4vw,22px);
       letter-spacing:.02em;
       color:#3b3b3b;
-      margin-bottom:38px;
+      margin-bottom:30px;
     }
     .hero-address{
       max-width:720px;
@@ -156,7 +155,7 @@
       font-size:clamp(13px,3.2vw,16px);
       line-height:1.45;
       color:#5b5b5b;
-	  margin-bottom:38px;
+	  margin-bottom:30px;
     }
 
     .heading{ font-size:clamp(28px,5vw,52px); line-height:1.12; }
@@ -195,7 +194,7 @@
     .input:focus:not([readonly]){ border-color:var(--gold-strong); box-shadow:0 0 0 3px rgba(212,175,55,.20); }
     .input[readonly]{ background:#fffdf7; border-color:#ead79a; color:#6b4b00; }
 
-    .tiny{ font-size:12px; color:var(--muted) }
+    .tiny{ font-size:12px; color:#6b7280 }
     .total{ text-align:center; margin-top:6px; color:#374151 }
 
     .confirm-btn{
@@ -335,9 +334,9 @@
       <div class="tagline" id="heroTag">Wedding Invitation</div>
 
 	  <div class="couple-title" style="--heart-shift: 10px" aria-label="Basran love Khairani">
-	  <span class="name">Basran</span>
-	  <span class="heart">♡</span>
-	  <span class="name">Khairani</span>
+	    <span class="name">Basran</span>
+	    <span class="heart">♡</span>
+	    <span class="name">Khairani</span>
 	  </div>
 
       <!-- Date in Times New Roman with weekday -->
@@ -371,7 +370,7 @@
 			<div class="inv-small" id="invSmall">WalimatulUrus</div>
 			
 			<div class="inv-couple">Muhammad Basri Bin Patara</div>
-            <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(22px,4.2vw,10px)">&amp;</div>
+            <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,20px)">&amp;</div>
             <div class="inv-couple">Samsah Binti Suda</div>
 			
             <div class="inv-body" id="invBody">
@@ -379,7 +378,7 @@
             </div>
 
             <div class="inv-couple">Basran Bin ??</div>
-            <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(22px,4.2vw,10px)">&amp;</div>
+            <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,20px)">&amp;</div>
             <div class="inv-couple">Noor Khairani Binti Muhammad Basri</div>
 
             <div class="inv-details">
@@ -573,6 +572,11 @@
 
     const BGM_STOP_AFTER_LOOPS = 1;
 
+    // ===== RESUBMISSION TOGGLE =====
+    // Set to 0 to LOCK after first successful submit (current behavior).
+    // Set to 1 to ALLOW immediate re-submission: show success then reset the form.
+    const RESUBMISSION_ENABLE = 1;
+
     // ====== i18n strings (added invitation section text) ======
     const I18N = {
       en: {
@@ -723,6 +727,31 @@
       validationMsg.textContent = I18N[LANG].already;
     }
 
+    // ===== NEW: reset helper for RESUBMISSION_ENABLE=1 =====
+    function resetFormToFreshState(){
+      // keep language; clear everything else related to the form
+      localStorage.removeItem('rsvp_names');
+      localStorage.removeItem('rsvp_confirmed');
+      localStorage.removeItem('rsvp_phone');
+      // DO NOT set rsvp_submitted in resubmission mode
+
+      // Re-render rows and reset controls
+      renderGuestRows();
+      getGuestInputs().forEach((inp, idx)=>{
+        const btn = getGuestButtons()[idx];
+        inp.readOnly = false;
+        inp.value = '';
+        btn.textContent = I18N[LANG].confirm;
+        btn.classList.remove('edit-state');
+        btn.classList.add('confirm-state');
+        btn.disabled = true;
+      });
+      phoneInput.readOnly = false;
+      phoneInput.value = '';
+      updateTotals();
+      maybeEnableSubmit();
+    }
+
     // ===== Rendering helpers =====
     function makeGuestRow(idx){
       const T = I18N[LANG];
@@ -749,7 +778,7 @@
           btn.classList.remove('confirm-state'); btn.classList.add('edit-state');
           btn.disabled = false;
         }else{
-          if(isSubmitted()) return;
+          if(!RESUBMISSION_ENABLE && isSubmitted()) return;
           input.readOnly = false;
           btn.textContent = T2.confirm;
           btn.classList.remove('edit-state'); btn.classList.add('confirm-state');
@@ -783,30 +812,27 @@
       btnGmaps.href = gq; btnWaze.href = wz;
     }
 
-    // Date format with weekday (Saturday/Sabtu)
-	// Date format with weekday and a guaranteed comma after the weekday.
-	// Works for EN/GB and MS/MY without double-commas.
+    // Date format with weekday and a guaranteed comma after the weekday.
+    // Works for EN/GB and MS/MY without double-commas.
 	function formatWeddingDateWithDay(lang){
-	const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
-	const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
-	
-	const parts = new Intl.DateTimeFormat(locale, {
+	  const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
+	  const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
+	  
+	  const parts = new Intl.DateTimeFormat(locale, {
 		weekday:'long', day:'2-digit', month:'long', year:'numeric'
-	}).formatToParts(d);
-	
-	let out = '';
-	for (let i = 0; i < parts.length; i++) {
+	  }).formatToParts(d);
+	  
+	  let out = '';
+	  for (let i = 0; i < parts.length; i++) {
 		const p = parts[i];
 		out += p.value;
-	
-		// If the locale didn't include a comma after the weekday, add it.
 		if (p.type === 'weekday') {
-		const next = parts[i+1];
-		const alreadyHasComma = next && next.type === 'literal' && /,/.test(next.value);
-		if (!alreadyHasComma) out += ', ';
+		  const next = parts[i+1];
+		  const alreadyHasComma = next && next.type === 'literal' && /,/.test(next.value);
+		  if (!alreadyHasComma) out += ', ';
 		}
-	}
-	return out.replace(/\s+,/g, ', '); // tidy up spacing in case the locale already had a space/comma
+	  }
+	  return out.replace(/\s+,/g, ', ');
 	}
 
     function i18n(){
@@ -863,11 +889,11 @@
       document.getElementById('post_lang').value = LANG;
 
       maybeEnableSubmit();
-      if(isSubmitted()) lockSubmissionUI();
+      if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
     }
 
     function maybeEnableSubmit(){
-      if(isSubmitted()){ submitBtn.disabled = true; return; }
+      if(!RESUBMISSION_ENABLE && isSubmitted()){ submitBtn.disabled = true; return; }
       const hasPhone = phoneInput.value.trim().length > 0;
       const confirmedCount = getConfirmedCount();
       const hasUnconfirmedTyped = anyUnconfirmedTyped();
@@ -998,7 +1024,7 @@
       updateTotals();
       refreshLangToggleLabel();
       phoneInput.value = localStorage.getItem('rsvp_phone') || '';
-      if(isSubmitted()) lockSubmissionUI();
+      if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
       else maybeEnableSubmit();
     }
     renderAll();
@@ -1026,13 +1052,20 @@
       if(!_pendingSubmit) return;
       _pendingSubmit = false;
       showToast(I18N[LANG].thanks);
-      markSubmitted();
-      lockSubmissionUI();
-      saveLocal(); updateTotals();
+
+      if(RESUBMISSION_ENABLE){
+        // allow next RSVP immediately
+        resetFormToFreshState();
+      }else{
+        markSubmitted();
+        lockSubmissionUI();
+        saveLocal();
+      }
+      updateTotals();
     });
 
     form.addEventListener('submit', (e)=>{
-      if(isSubmitted() || submitBtn.disabled){ e.preventDefault(); playError(); return; }
+      if((!RESUBMISSION_ENABLE && isSubmitted()) || submitBtn.disabled){ e.preventDefault(); playError(); return; }
       syncHiddenFields(); saveLocal();
       _pendingSubmit = true; // posts to iframe
     });
@@ -1054,8 +1087,8 @@
         { inner:'rgba(255,255,255,0.9)', outer:'rgba(255,255,255,0.0)' },
         { inner:'rgba(255,240,210,0.85)', outer:'rgba(255,240,210,0.0)' },
         { inner:'rgba(240,210,120,0.85)', outer:'rgba(240,210,120,0.0)' },
-        { inner:'rgba(212,175,55,0.85)',  outer:'rgba(212,175,55,0.0)'  },
-        { inner:'rgba(255,255,255,0.88)',  outer:'rgba(255,255,255,0.0)'  }
+        { inner:'rgba(255,255,255,0.9)',  outer:'rgba(255,255,255,0.0)'  },
+        { inner:'rgba(255,255,255,0.9)',  outer:'rgba(255,255,255,0.0)'  }
       ];
 
       for(let i=0;i<count;i++){
