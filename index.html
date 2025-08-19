@@ -9,7 +9,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Added Great Vibes for LucySaidOK-like script on the couple names -->
+  <!-- Great Vibes for LucySaidOK-like script on the couple names -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
@@ -27,7 +27,6 @@
       --shadow:0 10px 30px rgba(0,0,0,.10);
       --shadow-sm:0 6px 16px rgba(0,0,0,.08);
 
-      /* Default to web image; media queries below will swap based on orientation */
       --wallpaper:url('rsvpwallpaper_web.png');
 
       --hero-overlay-color: 255,247,236;
@@ -36,7 +35,6 @@
       --hero-overlay-3: .65;
     }
 
-    /* Orientation-based wallpaper */
     @media (orientation: portrait){
       :root{ --wallpaper:url('rsvpwallpaper_mob.png'); }
     }
@@ -53,12 +51,8 @@
       background:var(--cream);
     }
 
-    /* Global particles ABOVE everything */
-    #bg-particles{
-      position:fixed; inset:0; z-index:9; pointer-events:none; opacity:.45;
-    }
+    #bg-particles{ position:fixed; inset:0; z-index:9; pointer-events:none; opacity:.45; }
 
-    /* Lift only the important UI above particles */
     .top-controls,
     .hero .heading,
     .hero .sub,
@@ -66,7 +60,6 @@
     .card,
     .footer { position:relative; z-index:10; }
 
-    /* Top-right controls */
     .top-controls{
       position:fixed; top:15px; right:15px;
       display:flex; gap:10px; z-index:9999;
@@ -83,7 +76,6 @@
     .icon-btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
     .icon-btn:active{ transform:translateY(0); }
 
-    /* (DISABLED) Volume popover kept for future */
     .volume-pop{ display:none !important; }
 
     /* Hero */
@@ -106,7 +98,6 @@
       background-attachment: scroll, scroll;
     }
 
-    /* NEW: small tagline on top of the couple names */
     .hero .tagline{
       font-size:12px;
       letter-spacing:.22em;
@@ -115,7 +106,6 @@
       margin-bottom:50px;
     }
 
-    /* Couple title in LucySaidOK-like script */
     .couple-title{
       display:flex; align-items:center; justify-content:center; gap:18px;
       margin-bottom:8px;
@@ -132,20 +122,27 @@
       .couple-title .heart{ transform:none; }
     }
 
-    /* NEW: wedding date under the couple names */
     .hero-date{
       font-family:'Playfair Display',serif;
       font-size:clamp(16px,4vw,22px);
       letter-spacing:.12em;
       text-transform:capitalize;
       color:#3b3b3b;
-      margin-bottom:18px;
+      margin-bottom:8px;
+    }
+    /* NEW: address style under the date */
+    .hero-address{
+      max-width:720px;
+      margin:0 auto 18px;
+      padding:0 12px;
+      font-size:clamp(13px,3.2vw,16px);
+      line-height:1.45;
+      color:#5b5b5b;
     }
 
     .heading{ font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,52px); line-height:1.12; }
     .sub{ color:var(--muted); margin-top:8px }
 
-    /* Buttons */
     .cta-row{ margin-top:26px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
     .btn{
       appearance:none; cursor:pointer; display:inline-block; text-decoration:none;
@@ -159,7 +156,6 @@
     .btn:active{ transform:translateY(0); }
     .btn-outline{ background:#fff; color:#111; border:1px solid var(--gold-strong) }
 
-    /* Submit button */
     #submitBtn{ background:var(--gold); color:#111; border:1px solid var(--gold-strong); }
     #submitBtn[disabled]{ background:#eee; color:#999; border-color:#ddd; cursor:not-allowed; box-shadow:none; transform:none; }
 
@@ -167,11 +163,9 @@
     .container{ max-width:980px; margin:0 auto; }
     .card{ background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
 
-    /* Guest rows */
     .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
     .row{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
 
-    /* Inputs – fixed height so buttons align perfectly */
     .input{
       width:100%; height:48px; padding:0 16px; border-radius:12px;
       border:1px solid #e5e7eb; font-size:16px; background:#fff;
@@ -185,7 +179,6 @@
     .tiny{ font-size:12px; color:var(--muted) }
     .total{ text-align:center; margin-top:6px; color:#374151 }
 
-    /* Confirm/Edit pill – match input height */
     .confirm-btn{
       height:48px; padding:0 16px;
       white-space:nowrap; border-radius:12px;
@@ -208,11 +201,7 @@
     }
     .muted{ color:#6b7280 }
 
-    /* Section title style */
-    .section-title{
-      margin:0 0 8px; font-family:'Playfair Display',serif; font-size:clamp(22px,3.6vw,28px);
-      color:#1f2937;
-    }
+    .section-title{ margin:0 0 8px; font-family:'Playfair Display',serif; font-size:clamp(22px,3.6vw,28px); color:#1f2937; }
 
     .separator{ height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(184,144,23,.35), transparent); }
     .spacer-8{ height:8px }
@@ -228,12 +217,11 @@
     }
     .toast.show{ opacity:1 }
 
-    /* ===== COUNTDOWN ===== */
+    /* COUNTDOWN */
     #countdown .cd-sub{ margin:6px 0 16px; }
 
     .countdown-row{
-      display:grid;
-      gap:12px;
+      display:grid; gap:12px;
       grid-template-columns:repeat(4, minmax(100px, 1fr));
       align-items:stretch;
     }
@@ -241,18 +229,12 @@
       background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius);
       box-shadow:var(--shadow-sm); padding:16px 12px;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
-      text-align:center;
-      aspect-ratio:1/1; min-width:0;
+      text-align:center; aspect-ratio:1/1; min-width:0;
     }
-    .cd-num{
-      font-family:'Playfair Display',serif; font-weight:700; line-height:1;
-      font-size:clamp(22px, 7.2vw, 48px);
-    }
+    .cd-num{ font-family:'Playfair Display',serif; font-weight:700; line-height:1; font-size:clamp(22px, 7.2vw, 48px); }
     .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:var(--muted); }
 
-    @media (max-width:520px){
-      .countdown-row{ grid-template-columns:repeat(2, minmax(120px, 1fr)); }
-    }
+    @media (max-width:520px){ .countdown-row{ grid-template-columns:repeat(2, minmax(120px, 1fr)); } }
     @media (max-width:400px){
       .countdown-row{ grid-template-columns:repeat(2, minmax(110px, 1fr)); }
       .cd-box{ aspect-ratio:auto; }
@@ -260,26 +242,15 @@
       .cd-label{ letter-spacing:.28em; }
     }
 
-    /* ===== AGENDA / TIMELINE ===== */
-    .agenda{
-      display:grid; grid-template-columns: 240px 1fr; gap:24px;
-      --timeline-pad:28px;
-      --tl-line-x:11px;
-      --tl-dot-nudge:1px;
-    }
+    /* AGENDA */
+    .agenda{ display:grid; grid-template-columns: 240px 1fr; gap:24px; --timeline-pad:28px; --tl-line-x:11px; --tl-dot-nudge:1px; }
     .agenda-date{ font-family:'Playfair Display',serif; font-size:clamp(18px,2.6vw,24px); }
     .agenda-day{ color:#6b7280; margin-top:6px; }
 
     .timeline{ position:relative; padding-left:var(--timeline-pad); }
-    .timeline::before{
-      content:''; position:absolute; left:var(--tl-line-x); top:6px; bottom:6px; width:2px; background:var(--gold-strong);
-    }
+    .timeline::before{ content:''; position:absolute; left:var(--tl-line-x); top:6px; bottom:6px; width:2px; background:var(--gold-strong); }
 
-    .tl-item{
-      position:relative;
-      display:grid; grid-template-columns: 120px 1fr; align-items:center;
-      gap:10px; margin:20px 0;
-    }
+    .tl-item{ position:relative; display:grid; grid-template-columns: 120px 1fr; align-items:center; gap:10px; margin:20px 0; }
     .tl-mid{ display:none; }
 
     .tl-item::before{
@@ -302,22 +273,11 @@
       .tl-item{ grid-template-columns: 96px 1fr; }
     }
 
-    /* ===== NEW INVITATION SECTION (gold/white abstract frame) ===== */
-    .invite-card{
-      position:relative;
-      background:#fff;
-      border-radius:28px;
-      padding:36px 24px;
-      box-shadow:var(--shadow);
-      border:1px solid rgba(184,144,23,.30);
-      overflow:hidden;
-    }
-    /* subtle abstract gold corners */
+    /* Invitation card frame */
+    .invite-card{ position:relative; background:#fff; border-radius:28px; padding:36px 24px; box-shadow:var(--shadow); border:1px solid rgba(184,144,23,.30); overflow:hidden; }
     .invite-card::before,
     .invite-card::after{
-      content:'';
-      position:absolute; pointer-events:none;
-      width:320px; height:320px; opacity:.18; filter:blur(0.2px);
+      content:''; position:absolute; pointer-events:none; width:320px; height:320px; opacity:.18; filter:blur(0.2px);
       background:
         radial-gradient( circle at 30% 30%, rgba(212,175,55,.9), rgba(212,175,55,0) 60% ),
         radial-gradient( circle at 70% 70%, rgba(255,255,255,.9), rgba(255,255,255,0) 65% );
@@ -325,49 +285,26 @@
     .invite-card::before{ top:-120px; left:-120px; transform:rotate(-12deg); }
     .invite-card::after{ bottom:-120px; right:-120px; transform:rotate(18deg); }
 
-    /* inner gold line */
     .invite-inner{
-      position:relative;
-      padding:28px 18px;
-      border-radius:20px;
+      position:relative; padding:28px 18px; border-radius:20px;
       background:
         linear-gradient(#fff,#fff) padding-box,
-        linear-gradient( 135deg, rgba(255,255,255,.7), rgba(212,175,55,.9), rgba(255,255,255,.7) ) border-box;
+        linear-gradient(135deg, rgba(255,255,255,.7), rgba(212,175,55,.9), rgba(255,255,255,.7)) border-box;
       border:2px solid transparent;
     }
 
     .inv-small{ text-align:center; font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:#6b4b00; }
     .inv-italic{ text-align:center; font-style:italic; color:#6b7280; margin-top:6px; }
 
-    .inv-names{
-      margin:20px 0 10px;
-      text-align:center;
-      font-family:'Playfair Display',serif;
-      font-weight:700;
-      font-size:clamp(22px,4.8vw,36px);
-      color:#111;
-    }
-    .inv-and{
-      text-align:center; font-size:clamp(22px,4.2vw,30px); color:#b89017; margin:8px 0;
-    }
-    .inv-body{
-      max-width:720px; margin:14px auto 6px; text-align:center; color:#111; line-height:1.55;
-    }
+    .inv-names{ margin:20px 0 10px; text-align:center; font-family:'Playfair Display',serif; font-weight:700; font-size:clamp(22px,4.8vw,36px); color:#111; }
+    .inv-and{ text-align:center; font-size:clamp(22px,4.2vw,30px); color:#b89017; margin:8px 0; }
+
+    .inv-body{ max-width:720px; margin:14px auto 6px; text-align:center; color:#111; line-height:1.55; }
     .inv-english{ font-style:italic; color:#6b7280; margin-top:6px; }
 
-    .inv-couple{
-      margin:18px 0 10px;
-      text-align:center;
-      font-family:'Playfair Display',serif;
-      font-weight:700;
-      font-size:clamp(22px,4.8vw,34px);
-      color:#111;
-    }
+    .inv-couple{ margin:18px 0 10px; text-align:center; font-family:'Playfair Display',serif; font-weight:700; font-size:clamp(22px,4.8vw,34px); color:#111; }
 
-    .inv-details{
-      max-width:720px; margin:20px auto 0;
-      display:grid; gap:14px;
-    }
+    .inv-details{ max-width:720px; margin:20px auto 0; display:grid; gap:14px; }
     .inv-row{ text-align:center; }
     .inv-label{ font-weight:700; letter-spacing:.06em; color:#0f172a; }
     .inv-value{ margin-top:4px; color:#0f172a; }
@@ -375,10 +312,8 @@
 </head>
 <body>
 
-  <!-- One global particle canvas across the whole site -->
   <canvas id="bg-particles" aria-hidden="true"></canvas>
 
-  <!-- Top-right controls -->
   <div class="top-controls">
     <button id="langToggle" class="icon-btn" aria-label="Toggle language">Malay</button>
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
@@ -386,20 +321,22 @@
 
   <header class="hero">
     <div>
-      <!-- NEW tagline -->
       <div class="tagline" id="heroTag">Wedding Invitation</div>
 
-      <!-- Couple names in script -->
       <div class="couple-title" aria-label="Basran love Khairani">
         <span class="name">Basran</span>
         <span class="heart">♡</span>
         <span class="name">Khairani</span>
       </div>
 
-      <!-- NEW wedding date (auto-linked to countdown target) -->
       <div class="hero-date" id="heroDate">22 November 2025</div>
+      <!-- NEW: address just below the date -->
+      <div class="hero-address" id="heroAddress">
+        Promenade Hotel,<br/>
+        Rafflesia I<br/>
+        4, 3, Lorong Api - Api 1, Api-api Centre, 88000 Kota Kinabalu, Sabah
+      </div>
 
-      <!-- Existing question + CTA kept beneath the date -->
       <div class="heading" id="titleText">Will you attend our wedding?</div>
       <div class="sub" id="subtitleText">We'd love to celebrate with you. Please RSVP below.</div>
       <div class="cta-row">
@@ -410,7 +347,7 @@
   </header>
 
   <main>
-    <!-- ===== NEW INVITATION SECTION (after hero) ===== -->
+    <!-- Invitation section (kept) -->
     <section id="invite">
       <div class="container">
         <div class="invite-card">
@@ -451,7 +388,7 @@
       </div>
     </section>
 
-    <!-- ===== RSVP (unchanged) ===== -->
+    <!-- RSVP (kept) -->
     <section id="rsvp">
       <div class="container">
         <div class="card">
@@ -468,10 +405,8 @@
             <input type="hidden" name="ua" id="post_ua">
             <input type="hidden" name="note" id="post_note">
 
-            <!-- Guest names -->
             <div id="guestRows" class="grid" aria-live="polite"></div>
 
-            <!-- Phone section separated from names -->
             <div class="separator"></div>
             <div class="spacer-8"></div>
 
@@ -522,7 +457,6 @@
       </div>
     </section>
 
-    <!-- Event agenda schedule (kept) -->
     <section id="schedule">
       <div class="container">
         <div class="card">
@@ -576,42 +510,26 @@
       </div>
     </section>
 
-    <!-- Live countdown -->
     <section id="countdown">
       <div class="container">
         <div class="card">
           <h2 class="section-title">Countdown timer</h2>
           <p class="muted cd-sub" id="cdSub">Our big day’s coming soon!</p>
           <div class="countdown-row" role="timer" aria-live="polite">
-            <div class="cd-box">
-              <div id="cdDays" class="cd-num">0</div>
-              <div class="cd-label">DAYS</div>
-            </div>
-            <div class="cd-box">
-              <div id="cdHours" class="cd-num">0</div>
-              <div class="cd-label">HOURS</div>
-            </div>
-            <div class="cd-box">
-              <div id="cdMins" class="cd-num">0</div>
-              <div class="cd-label">MINS</div>
-            </div>
-            <div class="cd-box">
-              <div id="cdSecs" class="cd-num">0</div>
-              <div class="cd-label">SECS</div>
-            </div>
+            <div class="cd-box"><div id="cdDays" class="cd-num">0</div><div class="cd-label">DAYS</div></div>
+            <div class="cd-box"><div id="cdHours" class="cd-num">0</div><div class="cd-label">HOURS</div></div>
+            <div class="cd-box"><div id="cdMins" class="cd-num">0</div><div class="cd-label">MINS</div></div>
+            <div class="cd-box"><div id="cdSecs" class="cd-num">0</div><div class="cd-label">SECS</div></div>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="tiny">Made with ♥ for Kak Ira</div>
-  </footer>
+  <footer class="footer"><div class="tiny">Made with ♥ for Kak Ira</div></footer>
 
   <div id="toast" class="toast">Saved!</div>
 
-  <!-- BGM: no loop attribute; loop count controlled by JS -->
   <audio id="bgm" src="maulaya.mp3" autoplay preload="auto" playsinline></audio>
 
   <script>
@@ -627,20 +545,13 @@
       { name: "Anyone", phone: "+60 19 121 2121" },
     ];
 
-    // ====== SINGLE SOURCE OF TRUTH FOR THE DATE ======
-    // Update this date (YYYY-MM-DD) and both the hero/invitation text and the countdown target will follow.
+    // Single source of truth for the date
     const WEDDING_DATE_ISO = '2025-11-22';
-    const WEDDING_TIME = '10:00:00'; // local time for countdown target
-
-    // Countdown target computed from the ISO date above
+    const WEDDING_TIME = '10:00:00';
     let COUNTDOWN_TARGET = new Date(`${WEDDING_DATE_ISO}T${WEDDING_TIME}`);
 
-    /* ===== BGM LOOP CONTROL =====
-       1 = play once, 2 = twice, 5 = five times, Infinity = loop forever
-    */
-    const BGM_STOP_AFTER_LOOPS = 1;  // loop only once
+    const BGM_STOP_AFTER_LOOPS = 1;
 
-    // ====== i18n strings ======
     const I18N = {
       en: {
         tagline: "Wedding Invitation",
@@ -694,7 +605,7 @@
       }
     };
 
-    // ====== DOM refs ======
+    // DOM refs
     const guestRowsEl = document.getElementById('guestRows');
     const totalGuestsEl = document.getElementById('totalGuests');
     const validationMsg = document.getElementById('validationMsg');
@@ -726,11 +637,9 @@
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
 
-    // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'en';
     function refreshLangToggleLabel(){ langToggle.textContent = (LANG === 'en') ? 'Malay' : 'English'; }
 
-    // ===== Local state =====
     function getStoredNames(){ return JSON.parse(localStorage.getItem('rsvp_names')||'[]'); }
     function getStoredConfirmed(){ return JSON.parse(localStorage.getItem('rsvp_confirmed')||'[]'); }
     function setStoredNames(arr){ localStorage.setItem('rsvp_names', JSON.stringify(arr)); }
@@ -738,7 +647,6 @@
     function isSubmitted(){ return localStorage.getItem('rsvp_submitted') === '1'; }
     function markSubmitted(){ localStorage.setItem('rsvp_submitted','1'); }
 
-    // ===== Helpers =====
     function showToast(msg){ toast.textContent = msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1600); }
 
     function getGuestInputs(){ return Array.from(document.querySelectorAll('.guest-name')); }
@@ -850,7 +758,6 @@
       btnGmaps.href = gq; btnWaze.href = wz;
     }
 
-    // --- helpers for date formatting ---
     function formatWeddingDate(lang){
       const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
       const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
@@ -917,7 +824,6 @@
       else{ validationMsg.textContent = ''; }
     }
 
-    // ===== Language toggle =====
     langToggle.addEventListener('click', (e)=>{
       e.preventDefault();
       LANG = (LANG === 'en') ? 'ms' : 'en';
@@ -925,7 +831,6 @@
       i18n(); saveLocal(); maybeEnableSubmit();
     });
 
-    // ===== Music: autoplay + 20% volume, loop control =====
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -943,8 +848,7 @@
     window.addEventListener('pageshow', ensurePlayback);
     window.addEventListener('load', ensurePlayback);
 
-    // Loop control via 'ended' event
-    let _bgmLoops = 0;  // how many times completed
+    let _bgmLoops = 0;
     bgm.loop = false;
     bgm.addEventListener('ended', async () => {
       _bgmLoops++;
@@ -953,7 +857,6 @@
       }
     });
 
-    // Mute/unmute only
     muteBtn.addEventListener('click', async (e)=>{
       e.preventDefault();
       try{ await bgm.play(); }catch(_){}
@@ -961,20 +864,13 @@
       setMutedUI();
     });
 
-    // ===== Smooth scrolling (kept) =====
-    function easeInOutCubic(t){
-      return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
-    }
+    function easeInOutCubic(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
     function smoothScrollTo(target, baseDuration=700){
       const start = window.scrollY || window.pageYOffset;
-      const end = (typeof target === 'number')
-        ? target
-        : (target.getBoundingClientRect().top + start);
-
+      const end = (typeof target === 'number') ? target : (target.getBoundingClientRect().top + start);
       const diff = end - start;
       const duration = Math.max(500, Math.min(1400, baseDuration + Math.abs(diff) * 0.25));
       let startTime = null;
-
       function step(ts){
         if(startTime === null) startTime = ts;
         const t = Math.min(1, (ts - startTime) / duration);
@@ -984,7 +880,6 @@
       }
       requestAnimationFrame(step);
     }
-
     function handleSmoothLink(link, selector){
       link.addEventListener('click', (e)=>{
         e.preventDefault();
@@ -996,7 +891,6 @@
     handleSmoothLink(rsvpBtn, '#rsvp');
     handleSmoothLink(locationBtn, '#location');
 
-    // ===== Click/error sounds =====
     let audioCtx;
     function initAudioCtx(){ if(!audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; audioCtx = new AC(); } }
     function playTone(freq=660, ms=60, type='sine', volume=0.05){
@@ -1018,7 +912,6 @@
       playClick();
     }, true);
 
-    // ===== (kept) duplicates for contacts/maps render =====
     function renderContacts(){
       const contactList = document.getElementById('contactList');
       if(!contactList) return;
@@ -1061,12 +954,10 @@
       else maybeEnableSubmit();
     }
 
-    // Initial render
     renderAll();
 
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
 
-    // ===== Submit to Google Apps Script (hidden iframe) =====
     const form = document.getElementById('rsvpForm');
     const hiddenIframe = document.getElementById('hidden_iframe');
     form.action = APPS_SCRIPT_URL;
@@ -1096,10 +987,8 @@
       if(isSubmitted() || submitBtn.disabled){ e.preventDefault(); playError(); return; }
       syncHiddenFields(); saveLocal();
       _pendingSubmit = true;
-      // posts to iframe
     });
 
-    // ===== Particles (global canvas) =====
     (function initParticles(){
       const canvas = document.getElementById('bg-particles');
       const ctx = canvas.getContext('2d');
@@ -1163,7 +1052,6 @@
       });
     })();
 
-    // ===== Countdown logic =====
     (function initCountdown(){
       const dEl = document.getElementById('cdDays');
       const hEl = document.getElementById('cdHours');
@@ -1188,7 +1076,6 @@
       tick(); setInterval(tick, 1000);
     })();
 
-    // ===== Orientation fallback (kept) =====
     (function ensureWallpaperOnRotate(){
       const m = window.matchMedia('(orientation: portrait)');
       function apply(){
@@ -1197,7 +1084,7 @@
       }
       apply();
       if (m.addEventListener) m.addEventListener('change', apply);
-      else if (m.addListener) m.addListener(apply); // older Safari
+      else if (m.addListener) m.addListener(apply);
       window.addEventListener('orientationchange', apply);
       window.addEventListener('resize', apply);
     })();
