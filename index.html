@@ -46,9 +46,23 @@
     html{ scroll-behavior:auto }
     body{
       margin:0;
-      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; /* descriptions/body text */
       color:var(--text);
       background:var(--cream);
+    }
+
+    /* Default font for all headings → Times New Roman */
+    h1,h2,h3,h4,h5,h6,
+    .heading,
+    .section-title,
+    .agenda-date,
+    .tl-title,
+    .inv-label,
+    .inv-couple,
+    .hero .tagline,
+    .hero-date,
+    .cd-num{
+      font-family:"Times New Roman", Times, serif;
     }
 
     #bg-particles{ position:fixed; inset:0; z-index:9; pointer-events:none; opacity:.45; }
@@ -103,13 +117,13 @@
       letter-spacing:.22em;
       text-transform:uppercase;
       color:#6b4b00;
-      margin-bottom:50px;
+      margin-bottom:10px;
     }
 
     .couple-title{
       display:flex; align-items:center; justify-content:center; gap:18px;
       margin-bottom:8px;
-      font-family:'Great Vibes', cursive;
+      font-family:'Great Vibes', cursive;  /* keep the script */
       font-weight:400;
       font-size:clamp(48px,12vw,120px);
       line-height:1;
@@ -123,14 +137,11 @@
     }
 
     .hero-date{
-      font-family:'Playfair Display',serif;
       font-size:clamp(16px,4vw,22px);
-      letter-spacing:.12em;
-      text-transform:capitalize;
+      letter-spacing:.02em;
       color:#3b3b3b;
       margin-bottom:8px;
     }
-    /* NEW: address style under the date */
     .hero-address{
       max-width:720px;
       margin:0 auto 18px;
@@ -140,7 +151,7 @@
       color:#5b5b5b;
     }
 
-    .heading{ font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,52px); line-height:1.12; }
+    .heading{ font-size:clamp(28px,5vw,52px); line-height:1.12; }
     .sub{ color:var(--muted); margin-top:8px }
 
     .cta-row{ margin-top:26px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
@@ -201,7 +212,7 @@
     }
     .muted{ color:#6b7280 }
 
-    .section-title{ margin:0 0 8px; font-family:'Playfair Display',serif; font-size:clamp(22px,3.6vw,28px); color:#1f2937; }
+    .section-title{ margin:0 0 8px; font-size:clamp(22px,3.6vw,28px); color:#1f2937; }
 
     .separator{ height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(184,144,23,.35), transparent); }
     .spacer-8{ height:8px }
@@ -219,7 +230,6 @@
 
     /* COUNTDOWN */
     #countdown .cd-sub{ margin:6px 0 16px; }
-
     .countdown-row{
       display:grid; gap:12px;
       grid-template-columns:repeat(4, minmax(100px, 1fr));
@@ -231,7 +241,7 @@
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       text-align:center; aspect-ratio:1/1; min-width:0;
     }
-    .cd-num{ font-family:'Playfair Display',serif; font-weight:700; line-height:1; font-size:clamp(22px, 7.2vw, 48px); }
+    .cd-num{ font-weight:700; line-height:1; font-size:clamp(22px, 7.2vw, 48px); }
     .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:var(--muted); }
 
     @media (max-width:520px){ .countdown-row{ grid-template-columns:repeat(2, minmax(120px, 1fr)); } }
@@ -244,7 +254,7 @@
 
     /* AGENDA */
     .agenda{ display:grid; grid-template-columns: 240px 1fr; gap:24px; --timeline-pad:28px; --tl-line-x:11px; --tl-dot-nudge:1px; }
-    .agenda-date{ font-family:'Playfair Display',serif; font-size:clamp(18px,2.6vw,24px); }
+    .agenda-date{ font-size:clamp(18px,2.6vw,24px); }
     .agenda-day{ color:#6b7280; margin-top:6px; }
 
     .timeline{ position:relative; padding-left:var(--timeline-pad); }
@@ -294,15 +304,8 @@
     }
 
     .inv-small{ text-align:center; font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:#6b4b00; }
-    .inv-italic{ text-align:center; font-style:italic; color:#6b7280; margin-top:6px; }
-
-    .inv-names{ margin:20px 0 10px; text-align:center; font-family:'Playfair Display',serif; font-weight:700; font-size:clamp(22px,4.8vw,36px); color:#111; }
-    .inv-and{ text-align:center; font-size:clamp(22px,4.2vw,30px); color:#b89017; margin:8px 0; }
-
     .inv-body{ max-width:720px; margin:14px auto 6px; text-align:center; color:#111; line-height:1.55; }
-    .inv-english{ font-style:italic; color:#6b7280; margin-top:6px; }
-
-    .inv-couple{ margin:18px 0 10px; text-align:center; font-family:'Playfair Display',serif; font-weight:700; font-size:clamp(22px,4.8vw,34px); color:#111; }
+    .inv-couple{ margin:18px 0 10px; text-align:center; font-weight:700; font-size:clamp(22px,4.8vw,34px); color:#111; }
 
     .inv-details{ max-width:720px; margin:20px auto 0; display:grid; gap:14px; }
     .inv-row{ text-align:center; }
@@ -329,12 +332,16 @@
         <span class="name">Khairani</span>
       </div>
 
-      <div class="hero-date" id="heroDate">22 November 2025</div>
-      <!-- NEW: address just below the date -->
+      <!-- Date in Times New Roman with weekday -->
+      <div class="hero-date" id="heroDate">Saturday, 22 November 2025</div>
+
+      <!-- Address (multi-line) -->
       <div class="hero-address" id="heroAddress">
-        Promenade Hotel,<br/>
-        Rafflesia I<br/>
-        4, 3, Lorong Api - Api 1, Api-api Centre, 88000 Kota Kinabalu, Sabah
+        Promenade Hotel<br/>
+        Rafflesia I (Wedding Hall)<br/>
+        4, 3, Lorong Api - Api 1,<br/>
+        Api-api Centre,<br/>
+        88000 Kota Kinabalu, Sabah.
       </div>
 
       <div class="heading" id="titleText">Will you attend our wedding?</div>
@@ -347,40 +354,36 @@
   </header>
 
   <main>
-    <!-- Invitation section (kept) -->
+    <!-- Invitation section (now language-switchable) -->
     <section id="invite">
       <div class="container">
         <div class="invite-card">
           <div class="invite-inner">
-            <div class="inv-small">Undangan Majlis Perkahwinan</div>
-            <div class="inv-italic">Wedding Invitation</div>
-
-            <div class="inv-body">
-              Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan
-              untuk memeriahkan majlis perkahwinan kami.
+            <div class="inv-small" id="invSmall">Undangan Majlis Perkahwinan</div>
+            <div class="inv-body" id="invBody">
+              Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan majlis perkahwinan kami.
             </div>
-            <div class="inv-english">Cordially invite you and partner to our wedding reception.</div>
 
             <div class="inv-couple">Basran</div>
-            <div class="inv-and">&amp;</div>
+            <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(22px,4.2vw,30px)">&amp;</div>
             <div class="inv-couple">Khairani</div>
 
             <div class="inv-details">
               <div class="inv-row">
-                <div class="inv-label">Tarikh</div>
-                <div class="inv-value" id="inviteDate">22 November 2025</div>
+                <div class="inv-label" id="invDateLabel">Tarikh</div>
+                <div class="inv-value" id="inviteDate">Sabtu, 22 November 2025</div>
               </div>
               <div class="inv-row">
-                <div class="inv-label">Masa</div>
-                <div class="inv-value">11:00 AM – 4:00 PM</div>
+                <div class="inv-label" id="invTimeLabel">Masa</div>
+                <div class="inv-value" id="inviteTime">11:00 AM – 4:00 PM</div>
               </div>
               <div class="inv-row">
-                <div class="inv-label">Tempat</div>
-                <div class="inv-value" id="inviteVenue">Kak Ira Wedding Venue</div>
+                <div class="inv-label" id="invVenueLabel">Tempat</div>
+                <div class="inv-value" id="inviteVenue">Promenade Hotel, Rafflesia I (Wedding Hall)</div>
               </div>
               <div class="inv-row">
-                <div class="inv-label">Kod Pakaian</div>
-                <div class="inv-value">Sopan dan Menutup Aurat</div>
+                <div class="inv-label" id="invDressLabel">Kod Pakaian</div>
+                <div class="inv-value" id="inviteDress">Sopan dan Menutup Aurat</div>
               </div>
             </div>
           </div>
@@ -388,7 +391,7 @@
       </div>
     </section>
 
-    <!-- RSVP (kept) -->
+    <!-- RSVP -->
     <section id="rsvp">
       <div class="container">
         <div class="card">
@@ -457,6 +460,7 @@
       </div>
     </section>
 
+    <!-- Schedule (unchanged) -->
     <section id="schedule">
       <div class="container">
         <div class="card">
@@ -510,6 +514,7 @@
       </div>
     </section>
 
+    <!-- Countdown -->
     <section id="countdown">
       <div class="container">
         <div class="card">
@@ -526,7 +531,9 @@
     </section>
   </main>
 
-  <footer class="footer"><div class="tiny">Made with ♥ for Kak Ira</div></footer>
+  <footer class="footer">
+    <div class="tiny">Made with ♥ for Kak Ira</div>
+  </footer>
 
   <div id="toast" class="toast">Saved!</div>
 
@@ -545,13 +552,14 @@
       { name: "Anyone", phone: "+60 19 121 2121" },
     ];
 
-    // Single source of truth for the date
+    // Single source of truth for the date/time
     const WEDDING_DATE_ISO = '2025-11-22';
-    const WEDDING_TIME = '10:00:00';
+    const WEDDING_TIME = '10:00:00'; // local time for countdown target
     let COUNTDOWN_TARGET = new Date(`${WEDDING_DATE_ISO}T${WEDDING_TIME}`);
 
     const BGM_STOP_AFTER_LOOPS = 1;
 
+    // ====== i18n strings (added invitation section text) ======
     const I18N = {
       en: {
         tagline: "Wedding Invitation",
@@ -577,6 +585,14 @@
         locNote: "Tip: You can share the link with friends who are carpooling.",
         contactTitle: "Contact (Bride's family)",
         contactDesc: "Tap a name to call directly.",
+
+        invSmall: "Wedding Invitation",
+        invBody: "With heartfelt gratitude, we cordially invite you and your partner to our wedding reception.",
+        invDateLabel: "Date",
+        invTimeLabel: "Time",
+        invVenueLabel: "Venue",
+        invDressLabel: "Dress Code",
+        invDressValue: "Modest and aurat-covering",
       },
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
@@ -602,10 +618,18 @@
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
         contactTitle: "Hubungi (keluarga pengantin perempuan)",
         contactDesc: "Tekan nama untuk terus membuat panggilan.",
+
+        invSmall: "Undangan Majlis Perkahwinan",
+        invBody: "Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan majlis perkahwinan kami.",
+        invDateLabel: "Tarikh",
+        invTimeLabel: "Masa",
+        invVenueLabel: "Tempat",
+        invDressLabel: "Kod Pakaian",
+        invDressValue: "Sopan dan Menutup Aurat",
       }
     };
 
-    // DOM refs
+    // ====== DOM refs ======
     const guestRowsEl = document.getElementById('guestRows');
     const totalGuestsEl = document.getElementById('totalGuests');
     const validationMsg = document.getElementById('validationMsg');
@@ -631,15 +655,27 @@
     const locNote = document.getElementById('locNote');
     const contactTitle = document.getElementById('contactTitle');
     const contactDesc = document.getElementById('contactDesc');
+
     const inviteDateEl = document.getElementById('inviteDate');
+    const inviteTimeEl = document.getElementById('inviteTime');
     const inviteVenueEl = document.getElementById('inviteVenue');
+    const inviteDressEl = document.getElementById('inviteDress');
+
+    const invSmall = document.getElementById('invSmall');
+    const invBody  = document.getElementById('invBody');
+    const invDateLabel  = document.getElementById('invDateLabel');
+    const invTimeLabel  = document.getElementById('invTimeLabel');
+    const invVenueLabel = document.getElementById('invVenueLabel');
+    const invDressLabel = document.getElementById('invDressLabel');
 
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
 
+    // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'en';
     function refreshLangToggleLabel(){ langToggle.textContent = (LANG === 'en') ? 'Malay' : 'English'; }
 
+    // ===== Local state helpers =====
     function getStoredNames(){ return JSON.parse(localStorage.getItem('rsvp_names')||'[]'); }
     function getStoredConfirmed(){ return JSON.parse(localStorage.getItem('rsvp_confirmed')||'[]'); }
     function setStoredNames(arr){ localStorage.setItem('rsvp_names', JSON.stringify(arr)); }
@@ -654,7 +690,6 @@
     function getGuestNames(){ return getGuestInputs().map(i=>i.value.trim()); }
     function getConfirmedCount(){ return getGuestInputs().filter(inp => inp.readOnly && inp.value.trim().length>0).length; }
     function anyUnconfirmedTyped(){ return getGuestInputs().some(inp => !inp.readOnly && inp.value.trim().length>0); }
-
     function updateTotals(){ const n = getGuestNames().filter(Boolean).length; totalGuestsEl.textContent = I18N[LANG].total(n); }
 
     function saveLocal(){
@@ -674,28 +709,7 @@
       validationMsg.textContent = I18N[LANG].already;
     }
 
-    function loadLocal(){
-      const phone = localStorage.getItem('rsvp_phone') || '';
-      const names = getStoredNames();
-      const confirmed = getStoredConfirmed();
-      phoneInput.value = phone;
-
-      getGuestInputs().forEach((inp, idx)=>{
-        if(names[idx]) inp.value = names[idx];
-        const btn = getGuestButtons()[idx];
-        const isConfirmed = !!confirmed[idx] && inp.value.trim().length>0;
-        inp.readOnly = isConfirmed;
-        btn.textContent = isConfirmed ? I18N[LANG].edit : I18N[LANG].confirm;
-        btn.classList.toggle('edit-state', isConfirmed);
-        btn.classList.toggle('confirm-state', !isConfirmed);
-        btn.disabled = isConfirmed ? false : inp.value.trim().length === 0;
-      });
-
-      updateTotals();
-      maybeEnableSubmit();
-      if(isSubmitted()) lockSubmissionUI();
-    }
-
+    // ===== Rendering helpers =====
     function makeGuestRow(idx){
       const T = I18N[LANG];
       const placeholder = idx===0 ? T.fullNameFirst : T.fullNameOthers;
@@ -733,12 +747,10 @@
 
       return row;
     }
-
     function renderGuestRows(){
       guestRowsEl.innerHTML = '';
       for(let i=0; i<MAX_GUESTS; i++){ guestRowsEl.appendChild(makeGuestRow(i)); }
     }
-
     function renderContacts(){
       const contactList = document.getElementById('contactList');
       if(!contactList) return;
@@ -751,26 +763,39 @@
         contactList.appendChild(a);
       });
     }
-
     function renderMaps(){
       const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
       const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
       btnGmaps.href = gq; btnWaze.href = wz;
     }
 
-    function formatWeddingDate(lang){
+    // Date format with weekday (Saturday/Sabtu)
+    function formatWeddingDateWithDay(lang){
       const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
       const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
-      return d.toLocaleDateString(locale, { day:'2-digit', month:'long', year:'numeric' });
+      return d.toLocaleDateString(locale, { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
     }
 
     function i18n(){
       const T = I18N[LANG];
-      heroTag.textContent = T.tagline;
-      heroDate.textContent = formatWeddingDate(LANG);
-      if(inviteDateEl) inviteDateEl.textContent = formatWeddingDate(LANG);
-      if(inviteVenueEl) inviteVenueEl.textContent = decodeURIComponent(VENUE_LABEL);
 
+      // Hero
+      heroTag.textContent = T.tagline;
+      heroDate.textContent = formatWeddingDateWithDay(LANG);
+
+      // Invitation section
+      invSmall.textContent = T.invSmall;
+      invBody.textContent = T.invBody;
+      invDateLabel.textContent  = T.invDateLabel;
+      invTimeLabel.textContent  = T.invTimeLabel;
+      invVenueLabel.textContent = T.invVenueLabel;
+      invDressLabel.textContent = T.invDressLabel;
+      inviteDateEl.textContent  = formatWeddingDateWithDay(LANG);
+      inviteTimeEl.textContent  = "11:00 AM – 4:00 PM";
+      inviteVenueEl.textContent = "Promenade Hotel, Rafflesia I (Wedding Hall)";
+      inviteDressEl.textContent = T.invDressValue;
+
+      // Other labels/text
       titleText.textContent = T.title;
       subtitleText.textContent = T.subtitle;
       rsvpBtn.textContent = T.rsvp;
@@ -785,6 +810,7 @@
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
 
+      // Re-render guest rows with proper button labels/placeholders
       const savedNames = getStoredNames();
       const savedConfirmed = getStoredConfirmed();
       renderGuestRows();
@@ -824,6 +850,7 @@
       else{ validationMsg.textContent = ''; }
     }
 
+    // Language toggle
     langToggle.addEventListener('click', (e)=>{
       e.preventDefault();
       LANG = (LANG === 'en') ? 'ms' : 'en';
@@ -831,6 +858,7 @@
       i18n(); saveLocal(); maybeEnableSubmit();
     });
 
+    // Music
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -864,10 +892,13 @@
       setMutedUI();
     });
 
+    // Smooth scroll (unchanged)
     function easeInOutCubic(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
     function smoothScrollTo(target, baseDuration=700){
       const start = window.scrollY || window.pageYOffset;
-      const end = (typeof target === 'number') ? target : (target.getBoundingClientRect().top + start);
+      const end = (typeof target === 'number')
+        ? target
+        : (target.getBoundingClientRect().top + start);
       const diff = end - start;
       const duration = Math.max(500, Math.min(1400, baseDuration + Math.abs(diff) * 0.25));
       let startTime = null;
@@ -891,6 +922,7 @@
     handleSmoothLink(rsvpBtn, '#rsvp');
     handleSmoothLink(locationBtn, '#location');
 
+    // Click sounds
     let audioCtx;
     function initAudioCtx(){ if(!audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; audioCtx = new AC(); } }
     function playTone(freq=660, ms=60, type='sine', volume=0.05){
@@ -912,24 +944,7 @@
       playClick();
     }, true);
 
-    function renderContacts(){
-      const contactList = document.getElementById('contactList');
-      if(!contactList) return;
-      contactList.innerHTML = '';
-      CONTACTS.forEach(c=>{
-        const a = document.createElement('a');
-        a.className = 'btn btn-outline';
-        a.href = `tel:${c.phone.replace(/\s+/g,'')}`;
-        a.textContent = `${c.name} (${c.phone})`;
-        contactList.appendChild(a);
-      });
-    }
-    function renderMaps(){
-      const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
-      const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
-      btnGmaps.href = gq; btnWaze.href = wz;
-    }
-
+    // Render (kept)
     function renderAll(){
       i18n();
       renderContacts();
@@ -953,11 +968,11 @@
       if(isSubmitted()) lockSubmissionUI();
       else maybeEnableSubmit();
     }
-
     renderAll();
 
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
 
+    // Submit to Apps Script (iframe)
     const form = document.getElementById('rsvpForm');
     const hiddenIframe = document.getElementById('hidden_iframe');
     form.action = APPS_SCRIPT_URL;
@@ -986,14 +1001,14 @@
     form.addEventListener('submit', (e)=>{
       if(isSubmitted() || submitBtn.disabled){ e.preventDefault(); playError(); return; }
       syncHiddenFields(); saveLocal();
-      _pendingSubmit = true;
+      _pendingSubmit = true; // posts to iframe
     });
 
+    // Particles
     (function initParticles(){
       const canvas = document.getElementById('bg-particles');
       const ctx = canvas.getContext('2d');
       if(!canvas || !ctx) return;
-
       const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if(prefersReduced) return;
 
@@ -1052,6 +1067,7 @@
       });
     })();
 
+    // Countdown
     (function initCountdown(){
       const dEl = document.getElementById('cdDays');
       const hEl = document.getElementById('cdHours');
@@ -1076,6 +1092,7 @@
       tick(); setInterval(tick, 1000);
     })();
 
+    // Orientation wallpaper fallback
     (function ensureWallpaperOnRotate(){
       const m = window.matchMedia('(orientation: portrait)');
       function apply(){
