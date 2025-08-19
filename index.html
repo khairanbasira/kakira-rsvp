@@ -6,9 +6,11 @@
   <title>Kak Ira Wedding RSVP</title>
   <meta name="description" content="RSVP for Kak Ira's wedding — elegant, mobile-first, bilingual (EN/MS)." />
   <meta name="theme-color" content="#fff7ec" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Added Great Vibes for LucySaidOK-like script on the couple names -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -85,40 +87,42 @@
     .volume-pop{ display:none !important; }
 
     /* Hero */
-	.hero{
-	position:relative;
-	min-height:100svh;              /* keep your height – change to 100svh if you want full screen - now is 72vh*/
-	display:grid; place-items:center; text-align:center; color:#222;
-	
-	/* Explicit multi-layer background to prevent mobile 'framing' */
-	background-image:
-		linear-gradient(
-		180deg,
-		rgba(var(--hero-overlay-color), var(--hero-overlay-1)) 0%,
-		rgba(var(--hero-overlay-color), var(--hero-overlay-2)) 55%,
-		rgba(var(--hero-overlay-color), var(--hero-overlay-3)) 100%
-		),
-		var(--wallpaper);
-	
-	/* Make BOTH layers cover, centered, no-repeat */
-	background-position: center center, center center;
-	background-repeat: no-repeat, no-repeat;
-	background-size: cover, cover;
-	
-	/* Disable 'fixed' — it causes the crop/frame on iOS/Android */
-	background-attachment: scroll, scroll;
-	}
+    .hero{
+      position:relative;
+      min-height:100svh;
+      display:grid; place-items:center; text-align:center; color:#222;
 
+      background-image:
+        linear-gradient(
+          180deg,
+          rgba(var(--hero-overlay-color), var(--hero-overlay-1)) 0%,
+          rgba(var(--hero-overlay-color), var(--hero-overlay-2)) 55%,
+          rgba(var(--hero-overlay-color), var(--hero-overlay-3)) 100%
+        ),
+        var(--wallpaper);
+      background-position: center center, center center;
+      background-repeat: no-repeat, no-repeat;
+      background-size: cover, cover;
+      background-attachment: scroll, scroll;
+    }
 
-    /* Decorative couple title */
+    /* NEW: small tagline on top of the couple names */
+    .hero .tagline{
+      font-size:12px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color:#6b4b00;
+      margin-bottom:10px;
+    }
+
+    /* Couple title in LucySaidOK-like script */
     .couple-title{
       display:flex; align-items:center; justify-content:center; gap:18px;
-      margin-bottom:16px;
-      font-family:'Playfair Display',serif;
-      font-weight:700;
-      font-size:clamp(34px,8vw,84px);
+      margin-bottom:8px;
+      font-family:'Great Vibes', cursive;
+      font-weight:400;
+      font-size:clamp(48px,12vw,120px);
       line-height:1;
-      letter-spacing:.5px;
       color:var(--gold-strong);
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
     }
@@ -126,6 +130,16 @@
     @media (max-width:520px){
       .couple-title{ flex-direction:column; gap:6px; }
       .couple-title .heart{ transform:none; }
+    }
+
+    /* NEW: wedding date under the couple names */
+    .hero-date{
+      font-family:'Playfair Display',serif;
+      font-size:clamp(16px,4vw,22px);
+      letter-spacing:.12em;
+      text-transform:capitalize;
+      color:#3b3b3b;
+      margin-bottom:18px;
     }
 
     .heading{ font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,52px); line-height:1.12; }
@@ -214,7 +228,7 @@
     }
     .toast.show{ opacity:1 }
 
-    /* ===== COUNTDOWN (improved for phones) ===== */
+    /* ===== COUNTDOWN ===== */
     #countdown .cd-sub{ margin:6px 0 16px; }
 
     .countdown-row{
@@ -228,8 +242,7 @@
       box-shadow:var(--shadow-sm); padding:16px 12px;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       text-align:center;
-      aspect-ratio:1/1;
-      min-width:0;
+      aspect-ratio:1/1; min-width:0;
     }
     .cd-num{
       font-family:'Playfair Display',serif; font-weight:700; line-height:1;
@@ -247,19 +260,17 @@
       .cd-label{ letter-spacing:.28em; }
     }
 
-    /* ===== AGENDA / TIMELINE (dot alignment with tweak vars) ===== */
+    /* ===== AGENDA / TIMELINE ===== */
     .agenda{
       display:grid; grid-template-columns: 240px 1fr; gap:24px;
       --timeline-pad:28px;
       --tl-line-x:11px;
-      --tl-dot-nudge:1px; /* <— EDIT HERE to nudge dot left/right */
+      --tl-dot-nudge:1px;
     }
     .agenda-date{ font-family:'Playfair Display',serif; font-size:clamp(18px,2.6vw,24px); }
     .agenda-day{ color:#6b7280; margin-top:6px; }
 
-    .timeline{
-      position:relative; padding-left:var(--timeline-pad);
-    }
+    .timeline{ position:relative; padding-left:var(--timeline-pad); }
     .timeline::before{
       content:''; position:absolute; left:var(--tl-line-x); top:6px; bottom:6px; width:2px; background:var(--gold-strong);
     }
@@ -290,6 +301,76 @@
       .agenda{ grid-template-columns:1fr; }
       .tl-item{ grid-template-columns: 96px 1fr; }
     }
+
+    /* ===== NEW INVITATION SECTION (gold/white abstract frame) ===== */
+    .invite-card{
+      position:relative;
+      background:#fff;
+      border-radius:28px;
+      padding:36px 24px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(184,144,23,.30);
+      overflow:hidden;
+    }
+    /* subtle abstract gold corners */
+    .invite-card::before,
+    .invite-card::after{
+      content:'';
+      position:absolute; pointer-events:none;
+      width:320px; height:320px; opacity:.18; filter:blur(0.2px);
+      background:
+        radial-gradient( circle at 30% 30%, rgba(212,175,55,.9), rgba(212,175,55,0) 60% ),
+        radial-gradient( circle at 70% 70%, rgba(255,255,255,.9), rgba(255,255,255,0) 65% );
+    }
+    .invite-card::before{ top:-120px; left:-120px; transform:rotate(-12deg); }
+    .invite-card::after{ bottom:-120px; right:-120px; transform:rotate(18deg); }
+
+    /* inner gold line */
+    .invite-inner{
+      position:relative;
+      padding:28px 18px;
+      border-radius:20px;
+      background:
+        linear-gradient(#fff,#fff) padding-box,
+        linear-gradient( 135deg, rgba(255,255,255,.7), rgba(212,175,55,.9), rgba(255,255,255,.7) ) border-box;
+      border:2px solid transparent;
+    }
+
+    .inv-small{ text-align:center; font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:#6b4b00; }
+    .inv-italic{ text-align:center; font-style:italic; color:#6b7280; margin-top:6px; }
+
+    .inv-names{
+      margin:20px 0 10px;
+      text-align:center;
+      font-family:'Playfair Display',serif;
+      font-weight:700;
+      font-size:clamp(22px,4.8vw,36px);
+      color:#111;
+    }
+    .inv-and{
+      text-align:center; font-size:clamp(22px,4.2vw,30px); color:#b89017; margin:8px 0;
+    }
+    .inv-body{
+      max-width:720px; margin:14px auto 6px; text-align:center; color:#111; line-height:1.55;
+    }
+    .inv-english{ font-style:italic; color:#6b7280; margin-top:6px; }
+
+    .inv-couple{
+      margin:18px 0 10px;
+      text-align:center;
+      font-family:'Playfair Display',serif;
+      font-weight:700;
+      font-size:clamp(22px,4.8vw,34px);
+      color:#111;
+    }
+
+    .inv-details{
+      max-width:720px; margin:20px auto 0;
+      display:grid; gap:14px;
+    }
+    .inv-row{ text-align:center; }
+    .inv-label{ font-weight:700; letter-spacing:.06em; color:#0f172a; }
+    .inv-value{ margin-top:4px; color:#0f172a; }
   </style>
 </head>
 <body>
@@ -303,26 +384,22 @@
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
   </div>
 
-  <!-- (COMMENTED OUT) Volume popover to revisit later
-  <div id="volumePop" class="volume-pop" role="dialog" aria-label="Volume">
-    <div class="vol-wrap">
-      <div class="vol-slider-wrap">
-        <input id="volumeSlider" class="vol-slider" type="range" min="1" max="100" step="1" value="20" aria-label="Volume slider">
-      </div>
-      <button id="volPlus" class="vol-btn" type="button" aria-label="Volume up +10">+</button>
-      <button id="volMinus" class="vol-btn" type="button" aria-label="Volume down -10">−</button>
-    </div>
-  </div>
-  -->
-
   <header class="hero">
     <div>
+      <!-- NEW tagline -->
+      <div class="tagline" id="heroTag">Wedding Invitation</div>
+
+      <!-- Couple names in script -->
       <div class="couple-title" aria-label="Basran love Khairani">
         <span class="name">Basran</span>
         <span class="heart">♡</span>
         <span class="name">Khairani</span>
       </div>
 
+      <!-- NEW wedding date (auto-linked to countdown target) -->
+      <div class="hero-date" id="heroDate">22 November 2025</div>
+
+      <!-- Existing question + CTA kept beneath the date -->
       <div class="heading" id="titleText">Will you attend our wedding?</div>
       <div class="sub" id="subtitleText">We'd love to celebrate with you. Please RSVP below.</div>
       <div class="cta-row">
@@ -333,6 +410,48 @@
   </header>
 
   <main>
+    <!-- ===== NEW INVITATION SECTION (after hero) ===== -->
+    <section id="invite">
+      <div class="container">
+        <div class="invite-card">
+          <div class="invite-inner">
+            <div class="inv-small">Undangan Majlis Perkahwinan</div>
+            <div class="inv-italic">Wedding Invitation</div>
+
+            <div class="inv-body">
+              Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan
+              untuk memeriahkan majlis perkahwinan kami.
+            </div>
+            <div class="inv-english">Cordially invite you and partner to our wedding reception.</div>
+
+            <div class="inv-couple">Basran</div>
+            <div class="inv-and">&amp;</div>
+            <div class="inv-couple">Khairani</div>
+
+            <div class="inv-details">
+              <div class="inv-row">
+                <div class="inv-label">Tarikh</div>
+                <div class="inv-value" id="inviteDate">22 November 2025</div>
+              </div>
+              <div class="inv-row">
+                <div class="inv-label">Masa</div>
+                <div class="inv-value">11:00 AM – 4:00 PM</div>
+              </div>
+              <div class="inv-row">
+                <div class="inv-label">Tempat</div>
+                <div class="inv-value" id="inviteVenue">Kak Ira Wedding Venue</div>
+              </div>
+              <div class="inv-row">
+                <div class="inv-label">Kod Pakaian</div>
+                <div class="inv-value">Sopan dan Menutup Aurat</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== RSVP (unchanged) ===== -->
     <section id="rsvp">
       <div class="container">
         <div class="card">
@@ -403,7 +522,7 @@
       </div>
     </section>
 
-    <!-- Event agenda schedule -->
+    <!-- Event agenda schedule (kept) -->
     <section id="schedule">
       <div class="container">
         <div class="card">
@@ -450,7 +569,6 @@
                 </div>
               </div>
 
-              <!-- kept for compatibility; visually hidden by CSS -->
               <div class="tl-mid">•</div>
             </div>
           </div>
@@ -509,8 +627,13 @@
       { name: "Anyone", phone: "+60 19 121 2121" },
     ];
 
-    // COUNTDOWN TARGET — local time
-    const COUNTDOWN_TARGET = new Date("2025-11-22T10:00:00");
+    // ====== SINGLE SOURCE OF TRUTH FOR THE DATE ======
+    // Update this date (YYYY-MM-DD) and both the hero/invitation text and the countdown target will follow.
+    const WEDDING_DATE_ISO = '2025-11-22';
+    const WEDDING_TIME = '10:00:00'; // local time for countdown target
+
+    // Countdown target computed from the ISO date above
+    let COUNTDOWN_TARGET = new Date(`${WEDDING_DATE_ISO}T${WEDDING_TIME}`);
 
     /* ===== BGM LOOP CONTROL =====
        1 = play once, 2 = twice, 5 = five times, Infinity = loop forever
@@ -520,6 +643,7 @@
     // ====== i18n strings ======
     const I18N = {
       en: {
+        tagline: "Wedding Invitation",
         title: "Will you attend our wedding?",
         subtitle: "We'd love to celebrate with you. Please RSVP below.",
         rsvp: "RSVP",
@@ -544,6 +668,7 @@
         contactDesc: "Tap a name to call directly.",
       },
       ms: {
+        tagline: "Undangan Majlis Perkahwinan",
         title: "Adakah anda akan hadir ke majlis kami?",
         subtitle: "Jemput RSVP di bawah ya.",
         rsvp: "RSVP",
@@ -581,6 +706,8 @@
     const langToggle = document.getElementById('langToggle');
     const muteBtn = document.getElementById('muteBtn');
 
+    const heroTag = document.getElementById('heroTag');
+    const heroDate = document.getElementById('heroDate');
     const titleText = document.getElementById('titleText');
     const subtitleText = document.getElementById('subtitleText');
     const rsvpBtn = document.getElementById('rsvpBtn');
@@ -593,6 +720,8 @@
     const locNote = document.getElementById('locNote');
     const contactTitle = document.getElementById('contactTitle');
     const contactDesc = document.getElementById('contactDesc');
+    const inviteDateEl = document.getElementById('inviteDate');
+    const inviteVenueEl = document.getElementById('inviteVenue');
 
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
@@ -721,8 +850,20 @@
       btnGmaps.href = gq; btnWaze.href = wz;
     }
 
+    // --- helpers for date formatting ---
+    function formatWeddingDate(lang){
+      const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
+      const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
+      return d.toLocaleDateString(locale, { day:'2-digit', month:'long', year:'numeric' });
+    }
+
     function i18n(){
       const T = I18N[LANG];
+      heroTag.textContent = T.tagline;
+      heroDate.textContent = formatWeddingDate(LANG);
+      if(inviteDateEl) inviteDateEl.textContent = formatWeddingDate(LANG);
+      if(inviteVenueEl) inviteVenueEl.textContent = decodeURIComponent(VENUE_LABEL);
+
       titleText.textContent = T.title;
       subtitleText.textContent = T.subtitle;
       rsvpBtn.textContent = T.rsvp;
@@ -820,7 +961,7 @@
       setMutedUI();
     });
 
-    // ===== Smooth scrolling (stronger ease-in/out, adaptive duration) =====
+    // ===== Smooth scrolling (kept) =====
     function easeInOutCubic(t){
       return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
     }
@@ -831,14 +972,13 @@
         : (target.getBoundingClientRect().top + start);
 
       const diff = end - start;
-      // Adaptive duration: longer distance → a bit longer, capped for sanity
       const duration = Math.max(500, Math.min(1400, baseDuration + Math.abs(diff) * 0.25));
       let startTime = null;
 
       function step(ts){
         if(startTime === null) startTime = ts;
         const t = Math.min(1, (ts - startTime) / duration);
-        const eased = easeInOutCubic(t); // slower start/end, quicker middle
+        const eased = easeInOutCubic(t);
         window.scrollTo(0, start + diff * eased);
         if(t < 1) requestAnimationFrame(step);
       }
@@ -878,7 +1018,7 @@
       playClick();
     }, true);
 
-    // ===== Render (keep existing duplicates intact) =====
+    // ===== (kept) duplicates for contacts/maps render =====
     function renderContacts(){
       const contactList = document.getElementById('contactList');
       if(!contactList) return;
@@ -921,6 +1061,7 @@
       else maybeEnableSubmit();
     }
 
+    // Initial render
     renderAll();
 
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
@@ -958,7 +1099,7 @@
       // posts to iframe
     });
 
-    // ===== Particles (global canvas across the page) =====
+    // ===== Particles (global canvas) =====
     (function initParticles(){
       const canvas = document.getElementById('bg-particles');
       const ctx = canvas.getContext('2d');
@@ -1003,14 +1144,14 @@
           p.x += p.drift * dt * 60;
           if(p.y < -10){ p.y = h + 10; p.x = Math.random()*w; }
 
-        const rr = p.r * (p.pulse + Math.sin((ts/600)+(p.x+p.y))*0.03);
-        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr*2.2);
-        g.addColorStop(0, p.inner);
-        g.addColorStop(0.5, p.inner);
-        g.addColorStop(1, p.outer);
+          const rr = p.r * (p.pulse + Math.sin((ts/600)+(p.x+p.y))*0.03);
+          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr*2.2);
+          g.addColorStop(0, p.inner);
+          g.addColorStop(0.5, p.inner);
+          g.addColorStop(1, p.outer);
 
-        ctx.fillStyle = g;
-        ctx.beginPath(); ctx.arc(p.x, p.y, rr, 0, Math.PI*2); ctx.fill();
+          ctx.fillStyle = g;
+          ctx.beginPath(); ctx.arc(p.x, p.y, rr, 0, Math.PI*2); ctx.fill();
         }
         if(running) requestAnimationFrame(step);
       }
@@ -1047,7 +1188,7 @@
       tick(); setInterval(tick, 1000);
     })();
 
-    // ===== Orientation fallback (ensures swap on rotate in stubborn browsers) =====
+    // ===== Orientation fallback (kept) =====
     (function ensureWallpaperOnRotate(){
       const m = window.matchMedia('(orientation: portrait)');
       function apply(){
