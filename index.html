@@ -122,7 +122,7 @@
 
     .couple-title{
       display:flex; align-items:center; justify-content:center; gap:18px;
-      margin-bottom:38px;
+      margin-bottom:50px;
       font-family:'Great Vibes', cursive;  /* keep the script */
       font-weight:400;
       font-size:clamp(48px,12vw,120px);
@@ -130,7 +130,14 @@
       color:var(--gold-strong);
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
     }
-    .couple-title .heart{ font-size:1.05em; transform:translateY(-2px); }
+	
+    /*.couple-title .heart{ font-size:1.05em; transform:translateY(-2px); }*/
+	/* Nudge the heart left/right with --heart-shift (e.g. 6px or -6px) */
+	.couple-title .heart{
+	font-size:1.05em;
+	display:inline-block;
+	transform: translateX(var(--heart-shift, 0px)) translateY(-2px);
+	}
     @media (max-width:520px){
       .couple-title{ flex-direction:column; gap:6px; }
       .couple-title .heart{ transform:none; }
@@ -149,6 +156,7 @@
       font-size:clamp(13px,3.2vw,16px);
       line-height:1.45;
       color:#5b5b5b;
+	  margin-bottom:38px;
     }
 
     .heading{ font-size:clamp(28px,5vw,52px); line-height:1.12; }
@@ -326,11 +334,11 @@
     <div>
       <div class="tagline" id="heroTag">Wedding Invitation</div>
 
-      <div class="couple-title" aria-label="Basran love Khairani">
-        <span class="name">Basran</span>
-        <span class="heart"> ♡</span>
-        <span class="name">Khairani</span>
-      </div>
+	  <div class="couple-title" style="--heart-shift: 10px" aria-label="Basran love Khairani">
+	  <span class="name">Basran</span>
+	  <span class="heart">♡</span>
+	  <span class="name">Khairani</span>
+	  </div>
 
       <!-- Date in Times New Roman with weekday -->
       <div class="hero-date" id="heroDate">Saturday, 22 November 2025</div>
@@ -360,13 +368,19 @@
         <div class="invite-card">
           <div class="invite-inner">
             <div class="inv-small" id="invSmall">Undangan Majlis Perkahwinan</div>
+			<div class="inv-small" id="invSmall">WalimatulUrus</div>
+			
+			<div class="inv-couple">Muhammad Basri Bin Patara</div>
+            <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(22px,4.2vw,30px)">&amp;</div>
+            <div class="inv-couple">Samsah Binti Suda</div>
+			
             <div class="inv-body" id="invBody">
-              Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan majlis perkahwinan kami.
+              Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan Majlis Perkahwinan puteri kami
             </div>
 
-            <div class="inv-couple">Basran</div>
+            <div class="inv-couple">Basran Bin </div>
             <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(22px,4.2vw,30px)">&amp;</div>
-            <div class="inv-couple">Khairani</div>
+            <div class="inv-couple">Noor Khairani Binti Muhammad Basri</div>
 
             <div class="inv-details">
               <div class="inv-row">
@@ -375,7 +389,7 @@
               </div>
               <div class="inv-row">
                 <div class="inv-label" id="invTimeLabel">Masa</div>
-                <div class="inv-value" id="inviteTime">11:00 AM – 4:00 PM</div>
+                <div class="inv-value" id="inviteTime">10:00AM – 4:00PM</div>
               </div>
               <div class="inv-row">
                 <div class="inv-label" id="invVenueLabel">Tempat</div>
@@ -479,28 +493,28 @@
                 </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">12:00pm</div>
+                <div class="tl-time">10:30am</div>
                 <div class="tl-what">
                   <div class="tl-title">NIKAH</div>
                   <div class="tl-desc">Akad nikah ceremony<br/>Family blessings</div>
                 </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">1:00pm</div>
+                <div class="tl-time">12:00pm</div>
                 <div class="tl-what">
                   <div class="tl-title">WEDDING CEREMONY</div>
                   <div class="tl-desc">Procession & doa<br/>Couple entrance</div>
                 </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">2:00pm</div>
+                <div class="tl-time">01:00pm</div>
                 <div class="tl-what">
                   <div class="tl-title">LUNCH</div>
                   <div class="tl-desc">Buffet opens<br/>Please enjoy the meal</div>
                 </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">3:00pm</div>
+                <div class="tl-time">03:00pm</div>
                 <div class="tl-what">
                   <div class="tl-title">PHOTO SESSION</div>
                   <div class="tl-desc">Group photos on stage<br/>Friends & family shots</div>
@@ -547,9 +561,9 @@
     const WAZE_COORDS  = { lat: 5.975194, lng: 116.0688396 };
     const VENUE_LABEL  = encodeURIComponent("Kak Ira Wedding Venue");
     const CONTACTS = [
-      { name: "Muhammad Basri", phone: "+60 12 345 6789" },
-      { name: "Samsah Suda", phone: "+60 13 222 1111" },
-      { name: "Anyone", phone: "+60 19 121 2121" },
+      { name: "Muhammad Basri", phone: "+60195365338" },
+      { name: "Samsah Suda", phone: "+60102517562" },
+      { name: "Mohd Ridzuan", phone: "+60134061314" },
     ];
 
     // Single source of truth for the date/time
@@ -597,7 +611,7 @@
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
         title: "Adakah anda akan hadir ke majlis kami?",
-        subtitle: "Jemput RSVP di bawah ya.",
+        subtitle: "Kami ingin meraikan bersama anda. Sila RSVP di bawah.",
         rsvp: "RSVP",
         location: "Lokasi",
         rsvpIntro: "Sila isi nama penuh anda, agar kami dapat menyambut kehadiran anda dengan penuh gembira pada hari istimewa kami.",
@@ -606,7 +620,7 @@
         confirm: "Hadir",
         edit: "Ubah",
         phoneHeader: "Nombor Untuk Dihubungi",
-        phoneHint: "Nombor ini untuk dihubungi jika ada makluman/perubahan.",
+        phoneHint: "Nombor untuk dihubungi jika ada makluman/perubahan.",
         submit: "Hantar Respon",
         total: (n)=>`Jumlah: ${n} Tetamu`,
         needPhone: "Sila isi nombor telefon untuk dihubungi",
@@ -770,11 +784,30 @@
     }
 
     // Date format with weekday (Saturday/Sabtu)
-    function formatWeddingDateWithDay(lang){
-      const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
-      const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
-      return d.toLocaleDateString(locale, { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
-    }
+	// Date format with weekday and a guaranteed comma after the weekday.
+	// Works for EN/GB and MS/MY without double-commas.
+	function formatWeddingDateWithDay(lang){
+	const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
+	const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
+	
+	const parts = new Intl.DateTimeFormat(locale, {
+		weekday:'long', day:'2-digit', month:'long', year:'numeric'
+	}).formatToParts(d);
+	
+	let out = '';
+	for (let i = 0; i < parts.length; i++) {
+		const p = parts[i];
+		out += p.value;
+	
+		// If the locale didn't include a comma after the weekday, add it.
+		if (p.type === 'weekday') {
+		const next = parts[i+1];
+		const alreadyHasComma = next && next.type === 'literal' && /,/.test(next.value);
+		if (!alreadyHasComma) out += ', ';
+		}
+	}
+	return out.replace(/\s+,/g, ', '); // tidy up spacing in case the locale already had a space/comma
+	}
 
     function i18n(){
       const T = I18N[LANG];
