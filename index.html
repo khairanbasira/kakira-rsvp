@@ -399,7 +399,7 @@
               Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan Majlis Perkahwinan puteri kami
             </div>
 
-            <div class="inv-couple">Basran Bin ??</div>
+            <div class="inv-couple">Basran Bin Ab Hamid</div>
             <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,22px)">&amp;</div>
             <div class="inv-couple">Noor Khairani Binti Muhammad Basri</div>
 
@@ -602,7 +602,7 @@
     // ===== RESUBMISSION TOGGLE =====
     // Set to 0 to LOCK after first successful submit (current behavior).
     // Set to 1 to ALLOW immediate re-submission: show success then reset the form.
-    const RESUBMISSION_ENABLE = 1;
+    const RESUBMISSION_ENABLE = 0;
 
     // ====== i18n strings (added invitation section text) ======
     const I18N = {
@@ -717,7 +717,7 @@
     const btnWaze  = document.getElementById('btnWaze');
 
     // ===== Language state =====
-    let LANG = localStorage.getItem('rsvp_lang') || 'en';
+    let LANG = localStorage.getItem('rsvp_lang') || 'ms'; // ===== change to 'en' if need english as default =====
     function refreshLangToggleLabel(){ langToggle.textContent = (LANG === 'en') ? 'Malay' : 'English'; }
 
     // ===== Local state helpers =====
