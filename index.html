@@ -74,15 +74,16 @@
     .card,
     .footer { position:relative; z-index:10; }
 
+    /* (3) RELOCATED: left-side tab-style controls */
     .top-controls{
-      position:fixed; top:15px; right:15px;
-      display:flex; gap:10px; z-index:9999;
+      position:fixed; left:0; top:50%; transform:translateY(-50%);
+      display:flex; flex-direction:column; gap:10px; z-index:9999;
     }
     .icon-btn{
       appearance:none; cursor:pointer;
       background:#fff; color:#5a3d00;
       border:1px solid rgba(0,0,0,.06);
-      padding:8px 12px; border-radius:999px;
+      padding:10px 14px; border-radius:0 999px 999px 0;   /* tab shape */
       font-size:14px; font-weight:600;
       box-shadow:var(--shadow-sm);
       transition:transform .12s ease, box-shadow .12s ease;
@@ -149,32 +150,31 @@
       margin-bottom:38px;
     }
 
-    /* === Address + Logo group (NEW) === */
+    /* (1) New wrapper to group logo + address and center together */
     .hero-address-wrap{
-      display:inline-flex;            /* inline so it can be centered by text-align */
-      align-items:stretch;            /* stretch children to the same height */
-      justify-content:center;
-      gap:14px;
-      max-width:820px;
-      margin:0 auto 18px;
+      max-width:900px;
+      margin:0 auto 38px;
       padding:0 12px;
-    }
-    .hero-address-logo{
-      display:block;
-      height:100%;                    /* match address block height */
-      max-height:100%;
-      object-fit:contain;
-      border-radius:8px;              /* subtle rounding to blend */
+      display:flex; align-items:center; justify-content:center; gap:16px;
+      flex-wrap:nowrap;
     }
     .hero-address{
+      max-width:720px;
       font-size:clamp(13px,3.2vw,16px);
       line-height:1.45;
       color:#5b5b5b;
-      text-align:left;                /* keep address readable */
-      margin:0;                       /* controlled by wrapper */
+      text-align:left;
+      margin:0; /* moved bottom margin to wrapper */
+    }
+    .hero-logo{
+      display:block;
+      height:auto;               /* JS will set explicit height to match text */
+      max-height:160px;          /* safe fallback */
+      width:auto; object-fit:contain;
     }
     @media (max-width:560px){
-      .hero-address-wrap{ gap:10px; }
+      .hero-address-wrap{ gap:12px; padding:0 10px; }
+      .hero-logo{ max-height:120px; }
     }
 
     .heading{ font-size:clamp(28px,5vw,52px); line-height:1.12; }
@@ -383,17 +383,10 @@
       <!-- Date in Times New Roman with weekday -->
       <div class="hero-date" id="heroDate">Saturday, 22 November 2025</div>
 
-      <!-- ===== Logo + Address group (NEW) ===== -->
+      <!-- (1) LOGO + ADDRESS grouped, centered -->
       <div class="hero-address-wrap" id="heroAddressWrap">
-        <img
-          src="promanade_hotel_logo_ai.png"
-          alt="Promenade Hotel Logo"
-          class="hero-address-logo"
-          id="heroAddressLogo"
-          loading="lazy"
-          decoding="async"
-        />
-        <div class="hero-address" id="heroAddressText">
+        <img id="hotelLogo" class="hero-logo" src="promanade_hotel_logo_ai.png" alt="Promenade Hotel Kota Kinabalu logo"/>
+        <div class="hero-address" id="heroAddress">
           Rafflesia Ballroom <br/>
           Promenade Hotel, Tingkat 1<br/>
           4, 3, Lorong Api - Api 1,<br/>
@@ -629,9 +622,11 @@
     const BGM_STOP_AFTER_LOOPS = 1;
 
     // ===== RESUBMISSION TOGGLE =====
+    // Set to 0 to LOCK after first successful submit (current behavior).
+    // Set to 1 to ALLOW immediate re-submission: show success then reset the form.
     const RESUBMISSION_ENABLE = 0;
 
-    // ====== i18n strings (added invitation section text + ADDRESS) ======
+    // ====== i18n strings (added invitation section text + ADDRESS LINES) ======
     const I18N = {
       en: {
         tagline: "Wedding Invitation",
@@ -666,13 +661,14 @@
         invDressLabel: "Dress Code",
         invDressValue: "Modest and aurat-covering",
 
-        // NEW: hero address (English)
-        heroAddressHTML:
-          "Rafflesia Ballroom <br/>" +
-          "Promenade Hotel, 1st Floor<br/>" +
-          "4, 3, Lorong Api - Api 1,<br/>" +
-          "Api-api Centre,<br/>" +
+        /* (2) Address bilingual (EN) */
+        addrLines: [
+          "Rafflesia Ballroom",
+          "Promenade Hotel, 1st Floor",
+          "4, 3, Lorong Api - Api 1,",
+          "Api-api Centre,",
           "88000 Kota Kinabalu, Sabah."
+        ],
       },
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
@@ -707,13 +703,14 @@
         invDressLabel: "Kod Pakaian",
         invDressValue: "Sopan dan Menutup Aurat",
 
-        // NEW: hero address (Malay default)
-        heroAddressHTML:
-          "Rafflesia Ballroom <br/>" +
-          "Promenade Hotel, Tingkat 1<br/>" +
-          "4, 3, Lorong Api - Api 1,<br/>" +
-          "Api-api Centre,<br/>" +
+        /* (2) Address bilingual (MS default) */
+        addrLines: [
+          "Rafflesia Ballroom",
+          "Promenade Hotel, Tingkat 1",
+          "4, 3, Lorong Api - Api 1,",
+          "Api-api Centre,",
           "88000 Kota Kinabalu, Sabah."
+        ],
       }
     };
 
@@ -759,8 +756,9 @@
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
 
-    // NEW: address nodes
-    const heroAddressText = document.getElementById('heroAddressText');
+    /* (1) elements to sync logo height with address */
+    const heroAddressEl = document.getElementById('heroAddress');
+    const hotelLogoEl = document.getElementById('hotelLogo');
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'ms'; // default Malay
@@ -802,9 +800,12 @@
 
     // ===== NEW: reset helper for RESUBMISSION_ENABLE=1 =====
     function resetFormToFreshState(){
+      // keep language; clear everything else related to the form
       localStorage.removeItem('rsvp_names');
       localStorage.removeItem('rsvp_confirmed');
       localStorage.removeItem('rsvp_phone');
+
+      // Re-render rows and reset controls
       renderGuestRows();
       getGuestInputs().forEach((inp, idx)=>{
         const btn = getGuestButtons()[idx];
@@ -882,12 +883,15 @@
     }
 
     // Date format with weekday and a guaranteed comma after the weekday.
+    // Works for EN/GB and MS/MY without double-commas.
 	function formatWeddingDateWithDay(lang){
 	  const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
 	  const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
+	  
 	  const parts = new Intl.DateTimeFormat(locale, {
 		weekday:'long', day:'2-digit', month:'long', year:'numeric'
 	  }).formatToParts(d);
+	  
 	  let out = '';
 	  for (let i = 0; i < parts.length; i++) {
 		const p = parts[i];
@@ -901,6 +905,19 @@
 	  return out.replace(/\s+,/g, ', ');
 	}
 
+    /* (1) Match logo height with the rendered address block */
+    function syncLogoHeight(){
+      const addr = heroAddressEl;
+      const img  = hotelLogoEl;
+      if(!addr || !img) return;
+      requestAnimationFrame(()=>{  // ensure layout is up to date
+        const h = addr.offsetHeight || 0;
+        if(h){ img.style.height = h + 'px'; }
+      });
+    }
+    window.addEventListener('load', syncLogoHeight);
+    window.addEventListener('resize', syncLogoHeight);
+
     function i18n(){
       const T = I18N[LANG];
 
@@ -908,8 +925,10 @@
       heroTag.textContent = T.tagline;
       heroDate.textContent = formatWeddingDateWithDay(LANG);
 
-      // NEW: Address bilingual swap
-      heroAddressText.innerHTML = T.heroAddressHTML;
+      // (2) Address bilingual toggle
+      if (Array.isArray(T.addrLines)) {
+        heroAddressEl.innerHTML = T.addrLines.join('<br/>');
+      }
 
       // Invitation section
       invSmall.textContent = T.invSmall;
@@ -959,6 +978,9 @@
 
       maybeEnableSubmit();
       if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
+
+      // (1) after DOM text updates, resync logo height
+      syncLogoHeight();
     }
 
     function maybeEnableSubmit(){
@@ -987,7 +1009,6 @@
     });
 
     // Music
-    const muteBtn = document.getElementById('muteBtn');
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -1096,6 +1117,9 @@
       phoneInput.value = localStorage.getItem('rsvp_phone') || '';
       if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
       else maybeEnableSubmit();
+
+      // ensure logo height is synced on initial render
+      syncLogoHeight();
     }
     renderAll();
 
@@ -1124,6 +1148,7 @@
       showToast(I18N[LANG].thanks);
 
       if(RESUBMISSION_ENABLE){
+        // allow next RSVP immediately
         resetFormToFreshState();
       }else{
         markSubmitted();
