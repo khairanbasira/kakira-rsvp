@@ -41,8 +41,8 @@
       --arrow-bounce-duration: 1.8s;
 
       /* (4) NAME-PAIR SPACING VARIABLES — change these later to adjust spacing around “&” */
-      --parentsA-gap: 6px; /* for Muhammad Basri Bin Patara & Samsah Binti Suda */
-      --parentsB-gap: 6px; /* for Basran Bin Ab Hamid & Noor Khairani Binti Muhammad Basri */
+      --parentsA-gap: 3px; /* for Muhammad Basri Bin Patara & Samsah Binti Suda */
+      --parentsB-gap: 3px; /* for Basran Bin Ab Hamid & Noor Khairani Binti Muhammad Basri */
 
       /* (5) LABEL FONT CONTROLS — change these later to adjust Tarikh/Masa/Tempat/Etika size & color */
       --inv-label-size: 13px;          /* font-size for labels */
@@ -163,18 +163,18 @@
       margin-bottom:30px;
       font-family:'Great Vibes', cursive;
       font-weight:400;
-      font-size:clamp(80px,12vw,130px);
+      font-size:clamp(76px,12vw,126px);
       line-height:1;
       color:var(--gold-strong);
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
     }
 	.couple-title .heart{
-	  font-size:0.7em;
+	  font-size:0.6em;
 	  display:inline-block;
 	  transform: translateX(var(--heart-shift, 10px)) translateY(-2px);
 	}
     @media (max-width:520px){
-      .couple-title{ flex-direction:column; gap:10px; } /*to nudje the heart*/
+      .couple-title{ flex-direction:column; gap:15px; } /*to nudje the heart*/
       .couple-title .heart{ transform:none; }
     }
 
