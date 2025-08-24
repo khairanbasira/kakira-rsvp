@@ -37,13 +37,21 @@
 	  --controls-top-offset: 5px;
 
       /* (HERO OFFSET) Push hero content down so tagline isn't covered by top buttons */
-      --hero-top-safe: 30px;
+      --hero-top-safe: 25px;
 
       /* (1) MOBILE LOGO SIZE VARIABLE */
       --mobile-logo-max-height: 92px;
 
       /* (2) ARROW BOUNCE SPEED VARIABLE */
       --arrow-bounce-duration: 1.3s;
+
+      /* (NEW-1) HEART POSITION OFFSETS — adjust heart left/right/up/down */
+      /* Negative X pulls toward "Basran" (left name) */
+      --heart-offset-x: -10px;
+      --heart-offset-y: -2px;
+
+      /* (NEW-3) ARROW VERTICAL OFFSET — increase to push arrow lower */
+      --arrow-bottom-offset: 22px;
 
       /* (4) NAME-PAIR SPACING VARIABLES — change these later to adjust spacing around “&” */
       --parentsA-gap: 3px; /* for Muhammad Basri Bin Patara & Samsah Binti Suda */
@@ -54,7 +62,13 @@
       --inv-label-color: #6b4b00;      /* color to match UNDANGAN/WALIMATULURUS */
 
       /* (NEW-5) CONSISTENT SECTION SPACING */
-      --section-space: 58px;
+      --section-space: 40px;
+
+      /* (NEW-2) PARENTS/COUPLE NAMES IN INVITE CARD — smaller size for the four names requested */
+      --parent-name-size: clamp(18px, 4.2vw, 28px);
+
+      /* (NEW-2b) INVITE BODY LETTER-SPACING — tighten spacing for “Dengan penuh rasa …” */
+      --inv-body-letter-spacing: .04em;
     }
 
     @media (orientation: portrait){
@@ -146,7 +160,7 @@
 
     /* (2) NEW: Double-chevron gold scroll button (shape like image) */
     .hero-scroll{
-      position:absolute; left:50%; bottom:12px; transform:translateX(-50%);
+      position:absolute; left:50%; bottom:var(--arrow-bottom-offset); transform:translateX(-50%);
       width:56px; height:56px; border-radius:999px;
       background:transparent; border:0; color:var(--gold-strong);
       display:flex; align-items:center; justify-content:center;
@@ -185,7 +199,8 @@
 	  display:inline-flex;
 	  align-items:center;
 	  justify-content:center;
-	  transform: translateX(var(--heart-shift, 10px)) translateY(-2px);
+	  /* Use variables to move the heart; defaults bring it closer to "Basran" */
+	  transform: translate(var(--heart-offset-x, -10px), var(--heart-offset-y, -2px));
 	}
 	.couple-title .heart svg{
 	  width:1.05em; height:1.05em;
@@ -424,8 +439,14 @@
     }
 
     .inv-small{ text-align:center; font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:#6b4b00; }
-    .inv-body{ max-width:720px; margin:14px auto 6px; text-align:center; color:#111; line-height:1.55; }
+    .inv-body-fixed{ }
     .inv-couple{ margin:18px 0 10px; text-align:center; font-weight:700; font-size:clamp(22px,4.8vw,34px); color:#111; }
+
+    /* (NEW-2) Make the four requested names smaller (controlled by --parent-name-size) */
+    .parents-block .inv-couple{ font-size: var(--parent-name-size); }
+
+    /* (NEW-2b) Tighten letter spacing for the invitation body text only */
+    #invBody{ letter-spacing: var(--inv-body-letter-spacing); }
 
     /* (4) Tighten spacing around the “&” for parents’ names using variables above */
     .parents-block .inv-couple{ margin: var(--pair-gap, 6px) 0; }
@@ -495,7 +516,8 @@
     <div>
       <div class="tagline" id="heroTag">Wedding Invitation</div>
 
-	  <div class="couple-title" style="--heart-shift: 10px" aria-label="Basran love Khairani">
+	  <!-- (NEW-1) Heart defaults closer to Basran via inline vars (you can remove/adjust; global defaults are in :root) -->
+	  <div class="couple-title" style="--heart-offset-x:-10px; --heart-offset-y:-2px;" aria-label="Basran love Khairani">
 	    <span class="name">Basran</span>
 	    <span class="heart" aria-hidden="true">
           <!-- (1) Calligraphic heart SVG (Good Vibes-like flourish) -->
@@ -571,6 +593,7 @@
               <div class="inv-couple">Samsah Binti Suda</div>
             </div>
 
+            <!-- (NEW-2b) Letter-spacing for readability tightened via variable -->
             <div class="inv-small" id="invBody">
               Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan Majlis Perkahwinan puteri kami
             </div>
@@ -811,7 +834,7 @@
         needPhone: "Please add your contact number.",
         needOneName: "At least one name must be confirmed before submitting.",
         thanks: "Thank you! Your RSVP has been received.",
-        already: "RSVP already submitted. Editing is disabled.",
+        already: "RSVP already submitted. Do contact us if there are any changes.",
 
         locTitle: "Direction to Wedding Avenue",
         locDesc: "Tap the button below to open directions.",
@@ -871,7 +894,7 @@
         needPhone: "Sila isi nombor telefon untuk dihubungi",
         needOneName: "Sekurang-kurangnya satu nama perlu disahkan hadir sebelum hantar.",
         thanks: "Terima kasih! Respon anda telah diterima.",
-        already: "RSVP telah dihantar. Penyuntingan dimatikan.",
+        already: "RSVP telah dihantar. Sila hubungi keluarga pengantin sekiranya terdapat perubahan.",
 
         locTitle: "Lokasi ke Majlis Perkahwinan",
         locDesc: "Tekan butang untuk buka arah ke lokasi.",
