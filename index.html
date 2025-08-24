@@ -33,9 +33,7 @@
       --hero-overlay-1: .35;
       --hero-overlay-2: .50;
       --hero-overlay-3: .65;
-
-      /* Top offset for the left tab controls (you can change this) */
-      --controls-top-offset: 30px;
+	  --controls-top-offset: 30px; /* change this value to move the buttons down/up */
     }
 
     @media (orientation: portrait){
@@ -77,29 +75,30 @@
     .card,
     .footer { position:relative; z-index:10; }
 
-    /* Left-edge tab-style controls */
-    .top-controls{
-      position: fixed;
-      left: 0;
-      top: var(--controls-top-offset);
-      transform: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      z-index: 9999;
-    }
-    .icon-btn{
-      appearance:none; cursor:pointer;
-      background:#fff; color:#5a3d00;
-      border:1px solid rgba(0,0,0,.08);
-      border-left:none;
-      padding:5px 9px;               /* smaller size */
-      font-size:10px; font-weight:600;
-      border-radius:0 12px 12px 0;    /* tab shape */
-      box-shadow:none;
-    }
-    .icon-btn:hover{ transform:none; box-shadow:none; }
-    .icon-btn:active{ transform:none; }
+    /* (3) RELOCATED: left-side tab-style controls */
+	.top-controls{
+		position: fixed;
+		left: 0;
+		top: var(--controls-top-offset);
+		transform: none;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		z-index: 9999;
+	}
+
+	.icon-btn{
+		appearance:none; cursor:pointer;
+		background:#fff; color:#5a3d00;
+		border:1px solid rgba(0,0,0,.08);
+		border-left:none;
+		padding:5px 8px;
+		font-size:10px; font-weight:600;
+		border-radius:0 12px 12px 0;
+		box-shadow:none;
+	}
+	.icon-btn:hover{ transform:none; box-shadow:none; }
+	.icon-btn:active{ transform:none; }
 
     .volume-pop{ display:none !important; }
 
@@ -141,8 +140,6 @@
       color:var(--gold-strong);
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
     }
-	
-	/* Nudge the heart left/right with --heart-shift (e.g. 6px or -6px) */
 	.couple-title .heart{
 	  font-size:1.05em;
 	  display:inline-block;
@@ -160,7 +157,7 @@
       margin-bottom:38px;
     }
 
-    /* Group logo + address and center together */
+    /* (1) New wrapper to group logo + address and center together */
     .hero-address-wrap{
       max-width:900px;
       margin:0 auto 38px;
@@ -178,7 +175,7 @@
     }
     .hero-logo{
       display:block;
-      height:auto;               /* JS will set explicit height to match text */
+      height:auto;
       max-height:160px;
       width:auto; object-fit:contain;
     }
@@ -300,7 +297,7 @@
       text-align:center; aspect-ratio:1/1; min-width:0;
     }
     .cd-num{ font-weight:700; line-height:1; font-size:clamp(22px, 7.2vw, 48px); }
-    .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:#muted; }
+    .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:var(--muted); }
 
     @media (max-width:520px){ .countdown-row{ grid-template-columns:repeat(2, minmax(120px, 1fr)); } }
     @media (max-width:400px){
@@ -370,8 +367,15 @@
     .inv-label{ font-weight:700; letter-spacing:.06em; color:#0f172a; }
     .inv-value{ margin-top:4px; color:#0f172a; }
 
-    /* Small helper for moved question block */
-    .section-intro{ text-align:center; margin-bottom:24px; }
+    /* (2) Location photo */
+    .loc-photo{
+      display:block;
+      margin:12px auto 12px;
+      max-width:100%;
+      height:auto;
+      border-radius:12px;
+      box-shadow:var(--shadow-sm);
+    }
   </style>
 </head>
 <body>
@@ -396,7 +400,7 @@
       <!-- Date in Times New Roman with weekday -->
       <div class="hero-date" id="heroDate">Saturday, 22 November 2025</div>
 
-      <!-- Logo + Address (bilingual, with auto-height logo) -->
+      <!-- (1) LOGO + ADDRESS grouped, centered -->
       <div class="hero-address-wrap" id="heroAddressWrap">
         <img id="hotelLogo" class="hero-logo" src="promanade_hotel_logo_ai.png" alt="Promenade Hotel Kota Kinabalu logo"/>
         <div class="hero-address" id="heroAddress">
@@ -408,34 +412,37 @@
         </div>
       </div>
 
-      <!-- (moved question + buttons out of hero) -->
+      <!-- (1) QUESTION & BUTTONS MOVED OUT OF HERO -->
     </div>
   </header>
 
   <main>
-    <!-- Invitation section (now begins with the question + buttons) -->
-    <section id="invite">
+    <!-- (1) NEW: CTA section immediately after hero (question + buttons) -->
+    <section id="cta">
       <div class="container">
-
-        <!-- Moved here from hero -->
-        <div class="section-intro">
+        <div class="card" style="text-align:center">
           <div class="heading" id="titleText">Will you attend our wedding?</div>
           <div class="sub" id="subtitleText">We'd love to celebrate with you. Please RSVP below.</div>
-          <div class="cta-row">
+          <div class="cta-row" style="justify-content:center">
             <a class="btn" href="#rsvp" id="rsvpBtn" data-smooth>RSVP</a>
             <a class="btn btn-outline" href="#location" id="locationBtn" data-smooth>Location</a>
           </div>
         </div>
+      </div>
+    </section>
 
+    <!-- Invitation section (now language-switchable) -->
+    <section id="invite">
+      <div class="container">
         <div class="invite-card">
           <div class="invite-inner">
             <div class="inv-small" id="invSmall">Undangan Majlis Perkahwinan</div>
 			<div class="inv-small" id="invSmall">WalimatulUrus</div>
-			
+
 			<div class="inv-couple">Muhammad Basri Bin Patara</div>
             <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,22px)">&amp;</div>
             <div class="inv-couple">Samsah Binti Suda</div>
-			
+
             <div class="inv-body" id="invBody">
               Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan Majlis Perkahwinan puteri kami
             </div>
@@ -464,7 +471,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </section>
 
@@ -513,31 +519,7 @@
       </div>
     </section>
 
-    <section id="location">
-      <div class="container">
-        <div class="card">
-          <h2 class="section-title" id="locTitle">Location & Directions</h2>
-          <p class="muted" id="locDesc">Tap a button below to open directions.</p>
-          <div class="actions" style="margin:10px 0 18px">
-            <a class="btn" id="btnGoogleMaps" target="_blank" rel="noopener">Google Maps</a>
-            <a class="btn btn-outline" id="btnWaze" target="_blank" rel="noopener">Waze</a>
-          </div>
-          <div class="muted tiny" id="locNote">Tip: You can share the link with friends who are carpooling.</div>
-        </div>
-      </div>
-    </section>
-
-    <section id="contact">
-      <div class="container">
-        <div class="card">
-          <h2 class="section-title" id="contactTitle">Contact (Bride's family)</h2>
-          <p class="muted" id="contactDesc">Tap a name to call directly.</p>
-          <div id="contactList" class="actions" style="margin-top:6px"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Schedule (unchanged) -->
+    <!-- (3) MOVED: Schedule now appears BEFORE Location/Direction -->
     <section id="schedule">
       <div class="container">
         <div class="card">
@@ -587,6 +569,39 @@
               <div class="tl-mid">•</div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- (2) UPDATED: Location/Direction with centered photo; text below photo; buttons below text -->
+    <section id="location">
+      <div class="container">
+        <div class="card">
+          <h2 class="section-title" id="locTitle">Direction to Wedding Avenue</h2>
+
+          <!-- Centered venue photo -->
+          <img id="venuePhoto" class="loc-photo" src="wedding_avenue.jpg" alt="Wedding Avenue location photo" />
+
+          <!-- Description under the photo -->
+          <p class="muted" id="locDesc">Tap the button below to open directions.</p>
+
+          <!-- Buttons under the description (Waze, then Maps as requested) -->
+          <div class="actions" style="margin:10px 0 18px">
+            <a class="btn btn-outline" id="btnWaze" target="_blank" rel="noopener">Waze</a>
+            <a class="btn" id="btnGoogleMaps" target="_blank" rel="noopener">Google Maps</a>
+          </div>
+
+          <div class="muted tiny" id="locNote">Tip: You can share the link with friends who are carpooling.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="card">
+          <h2 class="section-title" id="contactTitle">Contact (Bride's family)</h2>
+          <p class="muted" id="contactDesc">Tap a name to call directly.</p>
+          <div id="contactList" class="actions" style="margin-top:6px"></div>
         </div>
       </div>
     </section>
@@ -642,11 +657,9 @@
     const BGM_STOP_AFTER_LOOPS = 1;
 
     // ===== RESUBMISSION TOGGLE =====
-    // Set to 0 to LOCK after first successful submit (current behavior).
-    // Set to 1 to ALLOW immediate re-submission: show success then reset the form.
     const RESUBMISSION_ENABLE = 0;
 
-    // ====== i18n strings (with bilingual address) ======
+    // ====== i18n strings (added invitation section text + ADDRESS LINES) ======
     const I18N = {
       en: {
         tagline: "Wedding Invitation",
@@ -667,9 +680,12 @@
         needOneName: "At least one name must be confirmed before submitting.",
         thanks: "Thank you! Your RSVP has been received.",
         already: "RSVP already submitted. Editing is disabled.",
-        locTitle: "Location & Directions",
-        locDesc: "Tap a button below to open directions.",
+
+        /* (2) Updated Location/Direction text + title */
+        locTitle: "Direction to Wedding Avenue",
+        locDesc: "Tap the button below to open directions.",
         locNote: "Tip: You can share the link with friends who are carpooling.",
+
         contactTitle: "Contact (Bride's family)",
         contactDesc: "Tap a name to call directly.",
 
@@ -681,6 +697,7 @@
         invDressLabel: "Dress Code",
         invDressValue: "Modest and aurat-covering",
 
+        /* (2) Address bilingual (EN) */
         addrLines: [
           "Rafflesia Ballroom",
           "Promenade Hotel, 1st Floor",
@@ -708,9 +725,12 @@
         needOneName: "Sekurang-kurangnya satu nama perlu disahkan hadir sebelum hantar.",
         thanks: "Terima kasih! Respon anda telah diterima.",
         already: "RSVP telah dihantar. Penyuntingan dimatikan.",
-        locTitle: "Lokasi & Arah",
+
+        /* (2) Updated Location/Direction text + title */
+        locTitle: "Arah ke Majlis Perkahwinan",
         locDesc: "Tekan butang untuk buka arah ke lokasi.",
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
+
         contactTitle: "Hubungi (keluarga pengantin perempuan)",
         contactDesc: "Tekan nama untuk terus membuat panggilan.",
 
@@ -722,6 +742,7 @@
         invDressLabel: "Kod Pakaian",
         invDressValue: "Sopan dan Menutup Aurat",
 
+        /* (2) Address bilingual (MS default) */
         addrLines: [
           "Rafflesia Ballroom",
           "Promenade Hotel, Tingkat 1",
@@ -774,6 +795,7 @@
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
 
+    /* (1) elements to sync logo height with address */
     const heroAddressEl = document.getElementById('heroAddress');
     const hotelLogoEl = document.getElementById('hotelLogo');
 
@@ -815,7 +837,7 @@
       validationMsg.textContent = I18N[LANG].already;
     }
 
-    // ===== reset helper for RESUBMISSION_ENABLE=1 =====
+    // ===== NEW: reset helper for RESUBMISSION_ENABLE=1 =====
     function resetFormToFreshState(){
       localStorage.removeItem('rsvp_names');
       localStorage.removeItem('rsvp_confirmed');
@@ -916,6 +938,7 @@
 	  return out.replace(/\s+,/g, ', ');
 	}
 
+    /* (1) Match logo height with the rendered address block */
     function syncLogoHeight(){
       const addr = heroAddressEl;
       const img  = hotelLogoEl;
@@ -935,37 +958,35 @@
       heroTag.textContent = T.tagline;
       heroDate.textContent = formatWeddingDateWithDay(LANG);
 
-      // Address bilingual toggle
+      // (2) Address bilingual toggle
       if (Array.isArray(T.addrLines)) {
         heroAddressEl.innerHTML = T.addrLines.join('<br/>');
       }
 
-      // Invitation section text and labels
-      document.getElementById('invSmall').textContent = T.invSmall;
-      document.getElementById('invBody').textContent = T.invBody;
-      document.getElementById('invDateLabel').textContent  = T.invDateLabel;
-      document.getElementById('invTimeLabel').textContent  = T.invTimeLabel;
-      document.getElementById('invVenueLabel').textContent = T.invVenueLabel;
-      document.getElementById('invDressLabel').textContent = T.invDressLabel;
+      // Invitation section
+      invSmall.textContent = T.invSmall;
+      invBody.textContent = T.invBody;
+      invDateLabel.textContent  = T.invDateLabel;
+      invTimeLabel.textContent  = T.invTimeLabel;
+      invVenueLabel.textContent = T.invVenueLabel;
+      invDressLabel.textContent = T.invDressLabel;
       inviteDateEl.textContent  = formatWeddingDateWithDay(LANG);
       inviteTimeEl.textContent  = "11:00 AM – 4:00 PM";
       inviteVenueEl.textContent = "Promenade Hotel, Rafflesia I (Wedding Hall)";
       inviteDressEl.textContent = T.invDressValue;
 
-      // Moved question + buttons (still i18n)
+      // CTA (moved from hero)
       titleText.textContent = T.title;
       subtitleText.textContent = T.subtitle;
       rsvpBtn.textContent = T.rsvp;
       locationBtn.textContent = T.location;
 
-      // Other labels
-      rsvpIntro.textContent = T.rsvpIntro;
-      phoneHeader.textContent = T.phoneHeader;
-      phoneHint.textContent = T.phoneHint;
-      document.getElementById('submitBtn').textContent = (LANG === 'en' ? 'Submit RSVP' : 'Hantar RSVP');
+      // Location/Direction (updated)
       locTitle.textContent = T.locTitle;
       locDesc.textContent = T.locDesc;
       locNote.textContent = T.locNote;
+
+      // Contacts
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
 
@@ -991,6 +1012,7 @@
       maybeEnableSubmit();
       if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
 
+      // after DOM text updates, resync logo height
       syncLogoHeight();
     }
 
@@ -1020,7 +1042,6 @@
     });
 
     // Music
-    const bgm = document.getElementById('bgm');
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -1054,7 +1075,7 @@
       setMutedUI();
     });
 
-    // Smooth scroll
+    // Smooth scroll (unchanged)
     function easeInOutCubic(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
     function smoothScrollTo(target, baseDuration=700){
       const start = window.scrollY || window.pageYOffset;
@@ -1106,7 +1127,7 @@
       playClick();
     }, true);
 
-    // Render
+    // Render (kept)
     function renderAll(){
       i18n();
       renderContacts();
@@ -1130,6 +1151,7 @@
       if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
       else maybeEnableSubmit();
 
+      // ensure logo height is synced on initial render
       syncLogoHeight();
     }
     renderAll();
