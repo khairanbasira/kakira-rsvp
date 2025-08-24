@@ -9,7 +9,6 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Great Vibes for LucySaidOK-like script on the couple names -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
@@ -33,7 +32,7 @@
       --hero-overlay-1: .35;
       --hero-overlay-2: .50;
       --hero-overlay-3: .65;
-	  --controls-top-offset: 30px; /* change this value to move the buttons down/up */
+	  --controls-top-offset: 15px; /* change this value to move the buttons down/up */
     }
 
     @media (orientation: portrait){
@@ -47,7 +46,7 @@
     html{ scroll-behavior:auto }
     body{
       margin:0;
-      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; /* descriptions/body text */
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
       background:var(--cream);
     }
@@ -75,7 +74,7 @@
     .card,
     .footer { position:relative; z-index:10; }
 
-    /* (3) RELOCATED: left-side tab-style controls */
+	/* Left-side tab-style controls */
 	.top-controls{
 		position: fixed;
 		left: 0;
@@ -122,6 +121,22 @@
       background-attachment: scroll, scroll;
     }
 
+    /* (2) Soft-bouncy gold arrow at bottom of hero */
+    .hero-scroll{
+      position:absolute; left:50%; bottom:18px; transform:translateX(-50%);
+      width:48px; height:48px; border-radius:999px;
+      background:var(--gold); color:#111; border:1px solid var(--gold-strong);
+      display:flex; align-items:center; justify-content:center;
+      font-size:22px; box-shadow:var(--shadow);
+      cursor:pointer;
+      animation:soft-bounce 1.8s infinite ease-in-out;
+    }
+    .hero-scroll:active{ transform:translateX(-50%) scale(0.98); }
+    @keyframes soft-bounce{
+      0%,100%{ transform:translateX(-50%) translateY(0); }
+      50%    { transform:translateX(-50%) translateY(-6px); }
+    }
+
     .hero .tagline{
       font-size:16px;
       letter-spacing:.22em;
@@ -133,7 +148,7 @@
     .couple-title{
       display:flex; align-items:center; justify-content:center; gap:18px;
       margin-bottom:30px;
-      font-family:'Great Vibes', cursive;  /* keep the script */
+      font-family:'Great Vibes', cursive;
       font-weight:400;
       font-size:clamp(68px,12vw,120px);
       line-height:1;
@@ -157,7 +172,7 @@
       margin-bottom:38px;
     }
 
-    /* (1) New wrapper to group logo + address and center together */
+    /* (3) LOGO + ADDRESS grouped; mobile-safe */
     .hero-address-wrap{
       max-width:900px;
       margin:0 auto 38px;
@@ -178,10 +193,15 @@
       height:auto;
       max-height:160px;
       width:auto; object-fit:contain;
+      flex:0 0 auto;
     }
     @media (max-width:560px){
-      .hero-address-wrap{ gap:12px; padding:0 10px; }
-      .hero-logo{ max-height:120px; }
+      .hero-address-wrap{
+        gap:12px; padding:0 10px;
+        flex-direction:column; align-items:center; text-align:center;
+      }
+      .hero-logo{ max-height:120px; max-width:60vw; }
+      .hero-address{ text-align:center; }
     }
 
     .heading{ font-size:clamp(28px,5vw,52px); line-height:1.12; }
@@ -367,7 +387,7 @@
     .inv-label{ font-weight:700; letter-spacing:.06em; color:#0f172a; }
     .inv-value{ margin-top:4px; color:#0f172a; }
 
-    /* (2) Location photo */
+    /* Location photo */
     .loc-photo{
       display:block;
       margin:12px auto 12px;
@@ -376,6 +396,17 @@
       border-radius:12px;
       box-shadow:var(--shadow-sm);
     }
+
+    /* (1) Center location description + buttons */
+    .location-card{ text-align:center; display:flex; flex-direction:column; align-items:center; }
+    .location-card .actions{ justify-content:center; }
+    .location-card p{ text-align:center; }
+
+    /* Hide location tip text as requested */
+    #locNote{ display:none; }
+
+    /* CTA "No" note */
+    #noMsg{ text-align:center; margin-top:16px; display:none; }
   </style>
 </head>
 <body>
@@ -385,6 +416,9 @@
   <div class="top-controls">
     <button id="langToggle" class="icon-btn" aria-label="Toggle language">Malay</button>
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
+    <!-- (4) New quick-jump buttons on the left -->
+    <button id="quickLocation" class="icon-btn" aria-label="Jump to location">Location</button>
+    <button id="quickContact" class="icon-btn" aria-label="Jump to contact">Contact</button>
   </div>
 
   <header class="hero">
@@ -397,10 +431,10 @@
 	    <span class="name">Khairani</span>
 	  </div>
 
-      <!-- Date in Times New Roman with weekday -->
+      <!-- Date with weekday -->
       <div class="hero-date" id="heroDate">Saturday, 22 November 2025</div>
 
-      <!-- (1) LOGO + ADDRESS grouped, centered -->
+      <!-- (3) LOGO + ADDRESS -->
       <div class="hero-address-wrap" id="heroAddressWrap">
         <img id="hotelLogo" class="hero-logo" src="promanade_hotel_logo_ai.png" alt="Promenade Hotel Kota Kinabalu logo"/>
         <div class="hero-address" id="heroAddress">
@@ -411,27 +445,31 @@
           88000 Kota Kinabalu, Sabah.
         </div>
       </div>
-
-      <!-- (1) QUESTION & BUTTONS MOVED OUT OF HERO -->
     </div>
+
+    <!-- (2) Bouncy gold arrow -->
+    <button id="scrollArrow" class="hero-scroll" aria-label="Scroll to details" title="Scroll">
+      ▾
+    </button>
   </header>
 
   <main>
-    <!-- (1) NEW: CTA section immediately after hero (question + buttons) -->
+    <!-- (4) CTA section (with YES / No centered) -->
     <section id="cta">
       <div class="container">
         <div class="card" style="text-align:center">
           <div class="heading" id="titleText">Will you attend our wedding?</div>
-          <div class="sub" id="subtitleText">We'd love to celebrate with you. Please RSVP below.</div>
+          <div class="sub" id="subtitleText">We'd love to celebrate with you. Please confirm your attendance.</div>
           <div class="cta-row" style="justify-content:center">
-            <a class="btn" href="#rsvp" id="rsvpBtn" data-smooth>RSVP</a>
-            <a class="btn btn-outline" href="#location" id="locationBtn" data-smooth>Location</a>
+            <a class="btn" href="#rsvp" id="rsvpBtn" data-smooth>YES</a>
+            <button class="btn btn-outline" id="noBtn" type="button">No</button>
           </div>
+          <div id="noMsg" class="notice tiny">Sila hubungi keluarga pengantin jika berubah fikiran</div>
         </div>
       </div>
     </section>
 
-    <!-- Invitation section (now language-switchable) -->
+    <!-- Invitation section -->
     <section id="invite">
       <div class="container">
         <div class="invite-card">
@@ -519,7 +557,7 @@
       </div>
     </section>
 
-    <!-- (3) MOVED: Schedule now appears BEFORE Location/Direction -->
+    <!-- Schedule -->
     <section id="schedule">
       <div class="container">
         <div class="card">
@@ -573,19 +611,16 @@
       </div>
     </section>
 
-    <!-- (2) UPDATED: Location/Direction with centered photo; text below photo; buttons below text -->
+    <!-- (1) Location/Direction: centered text + buttons; tip hidden -->
     <section id="location">
       <div class="container">
-        <div class="card">
+        <div class="card location-card">
           <h2 class="section-title" id="locTitle">Direction to Wedding Avenue</h2>
 
-          <!-- Centered venue photo -->
           <img id="venuePhoto" class="loc-photo" src="wedding_avenue.jpg" alt="Wedding Avenue location photo" />
 
-          <!-- Description under the photo -->
           <p class="muted" id="locDesc">Tap the button below to open directions.</p>
 
-          <!-- Buttons under the description (Waze, then Maps as requested) -->
           <div class="actions" style="margin:10px 0 18px">
             <a class="btn btn-outline" id="btnWaze" target="_blank" rel="noopener">Waze</a>
             <a class="btn" id="btnGoogleMaps" target="_blank" rel="noopener">Google Maps</a>
@@ -659,13 +694,13 @@
     // ===== RESUBMISSION TOGGLE =====
     const RESUBMISSION_ENABLE = 0;
 
-    // ====== i18n strings (added invitation section text + ADDRESS LINES) ======
+    // ====== i18n strings ======
     const I18N = {
       en: {
         tagline: "Wedding Invitation",
         title: "Will you attend our wedding?",
         subtitle: "We'd love to celebrate with you. Please RSVP below.",
-        rsvp: "RSVP",
+        rsvp: "YES",                // (4) keep label as YES
         location: "Location",
         rsvpIntro: "Kindly share your full name, so we may welcome you with joy on our special day.",
         fullNameFirst: "Your Full Name",
@@ -681,7 +716,6 @@
         thanks: "Thank you! Your RSVP has been received.",
         already: "RSVP already submitted. Editing is disabled.",
 
-        /* (2) Updated Location/Direction text + title */
         locTitle: "Direction to Wedding Avenue",
         locDesc: "Tap the button below to open directions.",
         locNote: "Tip: You can share the link with friends who are carpooling.",
@@ -697,7 +731,6 @@
         invDressLabel: "Dress Code",
         invDressValue: "Modest and aurat-covering",
 
-        /* (2) Address bilingual (EN) */
         addrLines: [
           "Rafflesia Ballroom",
           "Promenade Hotel, 1st Floor",
@@ -709,8 +742,8 @@
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
         title: "Adakah anda akan hadir ke majlis kami?",
-        subtitle: "Kami ingin meraikan bersama anda. Sila RSVP di bawah.",
-        rsvp: "RSVP",
+        subtitle: "Kami ingin meraikan bersama anda. Sila sahkan kehadiran anda.",
+        rsvp: "YES",                // (4) keep as YES per request
         location: "Lokasi",
         rsvpIntro: "Sila isi nama penuh anda, agar kami dapat menyambut kehadiran anda dengan penuh gembira pada hari istimewa kami.",
         fullNameFirst: "Nama Penuh Anda",
@@ -726,8 +759,7 @@
         thanks: "Terima kasih! Respon anda telah diterima.",
         already: "RSVP telah dihantar. Penyuntingan dimatikan.",
 
-        /* (2) Updated Location/Direction text + title */
-        locTitle: "Arah ke Majlis Perkahwinan",
+        locTitle: "Lokasi ke Majlis Perkahwinan",
         locDesc: "Tekan butang untuk buka arah ke lokasi.",
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
 
@@ -742,7 +774,6 @@
         invDressLabel: "Kod Pakaian",
         invDressValue: "Sopan dan Menutup Aurat",
 
-        /* (2) Address bilingual (MS default) */
         addrLines: [
           "Rafflesia Ballroom",
           "Promenade Hotel, Tingkat 1",
@@ -770,7 +801,7 @@
     const titleText = document.getElementById('titleText');
     const subtitleText = document.getElementById('subtitleText');
     const rsvpBtn = document.getElementById('rsvpBtn');
-    const locationBtn = document.getElementById('locationBtn');
+    const locationBtn = document.getElementById('locationBtn'); // may be null (we moved it)
     const rsvpIntro = document.getElementById('rsvpIntro');
     const phoneHeader = document.getElementById('phoneHeader');
     const phoneHint = document.getElementById('phoneHint');
@@ -779,6 +810,11 @@
     const locNote = document.getElementById('locNote');
     const contactTitle = document.getElementById('contactTitle');
     const contactDesc = document.getElementById('contactDesc');
+    const quickLocation = document.getElementById('quickLocation');
+    const quickContact  = document.getElementById('quickContact');
+    const noBtn = document.getElementById('noBtn');
+    const noMsg = document.getElementById('noMsg');
+    const scrollArrow = document.getElementById('scrollArrow');
 
     const inviteDateEl = document.getElementById('inviteDate');
     const inviteTimeEl = document.getElementById('inviteTime');
@@ -795,7 +831,7 @@
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
 
-    /* (1) elements to sync logo height with address */
+    /* (3) elements to sync logo height with address on wide screens only */
     const heroAddressEl = document.getElementById('heroAddress');
     const hotelLogoEl = document.getElementById('hotelLogo');
 
@@ -938,11 +974,16 @@
 	  return out.replace(/\s+,/g, ', ');
 	}
 
-    /* (1) Match logo height with the rendered address block */
+    /* (3) Sync logo to address height only on wide screens to avoid mobile jitter */
     function syncLogoHeight(){
+      const isWide = window.innerWidth >= 700;
       const addr = heroAddressEl;
       const img  = hotelLogoEl;
       if(!addr || !img) return;
+      if(!isWide){
+        img.style.height = 'auto';
+        return;
+      }
       requestAnimationFrame(()=>{
         const h = addr.offsetHeight || 0;
         if(h){ img.style.height = h + 'px'; }
@@ -958,7 +999,7 @@
       heroTag.textContent = T.tagline;
       heroDate.textContent = formatWeddingDateWithDay(LANG);
 
-      // (2) Address bilingual toggle
+      // Address bilingual toggle
       if (Array.isArray(T.addrLines)) {
         heroAddressEl.innerHTML = T.addrLines.join('<br/>');
       }
@@ -975,16 +1016,17 @@
       inviteVenueEl.textContent = "Promenade Hotel, Rafflesia I (Wedding Hall)";
       inviteDressEl.textContent = T.invDressValue;
 
-      // CTA (moved from hero)
+      // CTA
       titleText.textContent = T.title;
       subtitleText.textContent = T.subtitle;
-      rsvpBtn.textContent = T.rsvp;
-      locationBtn.textContent = T.location;
+      if(rsvpBtn) rsvpBtn.textContent = T.rsvp;
+      if(locationBtn) locationBtn.textContent = T.location; // (kept guard; element no longer present)
 
-      // Location/Direction (updated)
+      // Location/Direction
       locTitle.textContent = T.locTitle;
       locDesc.textContent = T.locDesc;
-      locNote.textContent = T.locNote;
+      // (1) Keep text in i18n but tip stays hidden via CSS
+      if(locNote) locNote.textContent = T.locNote;
 
       // Contacts
       contactTitle.textContent = T.contactTitle;
@@ -1012,7 +1054,7 @@
       maybeEnableSubmit();
       if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
 
-      // after DOM text updates, resync logo height
+      // resync logo height
       syncLogoHeight();
     }
 
@@ -1095,6 +1137,7 @@
       requestAnimationFrame(step);
     }
     function handleSmoothLink(link, selector){
+      if(!link) return;
       link.addEventListener('click', (e)=>{
         e.preventDefault();
         playClick();
@@ -1102,8 +1145,54 @@
         if(el){ smoothScrollTo(el, 700); }
       });
     }
-    handleSmoothLink(rsvpBtn, '#rsvp');
-    handleSmoothLink(locationBtn, '#location');
+
+    // Existing handlers
+    handleSmoothLink(rsvpBtn, '#rsvp');       // YES button -> RSVP
+    handleSmoothLink(locationBtn, '#location'); // guard if old element exists
+    handleSmoothLink(quickLocation, '#location'); // (4) left tab Location
+    handleSmoothLink(quickContact,  '#contact');  // (4) left tab Contact
+
+    // (4) No button behavior: show Malay note at bottom of CTA section
+    if(noBtn){
+      noBtn.addEventListener('click', ()=>{
+        noMsg.style.display = 'block';
+      });
+    }
+
+    // (2) Scroll arrow behavior: go to CTA, stop before Invite section appears
+    function scrollToCTAWithoutInvite(){
+      const cta = document.querySelector('#cta');
+      if(!cta){ return; }
+      const invite = document.querySelector('#invite');
+      const ctaTop = cta.getBoundingClientRect().top + window.scrollY;
+      let target = ctaTop;
+      if(invite){
+        const inviteTop = invite.getBoundingClientRect().top + window.scrollY;
+        const safe = Math.max(0, inviteTop - (window.innerHeight - 20)); // keep invite just out of view
+        target = Math.min(ctaTop, safe);
+      }
+      smoothScrollTo(target, 700);
+    }
+    if(scrollArrow){
+      scrollArrow.addEventListener('click', (e)=>{
+        e.preventDefault();
+        playClick();
+        scrollToCTAWithoutInvite();
+      });
+    }
+    // Auto-trigger arrow if user didn't move the page
+    (function autoArrow(){
+      let moved = false;
+      const mark = ()=>{ moved = true; };
+      ['wheel','touchstart','scroll','keydown','pointerdown'].forEach(ev=>{
+        window.addEventListener(ev, mark, { once:true, passive:true });
+      });
+      setTimeout(()=>{
+        if(!moved && (window.scrollY||window.pageYOffset) < 8){
+          scrollArrow && scrollArrow.click();
+        }
+      }, 2200);
+    })();
 
     // Click sounds
     let audioCtx;
@@ -1151,7 +1240,7 @@
       if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
       else maybeEnableSubmit();
 
-      // ensure logo height is synced on initial render
+      // ensure logo height is synced on initial render (wide screens)
       syncLogoHeight();
     }
     renderAll();
