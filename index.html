@@ -33,6 +33,8 @@
       --hero-overlay-1: .35;
       --hero-overlay-2: .50;
       --hero-overlay-3: .65;
+	  --controls-top-offset: 15px; /* change this value to move the buttons down/up */
+
     }
 
     @media (orientation: portrait){
@@ -75,10 +77,17 @@
     .footer { position:relative; z-index:10; }
 
     /* (3) RELOCATED: left-side tab-style controls */
-    .top-controls{
-      position:fixed; left:0; top:50%; transform:translateY(-50%);
-      display:flex; flex-direction:column; gap:10px; z-index:9999;
-    }
+	.top-controls{
+		position: fixed;
+		left: 12px;                            /* distance from the left edge */
+		top: var(--controls-top-offset);       /* uses the variable you can change */
+		transform: none;                       /* remove vertical centering */
+		display: flex;
+		flex-direction: column;                /* language on top, mute below */
+		gap: 10px;
+		z-index: 9999;
+	}
+
     .icon-btn{
       appearance:none; cursor:pointer;
       background:#fff; color:#5a3d00;
