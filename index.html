@@ -32,10 +32,15 @@
       --hero-overlay-1: .35;
       --hero-overlay-2: .50;
       --hero-overlay-3: .65;
-	  --controls-top-offset: 5px; /* (3) Change this value to move the top tabs up/down */
+
+      /* (TABS OFFSET) Move top buttons up/down */
+	  --controls-top-offset: 5px;
+
+      /* (HERO OFFSET) Push hero content down so tagline isn't covered by top buttons */
+      --hero-top-safe: 72px;
 
       /* (1) MOBILE LOGO SIZE VARIABLE */
-      --mobile-logo-max-height: 96px;
+      --mobile-logo-max-height: 92px;
 
       /* (2) ARROW BOUNCE SPEED VARIABLE */
       --arrow-bounce-duration: 1.3s;
@@ -136,6 +141,9 @@
       background-attachment: scroll, scroll;
     }
 
+    /* Push hero content down by variable to avoid overlap with top buttons */
+    .hero > div{ padding-top: var(--hero-top-safe); }
+
     /* (2) NEW: Double-chevron gold scroll button (shape like image) */
     .hero-scroll{
       position:absolute; left:50%; bottom:12px; transform:translateX(-50%);
@@ -171,13 +179,22 @@
       color:var(--gold-strong);
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
     }
+	/* (1) Fancy calligraphic heart to match Great Vibes vibe */
 	.couple-title .heart{
 	  font-size:0.6em;
-	  display:inline-block;
+	  display:inline-flex;
+	  align-items:center;
+	  justify-content:center;
 	  transform: translateX(var(--heart-shift, 10px)) translateY(-2px);
 	}
+	.couple-title .heart svg{
+	  width:1.05em; height:1.05em;
+	  stroke:var(--gold-strong); fill:none; stroke-width:2.6;
+	  stroke-linecap:round; stroke-linejoin:round;
+	  filter: drop-shadow(0 2px 6px rgba(212,175,55,.35));
+	}
     @media (max-width:520px){
-      .couple-title{ flex-direction:column; gap:20px; } /*to nudje the heart*/
+      .couple-title{ flex-direction:column; gap:20px; } /*to nudge the heart*/
       .couple-title .heart{ transform:none; }
     }
 
@@ -403,6 +420,7 @@
         linear-gradient(#fff,#fff) padding-box,
         linear-gradient(135deg, rgba(255,255,255,.7), rgba(212,175,55,.9), rgba(255,255,255,.7)) border-box;
       border:2px solid transparent;
+      text-align:center; /* (3) Center everything inside invite */
     }
 
     .inv-small{ text-align:center; font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:#6b4b00; }
@@ -455,6 +473,9 @@
 
     /* (2) Ensure YES / NO same font/size (remove previous all-caps override) */
     #cta .btn{ text-transform:none; font-weight:600; }
+
+    /* (3) Ensure the two top invite titles using #invSmall are centered even if class is inv-label */
+    .invite-inner #invSmall{ display:block; text-align:center; }
   </style>
 </head>
 <body>
@@ -462,14 +483,12 @@
   <canvas id="bg-particles" aria-hidden="true"></canvas>
 
   <div class="top-controls">
-    <!-- (NEW-1) Home button -->
+    <!-- (NEW ORDER) Home → Location → Contact → Mute → Language -->
     <button id="quickHome" class="icon-btn" aria-label="Go to Home">Home</button>
-
-    <button id="langToggle" class="icon-btn" aria-label="Toggle language">Malay</button>
-    <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
-    <!-- (3) Top-centered quick-jump tabs -->
     <button id="quickLocation" class="icon-btn" aria-label="Jump to location">Location</button>
     <button id="quickContact" class="icon-btn" aria-label="Jump to contact">Contact</button>
+    <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
+    <button id="langToggle" class="icon-btn" aria-label="Toggle language">Malay</button>
   </div>
 
   <header class="hero">
@@ -478,7 +497,20 @@
 
 	  <div class="couple-title" style="--heart-shift: 10px" aria-label="Basran love Khairani">
 	    <span class="name">Basran</span>
-	    <span class="heart">♡</span>
+	    <span class="heart" aria-hidden="true">
+          <!-- (1) Calligraphic heart SVG (Good Vibes-like flourish) -->
+          <svg viewBox="0 0 64 64" role="img" focusable="false">
+            <path d="M32 50
+                     C 28 44, 10 36, 10 22
+                     C 10 14, 16 10, 22 10
+                     C 27 10, 30.5 13.5, 32 17
+                     C 33.5 13.5, 37 10, 42 10
+                     C 48 10, 54 14, 54 22
+                     C 54 36, 36 44, 32 50 Z"/>
+            <!-- little flourish tail -->
+            <path d="M31 51 C 30 56, 24 59, 18 57" />
+          </svg>
+        </span>
 	    <span class="name">Khairani</span>
 	  </div>
 
@@ -528,6 +560,7 @@
       <div class="container">
         <div class="invite-card">
           <div class="invite-inner">
+            <!-- (3) Centered titles -->
             <div class="inv-label" id="invSmall">Undangan Majlis Perkahwinan</div>
 			<div class="inv-label" id="invSmall">WalimatulUrus</div>
 
@@ -538,7 +571,7 @@
               <div class="inv-couple">Samsah Binti Suda</div>
             </div>
 
-            <div class="inv-body" id="invBody">
+            <div class="inv-small" id="invBody">
               Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan Majlis Perkahwinan puteri kami
             </div>
 
@@ -824,7 +857,7 @@
         title: "Adakah anda akan hadir ke majlis kami?",
         subtitle: "Kami ingin meraikan bersama anda. Sila sahkan kehadiran anda.",
         rsvp: "Hadir",                // (2) Malay label for YES
-        no: "Tidak",                  // (2) Malay label for NO
+        no: "Tidak Hadir",                  // (2) Malay label for NO
         location: "Lokasi",
         rsvpIntro: "Sila isi nama penuh anda, agar kami dapat menyambut kehadiran anda dengan penuh gembira pada hari istimewa kami.",
         fullNameFirst: "Nama Penuh Anda",
