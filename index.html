@@ -32,7 +32,7 @@
       --hero-overlay-1: .35;
       --hero-overlay-2: .50;
       --hero-overlay-3: .65;
-	  --controls-top-offset: 8px; /* (3) Change this value to move the top tabs up/down */
+	  --controls-top-offset: 5px; /* (3) Change this value to move the top tabs up/down */
 
       /* (1) MOBILE LOGO SIZE VARIABLE */
       --mobile-logo-max-height: 96px;
@@ -47,6 +47,9 @@
       /* (5) LABEL FONT CONTROLS — change these later to adjust Tarikh/Masa/Tempat/Etika size & color */
       --inv-label-size: 13px;          /* font-size for labels */
       --inv-label-color: #6b4b00;      /* color to match UNDANGAN/WALIMATULURUS */
+
+      /* (NEW-5) CONSISTENT SECTION SPACING */
+      --section-space: 58px;
     }
 
     @media (orientation: portrait){
@@ -163,7 +166,7 @@
       margin-bottom:28px;
       font-family:'Great Vibes', cursive;
       font-weight:400;
-      font-size:clamp(76px,12vw,126px);
+      font-size:clamp(75px,12vw,125px);
       line-height:1;
       color:var(--gold-strong);
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
@@ -174,7 +177,7 @@
 	  transform: translateX(var(--heart-shift, 10px)) translateY(-2px);
 	}
     @media (max-width:520px){
-      .couple-title{ flex-direction:column; gap:15px; } /*to nudje the heart*/
+      .couple-title{ flex-direction:column; gap:25px; } /*to nudje the heart*/
       .couple-title .heart{ transform:none; }
     }
 
@@ -188,7 +191,7 @@
     /* (3) LOGO + ADDRESS grouped; mobile-safe */
     .hero-address-wrap{
       max-width:900px;
-      margin:0 auto 38px;
+      margin:0 auto 36px;
       padding:0 12px;
       display:flex; align-items:center; justify-content:center; gap:16px;
       flex-wrap:nowrap;
@@ -246,7 +249,7 @@
       pointer-events:none; box-shadow:none; transform:none;
     }
 
-    section{ padding:58px 16px; background:transparent; }
+    section{ padding: var(--section-space) 16px; background:transparent; } /* (NEW-5) consistent spacing */
     .container{ max-width:980px; margin:0 auto; }
     .card{ background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
 
@@ -341,7 +344,7 @@
       text-align:center; aspect-ratio:1/1; min-width:0;
     }
     .cd-num{ font-weight:700; line-height:1; font-size:clamp(22px, 7.2vw, 48px); }
-    .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:var(--muted); }
+    .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:#6b7280; }
 
     @media (max-width:520px){ .countdown-row{ grid-template-columns:repeat(2, minmax(120px, 1fr)); } }
     @media (max-width:400px){
@@ -441,6 +444,8 @@
     .location-card{ text-align:center; display:flex; flex-direction:column; align-items:center; }
     .location-card .actions{ justify-content:center; }
     .location-card p{ text-align:center; }
+    /* (NEW-4) Left-align the Location section title only */
+    .location-card .section-title{ align-self:flex-start; text-align:left; }
 
     /* Hide location tip text as requested */
     #locNote{ display:none; }
@@ -457,6 +462,9 @@
   <canvas id="bg-particles" aria-hidden="true"></canvas>
 
   <div class="top-controls">
+    <!-- (NEW-1) Home button -->
+    <button id="quickHome" class="icon-btn" aria-label="Go to Home">Home</button>
+
     <button id="langToggle" class="icon-btn" aria-label="Toggle language">Malay</button>
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
     <!-- (3) Top-centered quick-jump tabs -->
@@ -552,7 +560,7 @@
               </div>
               <div class="inv-row">
                 <div class="inv-label" id="invVenueLabel">Tempat</div>
-                <div class="inv-value" id="inviteVenue">Promenade Hotel, Rafflesia I (Wedding Hall)</div>
+                <div class="inv-value" id="inviteVenue">Promenade Hotel, Rafflesia Ballroom</div>
               </div>
               <div class="inv-row">
                 <div class="inv-label" id="invDressLabel">Kod Pakaian</div>
@@ -613,46 +621,46 @@
     <section id="schedule">
       <div class="container">
         <div class="card">
-          <h2 class="section-title">Schedule</h2>
+          <h2 class="section-title" id="scheduleTitle">Schedule</h2>
           <div class="agenda">
             <div>
-              <div class="agenda-date">November 22, 2025</div>
-              <div class="agenda-day tiny">Saturday</div>
+              <div class="agenda-date" id="agendaDate">November 22, 2025</div>
+              <div class="agenda-day tiny" id="agendaDay">Saturday</div>
             </div>
             <div class="timeline">
               <div class="tl-item">
                 <div class="tl-time">10:00am</div>
                 <div class="tl-what">
-                  <div class="tl-title">GUEST ARRIVAL</div>
-                  <div class="tl-desc">Registration & welcome drinks<br/>Find your seat, mingle</div>
+                  <div class="tl-title" id="s1Title">GUEST ARRIVAL</div>
+                  <div class="tl-desc" id="s1Desc">Registration & welcome drinks<br/>Find your seat, mingle</div>
                 </div>
               </div>
               <div class="tl-item">
                 <div class="tl-time">10:30am</div>
                 <div class="tl-what">
-                  <div class="tl-title">NIKAH</div>
-                  <div class="tl-desc">Akad nikah ceremony<br/>Family blessings</div>
+                  <div class="tl-title" id="s2Title">NIKAH</div>
+                  <div class="tl-desc" id="s2Desc">Akad nikah ceremony<br/>Family blessings</div>
                 </div>
               </div>
               <div class="tl-item">
                 <div class="tl-time">12:00pm</div>
                 <div class="tl-what">
-                  <div class="tl-title">WEDDING CEREMONY</div>
-                  <div class="tl-desc">Procession & doa<br/>Couple entrance</div>
+                  <div class="tl-title" id="s3Title">WEDDING CEREMONY</div>
+                  <div class="tl-desc" id="s3Desc">Procession & doa<br/>Couple entrance</div>
                 </div>
               </div>
               <div class="tl-item">
                 <div class="tl-time">01:00pm</div>
                 <div class="tl-what">
-                  <div class="tl-title">LUNCH</div>
-                  <div class="tl-desc">Buffet opens<br/>Please enjoy the meal</div>
+                  <div class="tl-title" id="s4Title">LUNCH</div>
+                  <div class="tl-desc" id="s4Desc">Buffet opens<br/>Please enjoy the meal</div>
                 </div>
               </div>
               <div class="tl-item">
                 <div class="tl-time">03:00pm</div>
                 <div class="tl-what">
-                  <div class="tl-title">PHOTO SESSION</div>
-                  <div class="tl-desc">Group photos on stage<br/>Friends & family shots</div>
+                  <div class="tl-title" id="s5Title">PHOTO SESSION</div>
+                  <div class="tl-desc" id="s5Desc">Group photos on stage<br/>Friends & family shots</div>
                 </div>
               </div>
 
@@ -697,13 +705,13 @@
     <section id="countdown">
       <div class="container">
         <div class="card">
-          <h2 class="section-title">Countdown timer</h2>
+          <h2 class="section-title" id="countdownTitle">Countdown Timer</h2>
           <p class="muted cd-sub" id="cdSub">Our big day’s coming soon!</p>
           <div class="countdown-row" role="timer" aria-live="polite">
-            <div class="cd-box"><div id="cdDays" class="cd-num">0</div><div class="cd-label">DAYS</div></div>
-            <div class="cd-box"><div id="cdHours" class="cd-num">0</div><div class="cd-label">HOURS</div></div>
-            <div class="cd-box"><div id="cdMins" class="cd-num">0</div><div class="cd-label">MINS</div></div>
-            <div class="cd-box"><div id="cdSecs" class="cd-num">0</div><div class="cd-label">SECS</div></div>
+            <div class="cd-box"><div id="cdDays" class="cd-num">0</div><div class="cd-label" id="cdDaysLabel">DAYS</div></div>
+            <div class="cd-box"><div id="cdHours" class="cd-num">0</div><div class="cd-label" id="cdHoursLabel">HOURS</div></div>
+            <div class="cd-box"><div id="cdMins" class="cd-num">0</div><div class="cd-label" id="cdMinsLabel">MINS</div></div>
+            <div class="cd-box"><div id="cdSecs" class="cd-num">0</div><div class="cd-label" id="cdSecsLabel">SECS</div></div>
           </div>
         </div>
       </div>
@@ -747,7 +755,7 @@
     const RESUBMISSION_ENABLE = 0;
 
     // (3) AUTO-SCROLL DELAY VARIABLE (ms)
-    const ARROW_AUTO_DELAY_MS = 10000;
+    const ARROW_AUTO_DELAY_MS = 15000;
 
     // ====== i18n strings ======
     const I18N = {
@@ -780,7 +788,7 @@
         contactDesc: "Tap a name to call directly.",
 
         invSmall: "Wedding Invitation",
-        invBody: "With heartfelt gratitude, we cordially invite you and your partner to our wedding reception.",
+        invBody: "With heartfelt gratitude, we cordially invite you and your partner to our princess wedding reception.",
         invDateLabel: "Date",
         invTimeLabel: "Time",
         invVenueLabel: "Venue",
@@ -796,7 +804,20 @@
         ],
 
         // (4) NO-message bilingual
-        noMsg: "Please refresh the page if you change your mind."
+        noMsg: "Please refresh the page if you change your mind.",
+
+        // (NEW-3) Schedule & Countdown i18n
+        scheduleTitle: "Schedule",
+        schedItems: [
+          { title: "GUEST ARRIVAL", desc: "Registration & welcome drinks\nFind your seat, mingle" },
+          { title: "NIKAH", desc: "Akad nikah ceremony\nFamily blessings" },
+          { title: "WEDDING CEREMONY", desc: "Procession & doa\nCouple entrance" },
+          { title: "LUNCH", desc: "Buffet opens\nPlease enjoy the meal" },
+          { title: "PHOTO SESSION", desc: "Group photos on stage\nFriends & family shots" },
+        ],
+        countdownTitle: "Countdown Timer",
+        cdSub: "Our big day’s coming soon!",
+        cdLabels: { days: "DAYS", hours: "HOURS", mins: "MINS", secs: "SECS" }
       },
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
@@ -827,7 +848,7 @@
         contactDesc: "Tekan nama untuk terus membuat panggilan.",
 
         invSmall: "Undangan Majlis Perkahwinan",
-        invBody: "Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan majlis perkahwinan puteri kami.",
+        invBody: "Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan majlis perkahwinan puteri kami",
         invDateLabel: "Tarikh",
         invTimeLabel: "Masa",
         invVenueLabel: "Tempat",
@@ -843,7 +864,20 @@
         ],
 
         // (4) NO-message bilingual
-        noMsg: "Sila muat semula laman ini jika berubah fikiran."
+        noMsg: "Sila muat semula laman ini jika berubah fikiran.",
+
+        // (NEW-3) Schedule & Countdown i18n
+        scheduleTitle: "Atur Cara",
+        schedItems: [
+          { title: "KETIBAAN TETAMU", desc: "Pendaftaran & minuman alu-aluan\nCari tempat duduk, beramah mesra" },
+          { title: "NIKAH", desc: "Majlis akad nikah\nDoa & restu keluarga" },
+          { title: "MAJLIS PERKAHWINAN", desc: "Perarakan & doa\nKetibaan pasangan" },
+          { title: "JAMUAN MAKAN", desc: "Bufet dibuka\nSila nikmati hidangan" },
+          { title: "SESI BERGAMBAR", desc: "Bergambar di pelamin\nBersama keluarga & rakan" },
+        ],
+        countdownTitle: "Kiraan Detik",
+        cdSub: "Hari istimewa kami semakin hampir!",
+        cdLabels: { days: "HARI", hours: "JAM", mins: "MIN", secs: "SAAT" }
       }
     };
 
@@ -873,6 +907,7 @@
     const locNote = document.getElementById('locNote');
     const contactTitle = document.getElementById('contactTitle');
     const contactDesc = document.getElementById('contactDesc');
+    const quickHome     = document.getElementById('quickHome');     // NEW-1
     const quickLocation = document.getElementById('quickLocation');
     const quickContact  = document.getElementById('quickContact');
     const noBtn = document.getElementById('noBtn');
@@ -897,6 +932,23 @@
     /* (3) elements to sync logo height with address on wide screens only */
     const heroAddressEl = document.getElementById('heroAddress');
     const hotelLogoEl = document.getElementById('hotelLogo');
+
+    // NEW refs for Schedule & Countdown i18n
+    const scheduleTitleEl = document.getElementById('scheduleTitle');
+    const agendaDateEl = document.getElementById('agendaDate');
+    const agendaDayEl  = document.getElementById('agendaDay');
+    const s1Title = document.getElementById('s1Title'); const s1Desc = document.getElementById('s1Desc');
+    const s2Title = document.getElementById('s2Title'); const s2Desc = document.getElementById('s2Desc');
+    const s3Title = document.getElementById('s3Title'); const s3Desc = document.getElementById('s3Desc');
+    const s4Title = document.getElementById('s4Title'); const s4Desc = document.getElementById('s4Desc');
+    const s5Title = document.getElementById('s5Title'); const s5Desc = document.getElementById('s5Desc');
+
+    const countdownTitleEl = document.getElementById('countdownTitle');
+    const cdSubEl = document.getElementById('cdSub');
+    const cdDaysLabel = document.getElementById('cdDaysLabel');
+    const cdHoursLabel = document.getElementById('cdHoursLabel');
+    const cdMinsLabel = document.getElementById('cdMinsLabel');
+    const cdSecsLabel = document.getElementById('cdSecsLabel');
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'ms'; // default Malay
@@ -1036,6 +1088,16 @@
 	  }
 	  return out.replace(/\s+,/g, ', ');
 	}
+    function formatDateOnly(lang){
+      const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
+      const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
+      return new Intl.DateTimeFormat(locale, { day:'2-digit', month:'long', year:'numeric' }).format(d);
+    }
+    function weekdayOnly(lang){
+      const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
+      const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
+      return new Intl.DateTimeFormat(locale, { weekday:'long' }).format(d);
+    }
 
     /* (3) Sync logo to address height only on wide screens to avoid mobile jitter */
     function syncLogoHeight(){
@@ -1078,7 +1140,7 @@
       invDressLabel.textContent = T.invDressLabel;
       inviteDateEl.textContent  = formatWeddingDateWithDay(LANG);
       inviteTimeEl.textContent  = "11:00 AM – 4:00 PM";
-      inviteVenueEl.textContent = "Promenade Hotel, Rafflesia I (Wedding Hall)";
+      inviteVenueEl.textContent = "Promenade Hotel, Rafflesia Ballroom";
       inviteDressEl.textContent = T.invDressValue;
 
       // CTA
@@ -1087,6 +1149,12 @@
       if(rsvpBtn) rsvpBtn.textContent = T.rsvp;     // (2) YES/Hadir
       if(noBtn)   noBtn.textContent   = T.no;       // (2) NO/Tidak
       if(locationBtn) locationBtn.textContent = T.location;
+
+      // RSVP body/phone (NEW-2)
+      if(rsvpIntro)   rsvpIntro.textContent = T.rsvpIntro;
+      if(phoneHeader) phoneHeader.textContent = T.phoneHeader;
+      if(phoneHint)   phoneHint.textContent   = T.phoneHint;
+      if(submitBtn)   submitBtn.textContent   = T.submit;
 
       // Update NO message text per language and keep hidden until clicked
       if (noMsg){
@@ -1102,6 +1170,25 @@
       // Contacts
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
+
+      // Schedule (NEW-3)
+      if (scheduleTitleEl) scheduleTitleEl.textContent = T.scheduleTitle;
+      if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
+      if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
+      const items = T.schedItems || [];
+      if (items[0]){ s1Title.textContent = items[0].title; s1Desc.innerHTML = items[0].desc.replace(/\n/g,'<br/>'); }
+      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.innerHTML = items[1].desc.replace(/\n/g,'<br/>'); }
+      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.innerHTML = items[2].desc.replace(/\n/g,'<br/>'); }
+      if (items[3]){ s4Title.textContent = items[3].title; s4Desc.innerHTML = items[3].desc.replace(/\n/g,'<br/>'); }
+      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = items[4].desc.replace(/\n/g,'<br/>'); }
+
+      // Countdown (NEW-3)
+      if (countdownTitleEl) countdownTitleEl.textContent = T.countdownTitle || "Countdown";
+      if (cdSubEl)          cdSubEl.textContent          = T.cdSub || "";
+      if (cdDaysLabel)  cdDaysLabel.textContent  = (T.cdLabels && T.cdLabels.days)  || "DAYS";
+      if (cdHoursLabel) cdHoursLabel.textContent = (T.cdLabels && T.cdLabels.hours) || "HOURS";
+      if (cdMinsLabel)  cdMinsLabel.textContent  = (T.cdLabels && T.cdLabels.mins)  || "MINS";
+      if (cdSecsLabel)  cdSecsLabel.textContent  = (T.cdLabels && T.cdLabels.secs)  || "SECS";
 
       // Re-render guest rows with proper button labels/placeholders
       const savedNames = getStoredNames();
@@ -1218,8 +1305,9 @@
     }
 
     // Existing handlers
-    handleSmoothLink(rsvpBtn, '#rsvp');       // YES/Hadir button -> RSVP
+    handleSmoothLink(rsvpBtn, '#rsvp');         // YES/Hadir button -> RSVP
     handleSmoothLink(locationBtn, '#location'); // guard if old element exists
+    handleSmoothLink(quickHome, 'header.hero'); // NEW-1 Home -> Hero
     handleSmoothLink(quickLocation, '#location');
     handleSmoothLink(quickContact,  '#contact');
 
