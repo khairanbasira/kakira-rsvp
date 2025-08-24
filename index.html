@@ -37,7 +37,7 @@
 	  --controls-top-offset: 5px;
 
       /* (HERO OFFSET) Push hero content down so tagline isn't covered by top buttons */
-      --hero-top-safe: 25px;
+      --hero-top-safe: 22px;
 
       /* (1) MOBILE LOGO SIZE VARIABLE */
       --mobile-logo-max-height: 92px;
@@ -47,8 +47,8 @@
 
       /* (NEW-1) HEART POSITION OFFSETS — adjust heart left/right/up/down */
       /* Negative X pulls toward "Basran" (left name) */
-      --heart-offset-x: -10px;
-      --heart-offset-y: -2px;
+      --heart-offset-x: 20px;
+      --heart-offset-y: 20px;
 
       /* (NEW-3) ARROW VERTICAL OFFSET — increase to push arrow lower */
       --arrow-bottom-offset: 22px;
@@ -65,7 +65,7 @@
       --section-space: 40px;
 
       /* (NEW-2) PARENTS/COUPLE NAMES IN INVITE CARD — smaller size for the four names requested */
-      --parent-name-size: clamp(18px, 4.2vw, 28px);
+      --parent-name-size: clamp(19px, 4.2vw, 22px);
 
       /* (NEW-2b) INVITE BODY LETTER-SPACING — tighten spacing for “Dengan penuh rasa …” */
       --inv-body-letter-spacing: .04em;
@@ -216,7 +216,7 @@
     .hero-date{
       font-size:clamp(16px,4vw,22px);
       letter-spacing:.02em;
-      color:#3b3b3b;
+      color:#5b5b5b;
       margin-bottom:36px;
     }
 
@@ -685,14 +685,14 @@
             </div>
             <div class="timeline">
               <div class="tl-item">
-                <div class="tl-time">10:00am</div>
+                <div class="tl-time">10:30am</div>
                 <div class="tl-what">
                   <div class="tl-title" id="s1Title">GUEST ARRIVAL</div>
-                  <div class="tl-desc" id="s1Desc">Registration & welcome drinks<br/>Find your seat, mingle</div>
+                  <div class="tl-desc" id="s1Desc">Invitation greetings<br/>Find your seat, mingle</div>
                 </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">10:30am</div>
+                <div class="tl-time">11:00am</div>
                 <div class="tl-what">
                   <div class="tl-title" id="s2Title">NIKAH</div>
                   <div class="tl-desc" id="s2Desc">Akad nikah ceremony<br/>Family blessings</div>
@@ -708,15 +708,15 @@
               <div class="tl-item">
                 <div class="tl-time">01:00pm</div>
                 <div class="tl-what">
-                  <div class="tl-title" id="s4Title">LUNCH</div>
-                  <div class="tl-desc" id="s4Desc">Buffet opens<br/>Please enjoy the meal</div>
+                  <div class="tl-title" id="s4Title">LUNCH & PHOTO SESSION</div>
+                  <div class="tl-desc" id="s4Desc">Please enjoy the meal<br/>Group photos on stage<br/>Friends & family shots</div>
                 </div>
               </div>
               <div class="tl-item">
                 <div class="tl-time">03:00pm</div>
                 <div class="tl-what">
-                  <div class="tl-title" id="s5Title">PHOTO SESSION</div>
-                  <div class="tl-desc" id="s5Desc">Group photos on stage<br/>Friends & family shots</div>
+                  <div class="tl-title" id="s5Title">FAREWELL SESSION</div>
+                  <div class="tl-desc" id="s5Desc">End of event</div>
                 </div>
               </div>
 
@@ -802,7 +802,7 @@
 
     // Single source of truth for the date/time
     const WEDDING_DATE_ISO = '2025-11-22';
-    const WEDDING_TIME = '10:00:00'; // local time for countdown target
+    const WEDDING_TIME = '10:30:00'; // local time for countdown target
     let COUNTDOWN_TARGET = new Date(`${WEDDING_DATE_ISO}T${WEDDING_TIME}`);
 
     const BGM_STOP_AFTER_LOOPS = 1;
@@ -822,7 +822,7 @@
         rsvp: "YES",
         no: "NO",
         location: "Location",
-        rsvpIntro: "Kindly share your full name, so we may welcome you with joy on our special day.",
+        rsvpIntro: "Please confirm your attendance before 1 October 2025, so we may welcome you with joy on our special day.",
         fullNameFirst: "Your Full Name",
         fullNameOthers: "Attend With",
         confirm: "Confirm",
@@ -865,11 +865,11 @@
         // (NEW-3) Schedule & Countdown i18n
         scheduleTitle: "Schedule",
         schedItems: [
-          { title: "GUEST ARRIVAL", desc: "Registration & welcome drinks\nFind your seat, mingle" },
+          { title: "GUEST ARRIVAL", desc: "Invitation greetings\nFind your seat, mingle" },
           { title: "NIKAH", desc: "Akad nikah ceremony\nFamily blessings" },
           { title: "WEDDING CEREMONY", desc: "Procession & doa\nCouple entrance" },
-          { title: "LUNCH", desc: "Buffet opens\nPlease enjoy the meal" },
-          { title: "PHOTO SESSION", desc: "Group photos on stage\nFriends & family shots" },
+          { title: "LUNCH & PHOTO SESSION", desc: "Please enjoy the meal\nGroup photos on stage\nFriends & family shots" },
+          { title: "FAREWELL SESSION", desc: "End of event" },
         ],
         countdownTitle: "Countdown Timer",
         cdSub: "Our big day’s coming soon!",
@@ -882,7 +882,7 @@
         rsvp: "Hadir",                // (2) Malay label for YES
         no: "Tidak Hadir",                  // (2) Malay label for NO
         location: "Lokasi",
-        rsvpIntro: "Sila isi nama penuh anda, agar kami dapat menyambut kehadiran anda dengan penuh gembira pada hari istimewa kami.",
+        rsvpIntro: "Mohon sahkan kehadiran anda sebelum 1 Oktober 2025, agar kami dapat menyambut anda dengan mesra di hari bahagia kami.",
         fullNameFirst: "Nama Penuh Anda",
         fullNameOthers: "Hadir Bersama",
         confirm: "Hadir",
@@ -925,11 +925,11 @@
         // (NEW-3) Schedule & Countdown i18n
         scheduleTitle: "Atur Cara",
         schedItems: [
-          { title: "KETIBAAN TETAMU", desc: "Pendaftaran & minuman alu-aluan\nCari tempat duduk, beramah mesra" },
+          { title: "KETIBAAN TETAMU", desc: "Alu-aluan jemputan\nCari tempat duduk, beramah mesra" },
           { title: "NIKAH", desc: "Majlis akad nikah\nDoa & restu keluarga" },
           { title: "MAJLIS PERKAHWINAN", desc: "Perarakan & doa\nKetibaan pasangan" },
-          { title: "JAMUAN MAKAN", desc: "Bufet dibuka\nSila nikmati hidangan" },
-          { title: "SESI BERGAMBAR", desc: "Bergambar di pelamin\nBersama keluarga & rakan" },
+          { title: "JAMUAN MAKAN & SESI BERGAMBAR", desc: "Sila nikmati hidangan\nBergambar di pelamin\nBersama keluarga & rakan" },
+          { title: "SESI BERSURAI", desc: "Majlis tamat" },
         ],
         countdownTitle: "Kiraan Detik",
         cdSub: "Hari istimewa kami semakin hampir!",
