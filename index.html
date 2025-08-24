@@ -177,7 +177,7 @@
 	  transform: translateX(var(--heart-shift, 10px)) translateY(-2px);
 	}
     @media (max-width:520px){
-      .couple-title{ flex-direction:column; gap:25px; } /*to nudje the heart*/
+      .couple-title{ flex-direction:column; gap:20px; } /*to nudje the heart*/
       .couple-title .heart{ transform:none; }
     }
 
@@ -528,8 +528,8 @@
       <div class="container">
         <div class="invite-card">
           <div class="invite-inner">
-            <div class="inv-small" id="invSmall">Undangan Majlis Perkahwinan</div>
-			<div class="inv-small" id="invSmall">WalimatulUrus</div>
+            <div class="inv-label" id="invSmall">Undangan Majlis Perkahwinan</div>
+			<div class="inv-label" id="invSmall">WalimatulUrus</div>
 
             <!-- (4) Parents set A with tighter, controllable spacing -->
             <div class="parents-block parents-a">
@@ -544,9 +544,9 @@
 
             <!-- (4) Parents set B with tighter, controllable spacing -->
             <div class="parents-block parents-b">
-              <div class="inv-couple">Basran Bin Ab Hamid</div>
-              <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,22px)">&amp;</div>
               <div class="inv-couple">Noor Khairani Binti Muhammad Basri</div>
+              <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,22px)">&amp;</div>
+              <div class="inv-couple">Basran Bin Ab Hamid</div>
             </div>
 
             <div class="inv-details">
@@ -577,7 +577,7 @@
       <div class="container">
         <div class="card">
           <h2 class="section-title">RSVP</h2>
-          <p class="muted" id="rsvpIntro">Kindly share your full name, so we may welcome you with joy on our special day.</p>
+          <p class="tiny muted" id="rsvpIntro">Kindly share your full name, so we may welcome you with joy on our special day.</p>
 
           <form id="rsvpForm" method="POST" target="hidden_iframe">
             <input type="hidden" name="guest1" id="post_guest1">
