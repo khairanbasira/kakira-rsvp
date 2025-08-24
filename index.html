@@ -148,14 +148,33 @@
       color:#3b3b3b;
       margin-bottom:38px;
     }
-    .hero-address{
-      max-width:720px;
+
+    /* === Address + Logo group (NEW) === */
+    .hero-address-wrap{
+      display:inline-flex;            /* inline so it can be centered by text-align */
+      align-items:stretch;            /* stretch children to the same height */
+      justify-content:center;
+      gap:14px;
+      max-width:820px;
       margin:0 auto 18px;
       padding:0 12px;
+    }
+    .hero-address-logo{
+      display:block;
+      height:100%;                    /* match address block height */
+      max-height:100%;
+      object-fit:contain;
+      border-radius:8px;              /* subtle rounding to blend */
+    }
+    .hero-address{
       font-size:clamp(13px,3.2vw,16px);
       line-height:1.45;
       color:#5b5b5b;
-	  margin-bottom:38px;
+      text-align:left;                /* keep address readable */
+      margin:0;                       /* controlled by wrapper */
+    }
+    @media (max-width:560px){
+      .hero-address-wrap{ gap:10px; }
     }
 
     .heading{ font-size:clamp(28px,5vw,52px); line-height:1.12; }
@@ -364,13 +383,23 @@
       <!-- Date in Times New Roman with weekday -->
       <div class="hero-date" id="heroDate">Saturday, 22 November 2025</div>
 
-      <!-- Address (multi-line) -->
-      <div class="hero-address" id="heroAddress">
-        Promenade Hotel<br/>
-        Rafflesia I (Wedding Hall)<br/>
-        4, 3, Lorong Api - Api 1,<br/>
-        Api-api Centre,<br/>
-        88000 Kota Kinabalu, Sabah.
+      <!-- ===== Logo + Address group (NEW) ===== -->
+      <div class="hero-address-wrap" id="heroAddressWrap">
+        <img
+          src="promanade_hotel_logo_ai.png"
+          alt="Promenade Hotel Logo"
+          class="hero-address-logo"
+          id="heroAddressLogo"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="hero-address" id="heroAddressText">
+          Rafflesia Ballroom <br/>
+          Promenade Hotel, Tingkat 1<br/>
+          4, 3, Lorong Api - Api 1,<br/>
+          Api-api Centre,<br/>
+          88000 Kota Kinabalu, Sabah.
+        </div>
       </div>
 
       <div class="heading" id="titleText">Will you attend our wedding?</div>
@@ -600,11 +629,9 @@
     const BGM_STOP_AFTER_LOOPS = 1;
 
     // ===== RESUBMISSION TOGGLE =====
-    // Set to 0 to LOCK after first successful submit (current behavior).
-    // Set to 1 to ALLOW immediate re-submission: show success then reset the form.
     const RESUBMISSION_ENABLE = 0;
 
-    // ====== i18n strings (added invitation section text) ======
+    // ====== i18n strings (added invitation section text + ADDRESS) ======
     const I18N = {
       en: {
         tagline: "Wedding Invitation",
@@ -638,6 +665,14 @@
         invVenueLabel: "Venue",
         invDressLabel: "Dress Code",
         invDressValue: "Modest and aurat-covering",
+
+        // NEW: hero address (English)
+        heroAddressHTML:
+          "Rafflesia Ballroom <br/>" +
+          "Promenade Hotel, 1st Floor<br/>" +
+          "4, 3, Lorong Api - Api 1,<br/>" +
+          "Api-api Centre,<br/>" +
+          "88000 Kota Kinabalu, Sabah."
       },
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
@@ -665,12 +700,20 @@
         contactDesc: "Tekan nama untuk terus membuat panggilan.",
 
         invSmall: "Undangan Majlis Perkahwinan",
-        invBody: "Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan majlis perkahwinan kami.",
+        invBody: "Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan majlis perkahwinan puteri kami.",
         invDateLabel: "Tarikh",
         invTimeLabel: "Masa",
         invVenueLabel: "Tempat",
         invDressLabel: "Kod Pakaian",
         invDressValue: "Sopan dan Menutup Aurat",
+
+        // NEW: hero address (Malay default)
+        heroAddressHTML:
+          "Rafflesia Ballroom <br/>" +
+          "Promenade Hotel, Tingkat 1<br/>" +
+          "4, 3, Lorong Api - Api 1,<br/>" +
+          "Api-api Centre,<br/>" +
+          "88000 Kota Kinabalu, Sabah."
       }
     };
 
@@ -716,8 +759,11 @@
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
 
+    // NEW: address nodes
+    const heroAddressText = document.getElementById('heroAddressText');
+
     // ===== Language state =====
-    let LANG = localStorage.getItem('rsvp_lang') || 'ms'; // ===== change to 'en' if need english as default =====
+    let LANG = localStorage.getItem('rsvp_lang') || 'ms'; // default Malay
     function refreshLangToggleLabel(){ langToggle.textContent = (LANG === 'en') ? 'Malay' : 'English'; }
 
     // ===== Local state helpers =====
@@ -756,12 +802,9 @@
 
     // ===== NEW: reset helper for RESUBMISSION_ENABLE=1 =====
     function resetFormToFreshState(){
-      // keep language; clear everything else related to the form
       localStorage.removeItem('rsvp_names');
       localStorage.removeItem('rsvp_confirmed');
       localStorage.removeItem('rsvp_phone');
-
-      // Re-render rows and reset controls
       renderGuestRows();
       getGuestInputs().forEach((inp, idx)=>{
         const btn = getGuestButtons()[idx];
@@ -839,15 +882,12 @@
     }
 
     // Date format with weekday and a guaranteed comma after the weekday.
-    // Works for EN/GB and MS/MY without double-commas.
 	function formatWeddingDateWithDay(lang){
 	  const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
 	  const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
-	  
 	  const parts = new Intl.DateTimeFormat(locale, {
 		weekday:'long', day:'2-digit', month:'long', year:'numeric'
 	  }).formatToParts(d);
-	  
 	  let out = '';
 	  for (let i = 0; i < parts.length; i++) {
 		const p = parts[i];
@@ -867,6 +907,9 @@
       // Hero
       heroTag.textContent = T.tagline;
       heroDate.textContent = formatWeddingDateWithDay(LANG);
+
+      // NEW: Address bilingual swap
+      heroAddressText.innerHTML = T.heroAddressHTML;
 
       // Invitation section
       invSmall.textContent = T.invSmall;
@@ -944,6 +987,7 @@
     });
 
     // Music
+    const muteBtn = document.getElementById('muteBtn');
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -1080,7 +1124,6 @@
       showToast(I18N[LANG].thanks);
 
       if(RESUBMISSION_ENABLE){
-        // allow next RSVP immediately
         resetFormToFreshState();
       }else{
         markSubmitted();
