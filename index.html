@@ -32,13 +32,21 @@
       --hero-overlay-1: .35;
       --hero-overlay-2: .50;
       --hero-overlay-3: .65;
-	  --controls-top-offset: 15px; /* change this value to move the buttons down/up */
+	  --controls-top-offset: 15px; /* (3) Change this value to move the top tabs up/down */
 
       /* (1) MOBILE LOGO SIZE VARIABLE */
       --mobile-logo-max-height: 96px;
 
       /* (2) ARROW BOUNCE SPEED VARIABLE */
       --arrow-bounce-duration: 1.8s;
+
+      /* (4) NAME-PAIR SPACING VARIABLES — change these later to adjust spacing around “&” */
+      --parentsA-gap: 6px; /* for Muhammad Basri Bin Patara & Samsah Binti Suda */
+      --parentsB-gap: 6px; /* for Basran Bin Ab Hamid & Noor Khairani Binti Muhammad Basri */
+
+      /* (5) LABEL FONT CONTROLS — change these later to adjust Tarikh/Masa/Tempat/Etika size & color */
+      --inv-label-size: 13px;          /* font-size for labels */
+      --inv-label-color: #6b4b00;      /* color to match UNDANGAN/WALIMATULURUS */
     }
 
     @media (orientation: portrait){
@@ -80,26 +88,24 @@
     .card,
     .footer { position:relative; z-index:10; }
 
-	/* Left-side tab-style controls */
+	/* (3) Top-centered tab-style controls (moved from left side) */
 	.top-controls{
 		position: fixed;
-		left: 0;
+		left: 50%;
 		top: var(--controls-top-offset);
-		transform: none;
+		transform: translateX(-50%);
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		gap: 8px;
 		z-index: 9999;
 	}
-
 	.icon-btn{
 		appearance:none; cursor:pointer;
 		background:#fff; color:#5a3d00;
 		border:1px solid rgba(0,0,0,.08);
-		border-left:none;
-		padding:5px 8px;
-		font-size:10px; font-weight:600;
-		border-radius:0 12px 12px 0;
+		padding:6px 12px;
+		font-size:12px; font-weight:600;
+		border-radius:12px;
 		box-shadow:none;
 	}
 	.icon-btn:hover{ transform:none; box-shadow:none; }
@@ -168,7 +174,7 @@
 	  transform: translateX(var(--heart-shift, 10px)) translateY(-2px);
 	}
     @media (max-width:520px){
-      .couple-title{ flex-direction:column; gap:10px; }
+      .couple-title{ flex-direction:column; gap:10px; } /*to nudje the heart*/
       .couple-title .heart{ transform:none; }
     }
 
@@ -223,6 +229,8 @@
       border:1px solid var(--gold-strong);
       box-shadow:var(--shadow-sm);
       transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; /* ensure same font for buttons */
+      font-size:16px; /* same size for YES and NO */
     }
     .btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
     .btn:active{ transform:translateY(0); }
@@ -266,6 +274,7 @@
       box-shadow:var(--shadow-sm);
       transition:opacity .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
       cursor:pointer;
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     }
     .confirm-btn.confirm-state{ background:var(--gold-soft); color:#111; }
     .confirm-btn.edit-state{ background:#fff; color:#111; }
@@ -397,9 +406,25 @@
     .inv-body{ max-width:720px; margin:14px auto 6px; text-align:center; color:#111; line-height:1.55; }
     .inv-couple{ margin:18px 0 10px; text-align:center; font-weight:700; font-size:clamp(22px,4.8vw,34px); color:#111; }
 
+    /* (4) Tighten spacing around the “&” for parents’ names using variables above */
+    .parents-block .inv-couple{ margin: var(--pair-gap, 6px) 0; }
+    .parents-block .inv-and{ margin: var(--pair-gap, 6px) 0; }
+    .parents-a{ --pair-gap: var(--parentsA-gap); }
+    .parents-b{ --pair-gap: var(--parentsB-gap); }
+
     .inv-details{ max-width:720px; margin:20px auto 0; display:grid; gap:14px; }
     .inv-row{ text-align:center; }
-    .inv-label{ font-weight:700; letter-spacing:.06em; color:#0f172a; }
+
+    /* (5) Make Tarikh/Masa/Tempat/Etika labels share font & color with "UNDANGAN/WALIMATULURUS"
+          and expose --inv-label-size for later changes */
+    .inv-label{
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; /* match inv-small */
+      font-weight:700;
+      letter-spacing:.18em;              /* match inv-small feel */
+      text-transform:uppercase;          /* match inv-small caps feel */
+      color:var(--inv-label-color);      /* variable to tweak color later */
+      font-size:var(--inv-label-size);   /* variable to tweak size later */
+    }
     .inv-value{ margin-top:4px; color:#0f172a; }
 
     /* Location photo */
@@ -423,8 +448,8 @@
     /* CTA "No" note */
     #noMsg{ text-align:center; margin-top:16px; display:none; }
 
-    /* (4) Ensure YES / NO match and ALL CAPS in CTA only */
-    #cta .btn{ text-transform:uppercase; font-weight:700; letter-spacing:.05em; }
+    /* (2) Ensure YES / NO same font/size (remove previous all-caps override) */
+    #cta .btn{ text-transform:none; font-weight:600; }
   </style>
 </head>
 <body>
@@ -434,7 +459,7 @@
   <div class="top-controls">
     <button id="langToggle" class="icon-btn" aria-label="Toggle language">Malay</button>
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
-    <!-- (4) New quick-jump buttons on the left -->
+    <!-- (3) Top-centered quick-jump tabs -->
     <button id="quickLocation" class="icon-btn" aria-label="Jump to location">Location</button>
     <button id="quickContact" class="icon-btn" aria-label="Jump to contact">Contact</button>
   </div>
@@ -498,17 +523,23 @@
             <div class="inv-small" id="invSmall">Undangan Majlis Perkahwinan</div>
 			<div class="inv-small" id="invSmall">WalimatulUrus</div>
 
-			<div class="inv-couple">Muhammad Basri Bin Patara</div>
-            <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,22px)">&amp;</div>
-            <div class="inv-couple">Samsah Binti Suda</div>
+            <!-- (4) Parents set A with tighter, controllable spacing -->
+            <div class="parents-block parents-a">
+			  <div class="inv-couple">Muhammad Basri Bin Patara</div>
+              <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,22px)">&amp;</div>
+              <div class="inv-couple">Samsah Binti Suda</div>
+            </div>
 
             <div class="inv-body" id="invBody">
               Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan Majlis Perkahwinan puteri kami
             </div>
 
-            <div class="inv-couple">Basran Bin Ab Hamid</div>
-            <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,22px)">&amp;</div>
-            <div class="inv-couple">Noor Khairani Binti Muhammad Basri</div>
+            <!-- (4) Parents set B with tighter, controllable spacing -->
+            <div class="parents-block parents-b">
+              <div class="inv-couple">Basran Bin Ab Hamid</div>
+              <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,22px)">&amp;</div>
+              <div class="inv-couple">Noor Khairani Binti Muhammad Basri</div>
+            </div>
 
             <div class="inv-details">
               <div class="inv-row">
@@ -724,7 +755,8 @@
         tagline: "Wedding Invitation",
         title: "Will you attend our wedding?",
         subtitle: "We'd love to celebrate with you. Please confirm your attendance.",
-        rsvp: "YES",                // (4) keep label as YES
+        rsvp: "YES",
+        no: "NO",
         location: "Location",
         rsvpIntro: "Kindly share your full name, so we may welcome you with joy on our special day.",
         fullNameFirst: "Your Full Name",
@@ -764,13 +796,14 @@
         ],
 
         // (4) NO-message bilingual
-        noMsg: "Please contact the family if you change your mind."
+        noMsg: "Please refresh the page if you change your mind."
       },
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
         title: "Adakah anda akan hadir ke majlis kami?",
         subtitle: "Kami ingin meraikan bersama anda. Sila sahkan kehadiran anda.",
-        rsvp: "YES",                // (4) keep as YES per request
+        rsvp: "Hadir",                // (2) Malay label for YES
+        no: "Tidak",                  // (2) Malay label for NO
         location: "Lokasi",
         rsvpIntro: "Sila isi nama penuh anda, agar kami dapat menyambut kehadiran anda dengan penuh gembira pada hari istimewa kami.",
         fullNameFirst: "Nama Penuh Anda",
@@ -810,7 +843,7 @@
         ],
 
         // (4) NO-message bilingual
-        noMsg: "Sila hubungi keluarga pengantin jika berubah fikiran."
+        noMsg: "Sila muat semula laman ini jika berubah fikiran."
       }
     };
 
@@ -1029,9 +1062,11 @@
       heroTag.textContent = T.tagline;
       heroDate.textContent = formatWeddingDateWithDay(LANG);
 
-      // Address bilingual toggle
+      // Address bilingual toggle — (1) Bold the first line "Rafflesia Ballroom"
       if (Array.isArray(T.addrLines)) {
-        heroAddressEl.innerHTML = T.addrLines.join('<br/>');
+        heroAddressEl.innerHTML = T.addrLines
+          .map((line,i)=> i===0 ? `<strong>${line}</strong>` : line)
+          .join('<br/>');
       }
 
       // Invitation section
@@ -1049,7 +1084,8 @@
       // CTA
       titleText.textContent = T.title;
       subtitleText.textContent = T.subtitle;
-      if(rsvpBtn) rsvpBtn.textContent = T.rsvp;
+      if(rsvpBtn) rsvpBtn.textContent = T.rsvp;     // (2) YES/Hadir
+      if(noBtn)   noBtn.textContent   = T.no;       // (2) NO/Tidak
       if(locationBtn) locationBtn.textContent = T.location;
 
       // Update NO message text per language and keep hidden until clicked
@@ -1182,10 +1218,10 @@
     }
 
     // Existing handlers
-    handleSmoothLink(rsvpBtn, '#rsvp');       // YES button -> RSVP
+    handleSmoothLink(rsvpBtn, '#rsvp');       // YES/Hadir button -> RSVP
     handleSmoothLink(locationBtn, '#location'); // guard if old element exists
-    handleSmoothLink(quickLocation, '#location'); // (4) left tab Location
-    handleSmoothLink(quickContact,  '#contact');  // (4) left tab Contact
+    handleSmoothLink(quickLocation, '#location');
+    handleSmoothLink(quickContact,  '#contact');
 
     // (4) No button behavior: show bilingual note + disable YES like submit disabled
     if(noBtn){
