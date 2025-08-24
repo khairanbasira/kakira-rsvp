@@ -33,6 +33,12 @@
       --hero-overlay-2: .50;
       --hero-overlay-3: .65;
 	  --controls-top-offset: 15px; /* change this value to move the buttons down/up */
+
+      /* (1) MOBILE LOGO SIZE VARIABLE */
+      --mobile-logo-max-height: 96px;
+
+      /* (2) ARROW BOUNCE SPEED VARIABLE */
+      --arrow-bounce-duration: 1.8s;
     }
 
     @media (orientation: portrait){
@@ -121,16 +127,17 @@
       background-attachment: scroll, scroll;
     }
 
-    /* (2) Soft-bouncy gold arrow at bottom of hero */
+    /* (2) NEW: Double-chevron gold scroll button (shape like image) */
     .hero-scroll{
       position:absolute; left:50%; bottom:18px; transform:translateX(-50%);
-      width:48px; height:48px; border-radius:999px;
-      background:var(--gold); color:#111; border:1px solid var(--gold-strong);
+      width:56px; height:56px; border-radius:999px;
+      background:transparent; border:0; color:var(--gold-strong);
       display:flex; align-items:center; justify-content:center;
-      font-size:22px; box-shadow:var(--shadow);
-      cursor:pointer;
-      animation:soft-bounce 1.8s infinite ease-in-out;
+      cursor:pointer; box-shadow:none;
+      animation:soft-bounce var(--arrow-bounce-duration) infinite ease-in-out;
+      padding:6px;
     }
+    .hero-scroll svg{ width:100%; height:100%; }
     .hero-scroll:active{ transform:translateX(-50%) scale(0.98); }
     @keyframes soft-bounce{
       0%,100%{ transform:translateX(-50%) translateY(0); }
@@ -200,7 +207,8 @@
         gap:12px; padding:0 10px;
         flex-direction:column; align-items:center; text-align:center;
       }
-      .hero-logo{ max-height:120px; max-width:60vw; }
+      /* (1) Use variable for mobile-only logo size */
+      .hero-logo{ max-height:var(--mobile-logo-max-height); max-width:60vw; }
       .hero-address{ text-align:center; }
     }
 
@@ -222,6 +230,13 @@
 
     #submitBtn{ background:var(--gold); color:#111; border:1px solid var(--gold-strong); }
     #submitBtn[disabled]{ background:#eee; color:#999; border-color:#ddd; cursor:not-allowed; box-shadow:none; transform:none; }
+
+    /* Generic disabled style for anchors too */
+    .btn.disabled,
+    .btn[aria-disabled="true"]{
+      background:#eee !important; color:#999 !important; border-color:#ddd !important;
+      pointer-events:none; box-shadow:none; transform:none;
+    }
 
     section{ padding:58px 16px; background:transparent; }
     .container{ max-width:980px; margin:0 auto; }
@@ -407,6 +422,9 @@
 
     /* CTA "No" note */
     #noMsg{ text-align:center; margin-top:16px; display:none; }
+
+    /* (4) Ensure YES / NO match and ALL CAPS in CTA only */
+    #cta .btn{ text-transform:uppercase; font-weight:700; letter-spacing:.05em; }
   </style>
 </head>
 <body>
@@ -447,14 +465,17 @@
       </div>
     </div>
 
-    <!-- (2) Bouncy gold arrow -->
+    <!-- (2) NEW bouncy double-chevron icon in gold -->
     <button id="scrollArrow" class="hero-scroll" aria-label="Scroll to details" title="Scroll">
-      ▾
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+        <path d="M4 7.5 L12 15.5 L20 7.5" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M4 12.5 L12 20.5 L20 12.5" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </button>
   </header>
 
   <main>
-    <!-- (4) CTA section (with YES / No centered) -->
+    <!-- (4) CTA section (with YES / NO centered) -->
     <section id="cta">
       <div class="container">
         <div class="card" style="text-align:center">
@@ -462,7 +483,7 @@
           <div class="sub" id="subtitleText">We'd love to celebrate with you. Please confirm your attendance.</div>
           <div class="cta-row" style="justify-content:center">
             <a class="btn" href="#rsvp" id="rsvpBtn" data-smooth>YES</a>
-            <button class="btn btn-outline" id="noBtn" type="button">No</button>
+            <button class="btn btn-outline" id="noBtn" type="button">NO</button>
           </div>
           <div id="noMsg" class="notice tiny">Sila hubungi keluarga pengantin jika berubah fikiran</div>
         </div>
@@ -694,12 +715,15 @@
     // ===== RESUBMISSION TOGGLE =====
     const RESUBMISSION_ENABLE = 0;
 
+    // (3) AUTO-SCROLL DELAY VARIABLE (ms)
+    const ARROW_AUTO_DELAY_MS = 10000;
+
     // ====== i18n strings ======
     const I18N = {
       en: {
         tagline: "Wedding Invitation",
         title: "Will you attend our wedding?",
-        subtitle: "We'd love to celebrate with you. Please RSVP below.",
+        subtitle: "We'd love to celebrate with you. Please confirm your attendance.",
         rsvp: "YES",                // (4) keep label as YES
         location: "Location",
         rsvpIntro: "Kindly share your full name, so we may welcome you with joy on our special day.",
@@ -738,6 +762,9 @@
           "Api-api Centre,",
           "88000 Kota Kinabalu, Sabah."
         ],
+
+        // (4) NO-message bilingual
+        noMsg: "Please contact the family if you change your mind."
       },
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
@@ -771,7 +798,7 @@
         invDateLabel: "Tarikh",
         invTimeLabel: "Masa",
         invVenueLabel: "Tempat",
-        invDressLabel: "Kod Pakaian",
+        invDressLabel: "Etika Pakaian",
         invDressValue: "Sopan dan Menutup Aurat",
 
         addrLines: [
@@ -781,6 +808,9 @@
           "Api-api Centre,",
           "88000 Kota Kinabalu, Sabah."
         ],
+
+        // (4) NO-message bilingual
+        noMsg: "Sila hubungi keluarga pengantin jika berubah fikiran."
       }
     };
 
@@ -1020,12 +1050,17 @@
       titleText.textContent = T.title;
       subtitleText.textContent = T.subtitle;
       if(rsvpBtn) rsvpBtn.textContent = T.rsvp;
-      if(locationBtn) locationBtn.textContent = T.location; // (kept guard; element no longer present)
+      if(locationBtn) locationBtn.textContent = T.location;
+
+      // Update NO message text per language and keep hidden until clicked
+      if (noMsg){
+        noMsg.textContent = T.noMsg;
+        noMsg.style.display = 'none';
+      }
 
       // Location/Direction
       locTitle.textContent = T.locTitle;
       locDesc.textContent = T.locDesc;
-      // (1) Keep text in i18n but tip stays hidden via CSS
       if(locNote) locNote.textContent = T.locNote;
 
       // Contacts
@@ -1152,14 +1187,19 @@
     handleSmoothLink(quickLocation, '#location'); // (4) left tab Location
     handleSmoothLink(quickContact,  '#contact');  // (4) left tab Contact
 
-    // (4) No button behavior: show Malay note at bottom of CTA section
+    // (4) No button behavior: show bilingual note + disable YES like submit disabled
     if(noBtn){
       noBtn.addEventListener('click', ()=>{
+        noMsg.textContent = I18N[LANG].noMsg;
         noMsg.style.display = 'block';
+        if (rsvpBtn){
+          rsvpBtn.classList.add('disabled');
+          rsvpBtn.setAttribute('aria-disabled','true');
+        }
       });
     }
 
-    // (2) Scroll arrow behavior: go to CTA, stop before Invite section appears
+    // (2 & 3) Scroll arrow behavior + delayed auto-trigger
     function scrollToCTAWithoutInvite(){
       const cta = document.querySelector('#cta');
       if(!cta){ return; }
@@ -1180,7 +1220,7 @@
         scrollToCTAWithoutInvite();
       });
     }
-    // Auto-trigger arrow if user didn't move the page
+    // Auto-trigger arrow if user didn't move the page (delay configurable)
     (function autoArrow(){
       let moved = false;
       const mark = ()=>{ moved = true; };
@@ -1191,7 +1231,7 @@
         if(!moved && (window.scrollY||window.pageYOffset) < 8){
           scrollArrow && scrollArrow.click();
         }
-      }, 2200);
+      }, ARROW_AUTO_DELAY_MS);
     })();
 
     // Click sounds
