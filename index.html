@@ -33,7 +33,7 @@
       --hero-overlay-1: .35;
       --hero-overlay-2: .50;
       --hero-overlay-3: .65;
-	  --controls-top-offset: 15px; /* change this value to move the buttons down/up */
+	  --controls-top-offset: 20px; /* change this value to move the buttons down/up */
 
     }
 
@@ -79,26 +79,29 @@
     /* (3) RELOCATED: left-side tab-style controls */
 	.top-controls{
 		position: fixed;
-		left: 12px;                            /* distance from the left edge */
-		top: var(--controls-top-offset);       /* uses the variable you can change */
-		transform: none;                       /* remove vertical centering */
+		left: 0;                          /* flush to the left edge */
+		top: var(--controls-top-offset);  /* uses the variable above */
+		transform: none;                  /* no vertical centering */
 		display: flex;
-		flex-direction: column;                /* language on top, mute below */
-		gap: 10px;
+		flex-direction: column;           /* language on top, mute below */
+		gap: 8px;
 		z-index: 9999;
 	}
 
-    .icon-btn{
-      appearance:none; cursor:pointer;
-      background:#fff; color:#5a3d00;
-      border:1px solid rgba(0,0,0,.06);
-      padding:10px 14px; border-radius:0 999px 999px 0;   /* tab shape */
-      font-size:14px; font-weight:600;
-      box-shadow:var(--shadow-sm);
-      transition:transform .12s ease, box-shadow .12s ease;
-    }
-    .icon-btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
-    .icon-btn:active{ transform:translateY(0); }
+
+	.icon-btn{
+		appearance:none; cursor:pointer;
+		background:#fff; color:#5a3d00;
+		border:1px solid rgba(0,0,0,.08);
+		border-left:none;                 /* blends into the screen edge */
+		padding:6px 10px;                 /* smaller size */
+		font-size:12px; font-weight:600;
+		border-radius:0 12px 12px 0;      /* tab shape */
+		box-shadow:none;                  /* remove floating look */
+	}
+	
+	.icon-btn:hover{ transform:none; box-shadow:none; }
+	.icon-btn:active{ transform:none; }
 
     .volume-pop{ display:none !important; }
 
