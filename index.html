@@ -6,6 +6,8 @@
   <title>Kak Ira Wedding RSVP</title>
   <meta name="description" content="RSVP for Kak Ira's wedding — elegant, mobile-first, bilingual (EN/MS)." />
   <meta name="theme-color" content="#fff7ec" />
+  <!-- Force light colors even in OS dark mode -->
+  <meta name="color-scheme" content="light" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,30 +47,36 @@
       /* (2) ARROW BOUNCE SPEED VARIABLE */
       --arrow-bounce-duration: 1.3s;
 
-      /* (NEW-1) HEART POSITION OFFSETS — adjust heart left/right/up/down */
-      /* Negative X pulls toward "Basran" (left name) */
-      --heart-offset-x: 50px;
-      --heart-offset-y: 50px;
+      /* Heart + Names per-item position offsets (top/left via translateY/translateX) */
+      --name1-offset-x: 0px;
+      --name1-offset-y: 0px;
+      --heart-offset-x: 0px;
+      --heart-offset-y: 0px;
+      --name2-offset-x: 0px;
+      --name2-offset-y: 0px;
 
-      /* (NEW-3) ARROW VERTICAL OFFSET — increase to push arrow lower */
+      /* Arrow vertical offset (distance from bottom of the hero) */
       --arrow-bottom-offset: 30px;
 
-      /* (4) NAME-PAIR SPACING VARIABLES — change these later to adjust spacing around “&” */
-      --parentsA-gap: 3px; /* for Muhammad Basri Bin Patara & Samsah Binti Suda */
-      --parentsB-gap: 3px; /* for Basran Bin Ab Hamid & Noor Khairani Binti Muhammad Basri */
+      /* Parents spacing */
+      --parentsA-gap: 3px;
+      --parentsB-gap: 3px;
 
-      /* (5) LABEL FONT CONTROLS — change these later to adjust Tarikh/Masa/Tempat/Etika size & color */
-      --inv-label-size: 13px;          /* font-size for labels */
-      --inv-label-color: #6b4b00;      /* color to match UNDANGAN/WALIMATULURUS */
+      /* Label font controls */
+      --inv-label-size: 13px;
+      --inv-label-color: #6b4b00;
 
-      /* (NEW-5) CONSISTENT SECTION SPACING */
+      /* Consistent section spacing */
       --section-space: 40px;
 
-      /* (NEW-2) PARENTS/COUPLE NAMES IN INVITE CARD — smaller size for the four names requested */
+      /* Smaller size for four parent names */
       --parent-name-size: clamp(19px, 4.2vw, 22px);
 
-      /* (NEW-2b) INVITE BODY LETTER-SPACING — tighten spacing for “Dengan penuh rasa …” */
+      /* Tighten letter-spacing for invite body */
       --inv-body-letter-spacing: .04em;
+
+      /* Force light UI widgets even in dark mode */
+      color-scheme: light;
     }
 
     @media (orientation: portrait){
@@ -76,6 +84,12 @@
     }
     @media (orientation: landscape){
       :root{ --wallpaper:url('rsvpwallpaper_web.png'); }
+    }
+
+    /* Extra safeguard: keep colors the same even if system prefers dark */
+    @media (prefers-color-scheme: dark){
+      html, body { background: var(--cream) !important; color: var(--text) !important; }
+      .card, .btn, .input, .confirm-btn { background:#fff !important; color:#111 !important; }
     }
 
     *{ box-sizing:border-box }
@@ -87,7 +101,7 @@
       background:var(--cream);
     }
 
-    /* Default font for all headings → Times New Roman */
+    /* Default font for many headings (but we'll override hero date below) */
     h1,h2,h3,h4,h5,h6,
     .heading,
     .section-title,
@@ -96,7 +110,6 @@
     .inv-label,
     .inv-couple,
     .hero .tagline,
-    .hero-date,
     .cd-num{
       font-family:"Times New Roman", Times, serif;
     }
@@ -110,7 +123,7 @@
     .card,
     .footer { position:relative; z-index:10; }
 
-	/* (3) Top-centered tab-style controls (moved from left side) */
+	/* Top-centered controls */
 	.top-controls{
 		position: fixed;
 		left: 50%;
@@ -129,7 +142,9 @@
 		font-size:12px; font-weight:600;
 		border-radius:12px;
 		box-shadow:none;
+    display:inline-flex; align-items:center; justify-content:center;
 	}
+  .icon-btn.icon-only{ width:36px; height:36px; padding:0; }
 	.icon-btn:hover{ transform:none; box-shadow:none; }
 	.icon-btn:active{ transform:none; }
 
@@ -158,7 +173,7 @@
     /* Push hero content down by variable to avoid overlap with top buttons */
     .hero > div{ padding-top: var(--hero-top-safe); }
 
-    /* (2) NEW: Double-chevron gold scroll button (shape like image) */
+    /* Scroll arrow (uses adjustable bottom offset) */
     .hero-scroll{
       position:absolute; left:50%; bottom:var(--arrow-bottom-offset); transform:translateX(-50%);
       width:56px; height:56px; border-radius:999px;
@@ -184,7 +199,8 @@
     }
 
     .couple-title{
-      display:flex; align-items:center; justify-content:center; gap:18px;
+      display:flex; flex-direction:column; /* Force 3 lines on web too */
+      align-items:center; justify-content:center; gap:18px;
       margin-bottom:28px;
       font-family:'Great Vibes', cursive;
       font-weight:400;
@@ -192,15 +208,19 @@
       line-height:1;
       color:var(--gold-strong);
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
+      position:relative;
     }
-	/* (1) Fancy calligraphic heart to match Great Vibes vibe */
+    .couple-title .name{ display:inline-block; }
+    .couple-title .n1{ transform: translate(var(--name1-offset-x), var(--name1-offset-y)); }
+    .couple-title .n2{ transform: translate(var(--name2-offset-x), var(--name2-offset-y)); }
+
+	/* Fancy calligraphic heart with per-item offsets */
 	.couple-title .heart{
 	  font-size:0.6em;
 	  display:inline-flex;
 	  align-items:center;
 	  justify-content:center;
-	  /* Use variables to move the heart; defaults bring it closer to "Basran" */
-	  transform: translate(var(--heart-offset-x, -10px), var(--heart-offset-y, -2px));
+	  transform: translate(var(--heart-offset-x), var(--heart-offset-y));
 	}
 	.couple-title .heart svg{
 	  width:1.05em; height:1.05em;
@@ -209,18 +229,20 @@
 	  filter: drop-shadow(0 2px 6px rgba(212,175,55,.35));
 	}
     @media (max-width:520px){
-      .couple-title{ flex-direction:column; gap:20px; } /*to nudge the heart*/
-      .couple-title .heart{ transform:none; }
+      .couple-title{ gap:20px; }
+      .couple-title .heart{ /* let mobile sit naturally */ }
     }
 
+    /* (1) Date font should match address font, keep size */
     .hero-date{
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif !important;
       font-size:clamp(16px,4vw,22px);
       letter-spacing:.02em;
       color:#5b5b5b;
       margin-bottom:36px;
     }
 
-    /* (3) LOGO + ADDRESS grouped; mobile-safe */
+    /* LOGO + ADDRESS grouped */
     .hero-address-wrap{
       max-width:900px;
       margin:0 auto 36px;
@@ -248,7 +270,6 @@
         gap:12px; padding:0 10px;
         flex-direction:column; align-items:center; text-align:center;
       }
-      /* (1) Use variable for mobile-only logo size */
       .hero-logo{ max-height:var(--mobile-logo-max-height); max-width:60vw; }
       .hero-address{ text-align:center; }
     }
@@ -264,8 +285,8 @@
       border:1px solid var(--gold-strong);
       box-shadow:var(--shadow-sm);
       transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
-      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; /* ensure same font for buttons */
-      font-size:16px; /* same size for YES and NO */
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      font-size:16px;
     }
     .btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
     .btn:active{ transform:translateY(0); }
@@ -274,14 +295,13 @@
     #submitBtn{ background:var(--gold); color:#111; border:1px solid var(--gold-strong); }
     #submitBtn[disabled]{ background:#eee; color:#999; border-color:#ddd; cursor:not-allowed; box-shadow:none; transform:none; }
 
-    /* Generic disabled style for anchors too */
     .btn.disabled,
     .btn[aria-disabled="true"]{
       background:#eee !important; color:#999 !important; border-color:#ddd !important;
       pointer-events:none; box-shadow:none; transform:none;
     }
 
-    section{ padding: var(--section-space) 16px; background:transparent; } /* (NEW-5) consistent spacing */
+    section{ padding: var(--section-space) 16px; background:transparent; }
     .container{ max-width:980px; margin:0 auto; }
     .card{ background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
 
@@ -333,7 +353,6 @@
     .actions{ display:flex; flex-wrap:wrap; gap:10px; }
     .footer{ text-align:center; color:#6b7280; padding:30px 16px 70px; background:transparent; }
 
-    /* Footer brand line */
     .brandline{
       display:inline-flex;
       align-items:baseline;
@@ -435,20 +454,16 @@
         linear-gradient(#fff,#fff) padding-box,
         linear-gradient(135deg, rgba(255,255,255,.7), rgba(212,175,55,.9), rgba(255,255,255,.7)) border-box;
       border:2px solid transparent;
-      text-align:center; /* (3) Center everything inside invite */
+      text-align:center;
     }
 
     .inv-small{ text-align:center; font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:#6b4b00; }
     .inv-body-fixed{ }
     .inv-couple{ margin:18px 0 10px; text-align:center; font-weight:700; font-size:clamp(22px,4.8vw,34px); color:#111; }
 
-    /* (NEW-2) Make the four requested names smaller (controlled by --parent-name-size) */
     .parents-block .inv-couple{ font-size: var(--parent-name-size); }
-
-    /* (NEW-2b) Tighten letter spacing for the invitation body text only */
     #invBody{ letter-spacing: var(--inv-body-letter-spacing); }
 
-    /* (4) Tighten spacing around the “&” for parents’ names using variables above */
     .parents-block .inv-couple{ margin: var(--pair-gap, 6px) 0; }
     .parents-block .inv-and{ margin: var(--pair-gap, 6px) 0; }
     .parents-a{ --pair-gap: var(--parentsA-gap); }
@@ -457,19 +472,16 @@
     .inv-details{ max-width:720px; margin:20px auto 0; display:grid; gap:14px; }
     .inv-row{ text-align:center; }
 
-    /* (5) Make Tarikh/Masa/Tempat/Etika labels share font & color with "UNDANGAN/WALIMATULURUS"
-          and expose --inv-label-size for later changes */
     .inv-label{
-      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; /* match inv-small */
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       font-weight:700;
-      letter-spacing:.18em;              /* match inv-small feel */
-      text-transform:uppercase;          /* match inv-small caps feel */
-      color:var(--inv-label-color);      /* variable to tweak color later */
-      font-size:var(--inv-label-size);   /* variable to tweak size later */
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--inv-label-color);
+      font-size:var(--inv-label-size);
     }
     .inv-value{ margin-top:4px; color:#0f172a; }
 
-    /* Location photo */
     .loc-photo{
       display:block;
       margin:12px auto 12px;
@@ -479,23 +491,17 @@
       box-shadow:var(--shadow-sm);
     }
 
-    /* (1) Center location description + buttons */
     .location-card{ text-align:center; display:flex; flex-direction:column; align-items:center; }
     .location-card .actions{ justify-content:center; }
     .location-card p{ text-align:center; }
-    /* (NEW-4) Left-align the Location section title only */
     .location-card .section-title{ align-self:flex-start; text-align:left; }
 
-    /* Hide location tip text as requested */
     #locNote{ display:none; }
 
-    /* CTA "No" note */
     #noMsg{ text-align:center; margin-top:16px; display:none; }
 
-    /* (2) Ensure YES / NO same font/size (remove previous all-caps override) */
     #cta .btn{ text-transform:none; font-weight:600; }
 
-    /* (3) Ensure the two top invite titles using #invSmall are centered even if class is inv-label */
     .invite-inner #invSmall{ display:block; text-align:center; }
   </style>
 </head>
@@ -504,10 +510,15 @@
   <canvas id="bg-particles" aria-hidden="true"></canvas>
 
   <div class="top-controls">
-    <!-- (NEW ORDER) Home → Location → Contact → Mute → Language -->
-    <button id="quickHome" class="icon-btn" aria-label="Go to Home">Home</button>
+    <!-- (NEW ORDER) Home (icon) → Location → Contact → Mute → Language -->
+    <button id="quickHome" class="icon-btn icon-only" aria-label="Go to Home" title="Home">
+      <!-- simple home SVG icon -->
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path d="M3 10.5L12 3l9 7.5v8.5a1 1 0 0 1-1 1h-5.5a.5.5 0 0 1-.5-.5V15a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4.5a.5.5 0 0 1-.5.5H4a1 1 0 0 1-1-1v-8.5z" fill="currentColor"/>
+      </svg>
+    </button>
     <button id="quickLocation" class="icon-btn" aria-label="Jump to location">Location</button>
-    <button id="quickContact" class="icon-btn" aria-label="Jump to contact">Contact</button>
+    <button id="quickContact"  class="icon-btn" aria-label="Jump to contact">Contact</button>
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
     <button id="langToggle" class="icon-btn" aria-label="Toggle language">Malay</button>
   </div>
@@ -516,11 +527,12 @@
     <div>
       <div class="tagline" id="heroTag">Wedding Invitation</div>
 
-	  <!-- (NEW-1) Heart defaults closer to Basran via inline vars (you can remove/adjust; global defaults are in :root) -->
-	  <div class="couple-title" style="--heart-offset-x:-10px; --heart-offset-y:-2px;" aria-label="Basran love Khairani">
-	    <span class="name">Basran</span>
+	  <!-- You can fine-tune positions via the variables on this element or in :root -->
+	  <div class="couple-title"
+         style="--name1-offset-x:0px; --name1-offset-y:0px; --heart-offset-x:0px; --heart-offset-y:0px; --name2-offset-x:0px; --name2-offset-y:0px;"
+         aria-label="Basran love Khairani">
+	    <span class="name n1">Basran</span>
 	    <span class="heart" aria-hidden="true">
-          <!-- (1) Calligraphic heart SVG (Good Vibes-like flourish) -->
           <svg viewBox="0 0 64 64" role="img" focusable="false">
             <path d="M32 50
                      C 28 44, 10 36, 10 22
@@ -529,17 +541,16 @@
                      C 33.5 13.5, 37 10, 42 10
                      C 48 10, 54 14, 54 22
                      C 54 36, 36 44, 32 50 Z"/>
-            <!-- little flourish tail -->
             <path d="M31 51 C 30 56, 24 59, 18 57" />
           </svg>
         </span>
-	    <span class="name">Khairani</span>
+	    <span class="name n2">Khairani</span>
 	  </div>
 
-      <!-- Date with weekday -->
+      <!-- Date with weekday (Poppins font, bigger than address) -->
       <div class="hero-date" id="heroDate">Saturday, 22 November 2025</div>
 
-      <!-- (3) LOGO + ADDRESS -->
+      <!-- LOGO + ADDRESS -->
       <div class="hero-address-wrap" id="heroAddressWrap">
         <img id="hotelLogo" class="hero-logo" src="promanade_hotel_logo_ai.png" alt="Promenade Hotel Kota Kinabalu logo"/>
         <div class="hero-address" id="heroAddress">
@@ -552,7 +563,7 @@
       </div>
     </div>
 
-    <!-- (2) NEW bouncy double-chevron icon in gold -->
+    <!-- Bouncy double-chevron in gold -->
     <button id="scrollArrow" class="hero-scroll" aria-label="Scroll to details" title="Scroll">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
         <path d="M4 7.5 L12 15.5 L20 7.5" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -562,7 +573,7 @@
   </header>
 
   <main>
-    <!-- (4) CTA section (with YES / NO centered) -->
+    <!-- CTA -->
     <section id="cta">
       <div class="container">
         <div class="card" style="text-align:center">
@@ -577,28 +588,24 @@
       </div>
     </section>
 
-    <!-- Invitation section -->
+    <!-- Invitation -->
     <section id="invite">
       <div class="container">
         <div class="invite-card">
           <div class="invite-inner">
-            <!-- (3) Centered titles -->
             <div class="inv-label" id="invSmall">Undangan Majlis Perkahwinan</div>
 			<div class="inv-label" id="invSmall">WalimatulUrus</div>
 
-            <!-- (4) Parents set A with tighter, controllable spacing -->
             <div class="parents-block parents-a">
 			  <div class="inv-couple">Muhammad Basri Bin Patara</div>
               <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,22px)">&amp;</div>
               <div class="inv-couple">Samsah Binti Suda</div>
             </div>
 
-            <!-- (NEW-2b) Letter-spacing for readability tightened via variable -->
             <div class="inv-small" id="invBody">
               Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan Majlis Perkahwinan puteri kami
             </div>
 
-            <!-- (4) Parents set B with tighter, controllable spacing -->
             <div class="parents-block parents-b">
               <div class="inv-couple">Noor Khairani Binti Muhammad Basri</div>
               <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,22px)">&amp;</div>
@@ -727,7 +734,7 @@
       </div>
     </section>
 
-    <!-- (1) Location/Direction: centered text + buttons; tip hidden -->
+    <!-- Location -->
     <section id="location">
       <div class="container">
         <div class="card location-card">
@@ -747,6 +754,7 @@
       </div>
     </section>
 
+    <!-- Contact -->
     <section id="contact">
       <div class="container">
         <div class="card">
@@ -810,7 +818,7 @@
     // ===== RESUBMISSION TOGGLE =====
     const RESUBMISSION_ENABLE = 0;
 
-    // (3) AUTO-SCROLL DELAY VARIABLE (ms)
+    // Auto-scroll delay variable (ms)
     const ARROW_AUTO_DELAY_MS = 15000;
 
     // ====== i18n strings ======
@@ -822,6 +830,7 @@
         rsvp: "YES",
         no: "NO",
         location: "Location",
+        contactNav: "Contact",
         rsvpIntro: "Please confirm your attendance before 1 October 2025, so we may welcome you with joy on our special day.",
         fullNameFirst: "Your Full Name",
         fullNameOthers: "Attend With",
@@ -859,10 +868,8 @@
           "88000 Kota Kinabalu, Sabah."
         ],
 
-        // (4) NO-message bilingual
         noMsg: "Please refresh the page if you change your mind.",
 
-        // (NEW-3) Schedule & Countdown i18n
         scheduleTitle: "Schedule",
         schedItems: [
           { title: "GUEST ARRIVAL", desc: "Invitation greetings\nFind your seat, mingle" },
@@ -879,9 +886,10 @@
         tagline: "Undangan Majlis Perkahwinan",
         title: "Adakah anda akan hadir ke majlis kami?",
         subtitle: "Kami ingin meraikan bersama anda. Sila sahkan kehadiran anda.",
-        rsvp: "Hadir",                // (2) Malay label for YES
-        no: "Tidak Hadir",                  // (2) Malay label for NO
+        rsvp: "Hadir",
+        no: "Tidak Hadir",
         location: "Lokasi",
+        contactNav: "Hubungi",
         rsvpIntro: "Mohon sahkan kehadiran anda sebelum 1 Oktober 2025, agar kami dapat menyambut anda dengan mesra di hari bahagia kami.",
         fullNameFirst: "Nama Penuh Anda",
         fullNameOthers: "Hadir Bersama",
@@ -919,10 +927,8 @@
           "88000 Kota Kinabalu, Sabah."
         ],
 
-        // (4) NO-message bilingual
         noMsg: "Sila muat semula laman ini jika berubah fikiran.",
 
-        // (NEW-3) Schedule & Countdown i18n
         scheduleTitle: "Atur Cara",
         schedItems: [
           { title: "KETIBAAN TETAMU", desc: "Alu-aluan jemputan\nCari tempat duduk, beramah mesra" },
@@ -954,7 +960,7 @@
     const titleText = document.getElementById('titleText');
     const subtitleText = document.getElementById('subtitleText');
     const rsvpBtn = document.getElementById('rsvpBtn');
-    const locationBtn = document.getElementById('locationBtn'); // may be null (we moved it)
+    const locationBtn = document.getElementById('locationBtn'); // may be null (legacy)
     const rsvpIntro = document.getElementById('rsvpIntro');
     const phoneHeader = document.getElementById('phoneHeader');
     const phoneHint = document.getElementById('phoneHint');
@@ -963,7 +969,7 @@
     const locNote = document.getElementById('locNote');
     const contactTitle = document.getElementById('contactTitle');
     const contactDesc = document.getElementById('contactDesc');
-    const quickHome     = document.getElementById('quickHome');     // NEW-1
+    const quickHome     = document.getElementById('quickHome');
     const quickLocation = document.getElementById('quickLocation');
     const quickContact  = document.getElementById('quickContact');
     const noBtn = document.getElementById('noBtn');
@@ -985,7 +991,6 @@
     const btnGmaps = document.getElementById('btnGoogleMaps');
     const btnWaze  = document.getElementById('btnWaze');
 
-    /* (3) elements to sync logo height with address on wide screens only */
     const heroAddressEl = document.getElementById('heroAddress');
     const hotelLogoEl = document.getElementById('hotelLogo');
 
@@ -1044,7 +1049,6 @@
       validationMsg.textContent = I18N[LANG].already;
     }
 
-    // ===== NEW: reset helper for RESUBMISSION_ENABLE=1 =====
     function resetFormToFreshState(){
       localStorage.removeItem('rsvp_names');
       localStorage.removeItem('rsvp_confirmed');
@@ -1126,24 +1130,24 @@
       btnGmaps.href = gq; btnWaze.href = wz;
     }
 
-	function formatWeddingDateWithDay(lang){
-	  const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
-	  const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
-	  const parts = new Intl.DateTimeFormat(locale, {
-		weekday:'long', day:'2-digit', month:'long', year:'numeric'
-	  }).formatToParts(d);
-	  let out = '';
-	  for (let i = 0; i < parts.length; i++) {
-		const p = parts[i];
-		out += p.value;
-		if (p.type === 'weekday') {
-		  const next = parts[i+1];
-		  const alreadyHasComma = next && next.type === 'literal' && /,/.test(next.value);
-		  if (!alreadyHasComma) out += ', ';
-		}
+	  function formatWeddingDateWithDay(lang){
+	    const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
+	    const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
+	    const parts = new Intl.DateTimeFormat(locale, {
+		    weekday:'long', day:'2-digit', month:'long', year:'numeric'
+	    }).formatToParts(d);
+	    let out = '';
+	    for (let i = 0; i < parts.length; i++) {
+		    const p = parts[i];
+		    out += p.value;
+		    if (p.type === 'weekday') {
+			    const next = parts[i+1];
+			    const alreadyHasComma = next && next.type === 'literal' && /,/.test(next.value);
+			    if (!alreadyHasComma) out += ', ';
+		    }
+	    }
+	    return out.replace(/\s+,/g, ', ');
 	  }
-	  return out.replace(/\s+,/g, ', ');
-	}
     function formatDateOnly(lang){
       const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
       const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
@@ -1155,7 +1159,7 @@
       return new Intl.DateTimeFormat(locale, { weekday:'long' }).format(d);
     }
 
-    /* (3) Sync logo to address height only on wide screens to avoid mobile jitter */
+    /* Sync logo to address height only on wide screens to avoid mobile jitter */
     function syncLogoHeight(){
       const isWide = window.innerWidth >= 700;
       const addr = heroAddressEl;
@@ -1173,6 +1177,15 @@
     window.addEventListener('load', syncLogoHeight);
     window.addEventListener('resize', syncLogoHeight);
 
+    // Ensure arrow offset variable applies (fix for some browsers)
+    function applyArrowOffset(){
+      if(!scrollArrow) return;
+      const v = getComputedStyle(document.documentElement).getPropertyValue('--arrow-bottom-offset').trim();
+      if(v){ scrollArrow.style.bottom = v; }
+    }
+    window.addEventListener('load', applyArrowOffset);
+    window.addEventListener('resize', applyArrowOffset);
+
     function i18n(){
       const T = I18N[LANG];
 
@@ -1180,7 +1193,7 @@
       heroTag.textContent = T.tagline;
       heroDate.textContent = formatWeddingDateWithDay(LANG);
 
-      // Address bilingual toggle — (1) Bold the first line "Rafflesia Ballroom"
+      // Address bilingual toggle — bold the first line
       if (Array.isArray(T.addrLines)) {
         heroAddressEl.innerHTML = T.addrLines
           .map((line,i)=> i===0 ? `<strong>${line}</strong>` : line)
@@ -1202,17 +1215,21 @@
       // CTA
       titleText.textContent = T.title;
       subtitleText.textContent = T.subtitle;
-      if(rsvpBtn) rsvpBtn.textContent = T.rsvp;     // (2) YES/Hadir
-      if(noBtn)   noBtn.textContent   = T.no;       // (2) NO/Tidak
+      if(rsvpBtn) rsvpBtn.textContent = T.rsvp;
+      if(noBtn)   noBtn.textContent   = T.no;
       if(locationBtn) locationBtn.textContent = T.location;
 
-      // RSVP body/phone (NEW-2)
+      // Top control labels for Location/Contact (Home stays as icon)
+      if(quickLocation) quickLocation.textContent = T.location;
+      if(quickContact)  quickContact.textContent  = T.contactNav;
+
+      // RSVP body/phone
       if(rsvpIntro)   rsvpIntro.textContent = T.rsvpIntro;
       if(phoneHeader) phoneHeader.textContent = T.phoneHeader;
       if(phoneHint)   phoneHint.textContent   = T.phoneHint;
       if(submitBtn)   submitBtn.textContent   = T.submit;
 
-      // Update NO message text per language and keep hidden until clicked
+      // NO message per language
       if (noMsg){
         noMsg.textContent = T.noMsg;
         noMsg.style.display = 'none';
@@ -1227,7 +1244,7 @@
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
 
-      // Schedule (NEW-3)
+      // Schedule
       if (scheduleTitleEl) scheduleTitleEl.textContent = T.scheduleTitle;
       if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
       if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
@@ -1238,7 +1255,7 @@
       if (items[3]){ s4Title.textContent = items[3].title; s4Desc.innerHTML = items[3].desc.replace(/\n/g,'<br/>'); }
       if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = items[4].desc.replace(/\n/g,'<br/>'); }
 
-      // Countdown (NEW-3)
+      // Countdown
       if (countdownTitleEl) countdownTitleEl.textContent = T.countdownTitle || "Countdown";
       if (cdSubEl)          cdSubEl.textContent          = T.cdSub || "";
       if (cdDaysLabel)  cdDaysLabel.textContent  = (T.cdLabels && T.cdLabels.days)  || "DAYS";
@@ -1246,7 +1263,7 @@
       if (cdMinsLabel)  cdMinsLabel.textContent  = (T.cdLabels && T.cdLabels.mins)  || "MINS";
       if (cdSecsLabel)  cdSecsLabel.textContent  = (T.cdLabels && T.cdLabels.secs)  || "SECS";
 
-      // Re-render guest rows with proper button labels/placeholders
+      // Re-render guest rows with proper texts
       const savedNames = getStoredNames();
       const savedConfirmed = getStoredConfirmed();
       renderGuestRows();
@@ -1268,8 +1285,9 @@
       maybeEnableSubmit();
       if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
 
-      // resync logo height
+      // resync heights and arrow offset
       syncLogoHeight();
+      applyArrowOffset();
     }
 
     function maybeEnableSubmit(){
@@ -1360,14 +1378,14 @@
       });
     }
 
-    // Existing handlers
-    handleSmoothLink(rsvpBtn, '#rsvp');         // YES/Hadir button -> RSVP
-    handleSmoothLink(locationBtn, '#location'); // guard if old element exists
-    handleSmoothLink(quickHome, 'header.hero'); // NEW-1 Home -> Hero
+    // Handlers
+    handleSmoothLink(rsvpBtn, '#rsvp');
+    handleSmoothLink(locationBtn, '#location'); // legacy guard
+    handleSmoothLink(quickHome, 'header.hero');
     handleSmoothLink(quickLocation, '#location');
     handleSmoothLink(quickContact,  '#contact');
 
-    // (4) No button behavior: show bilingual note + disable YES like submit disabled
+    // NO button behavior
     if(noBtn){
       noBtn.addEventListener('click', ()=>{
         noMsg.textContent = I18N[LANG].noMsg;
@@ -1379,7 +1397,7 @@
       });
     }
 
-    // (2 & 3) Scroll arrow behavior + delayed auto-trigger
+    // Scroll arrow behavior + delayed auto-trigger
     function scrollToCTAWithoutInvite(){
       const cta = document.querySelector('#cta');
       if(!cta){ return; }
@@ -1388,7 +1406,7 @@
       let target = ctaTop;
       if(invite){
         const inviteTop = invite.getBoundingClientRect().top + window.scrollY;
-        const safe = Math.max(0, inviteTop - (window.innerHeight - 20)); // keep invite just out of view
+        const safe = Math.max(0, inviteTop - (window.innerHeight - 20));
         target = Math.min(ctaTop, safe);
       }
       smoothScrollTo(target, 700);
@@ -1400,7 +1418,6 @@
         scrollToCTAWithoutInvite();
       });
     }
-    // Auto-trigger arrow if user didn't move the page (delay configurable)
     (function autoArrow(){
       let moved = false;
       const mark = ()=>{ moved = true; };
@@ -1436,7 +1453,7 @@
       playClick();
     }, true);
 
-    // Render (kept)
+    // Render
     function renderAll(){
       i18n();
       renderContacts();
@@ -1460,8 +1477,8 @@
       if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
       else maybeEnableSubmit();
 
-      // ensure logo height is synced on initial render (wide screens)
       syncLogoHeight();
+      applyArrowOffset();
     }
     renderAll();
 
@@ -1505,7 +1522,7 @@
       _pendingSubmit = true; // posts to iframe
     });
 
-    // Particles
+    // Particles (unchanged)
     (function initParticles(){
       const canvas = document.getElementById('bg-particles');
       const ctx = canvas.getContext('2d');
