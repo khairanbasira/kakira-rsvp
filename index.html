@@ -54,12 +54,12 @@
       --name2-offset-y: 0px;
 
       /* NEW: hero heart image controls */
-      --hero-heart-width: 0.65em;
-      --hero-heart-offset-x: 0px;
+      --hero-heart-width: 0.95em;
+      --hero-heart-offset-x: 20px;
       --hero-heart-offset-y: 0px;
 
       /* NEW: top buttons sizing */
-      --top-btn-height: 36px;
+      --top-btn-height: 30px;
       --top-btn-min-width: 36px;
       --top-btn-padding-x: 8px;
 
@@ -1261,7 +1261,7 @@
       invVenueLabel.textContent = T.invVenueLabel;
       invDressLabel.textContent = T.invDressLabel;
       inviteDateEl.textContent  = formatWeddingDateWithDay(LANG);
-      inviteTimeEl.textContent  = "11:00 AM – 4:00 PM";
+      inviteTimeEl.textContent  = "10:30 AM – 3:00 PM";
       inviteVenueEl.textContent = "Promenade Hotel, Rafflesia Ballroom";
       inviteDressEl.textContent = T.invDressValue;
 
@@ -1620,7 +1620,7 @@
           if(p.y < -10){ p.y = h + 10; p.x = Math.random()*w; }
 
           const rr = p.r * (p.pulse + Math.sin((ts/600)+(p.x+p.y))*0.03);
-          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr*2.2);
+          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr*1.2);
           g.addColorStop(0, p.inner);
           g.addColorStop(0.5, p.inner);
           g.addColorStop(1, p.outer);
