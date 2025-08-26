@@ -36,7 +36,7 @@
       --hero-overlay-3: .65;
 
       /* (TABS OFFSET) Move top buttons up/down */
-	  --controls-top-offset: 5px;
+      --controls-top-offset: 5px;
 
       /* (HERO OFFSET) Push hero content down so tagline isn't covered by top buttons */
       --hero-top-safe: 25px;
@@ -47,13 +47,21 @@
       /* (2) ARROW BOUNCE SPEED VARIABLE */
       --arrow-bounce-duration: 1.3s;
 
-      /* Heart + Names per-item position offsets (top/left via translateY/translateX) */
+      /* Name position offsets */
       --name1-offset-x: 0px;
       --name1-offset-y: 0px;
-      --heart-offset-x: 20px;
-      --heart-offset-y: -20px;
       --name2-offset-x: 0px;
       --name2-offset-y: 0px;
+
+      /* NEW: hero heart image controls */
+      --hero-heart-width: 0.65em;
+      --hero-heart-offset-x: 0px;
+      --hero-heart-offset-y: 0px;
+
+      /* NEW: top buttons sizing */
+      --top-btn-height: 36px;
+      --top-btn-min-width: 36px;
+      --top-btn-padding-x: 8px;
 
       /* Arrow vertical offset (distance from bottom of the hero) */
       --arrow-bottom-offset: 3px;
@@ -123,30 +131,36 @@
     .card,
     .footer { position:relative; z-index:10; }
 
-	/* Top-centered controls */
-	.top-controls{
-		position: fixed;
-		left: 50%;
-		top: var(--controls-top-offset);
-		transform: translateX(-50%);
-		display: flex;
-		flex-direction: row;
-		gap: 8px;
-		z-index: 9999;
-	}
-	.icon-btn{
-		appearance:none; cursor:pointer;
-		background:#fff; color:#5a3d00;
-		border:1px solid rgba(0,0,0,.08);
-		padding:5px 8px;
-		font-size:10px; font-weight:600;
-		border-radius:12px;
-		box-shadow:none;
-    display:inline-flex; align-items:center; justify-content:center;
-	}
-  .icon-btn.icon-only{ width:36px; height:36px; padding:0; }
-	.icon-btn:hover{ transform:none; box-shadow:none; }
-	.icon-btn:active{ transform:none; }
+    /* Top-centered controls */
+    .top-controls{
+      position: fixed;
+      left: 50%;
+      top: var(--controls-top-offset);
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      z-index: 9999;
+    }
+    .icon-btn{
+      appearance:none; cursor:pointer;
+      background:#fff; color:#5a3d00;
+      border:1px solid rgba(0,0,0,.08);
+      height: var(--top-btn-height);
+      min-width: var(--top-btn-min-width);
+      padding: 0 var(--top-btn-padding-x);
+      font-size:10px; font-weight:600;
+      border-radius:12px;
+      box-shadow:none;
+      display:inline-flex; align-items:center; justify-content:center;
+    }
+    .icon-btn.icon-only{
+      width: var(--top-btn-height);
+      height: var(--top-btn-height);
+      padding:0;
+    }
+    .icon-btn:hover{ transform:none; box-shadow:none; }
+    .icon-btn:active{ transform:none; }
 
     .volume-pop{ display:none !important; }
 
@@ -214,23 +228,16 @@
     .couple-title .n1{ transform: translate(var(--name1-offset-x), var(--name1-offset-y)); }
     .couple-title .n2{ transform: translate(var(--name2-offset-x), var(--name2-offset-y)); }
 
-	/* Fancy calligraphic heart with per-item offsets */
-	.couple-title .heart{
-	  font-size:0.6em;
-	  display:inline-flex;
-	  align-items:center;
-	  justify-content:center;
-	  transform: translate(var(--heart-offset-x), var(--heart-offset-y));
-	}
-	.couple-title .heart svg{
-	  width:1.05em; height:1.05em;
-	  stroke:var(--gold-strong); fill:none; stroke-width:2.6;
-	  stroke-linecap:round; stroke-linejoin:round;
-	  filter: drop-shadow(0 2px 6px rgba(212,175,55,.35));
-	}
+    /* NEW: PNG heart between names */
+    .couple-title .hero-heart{
+      width: var(--hero-heart-width);
+      height: auto;
+      display:inline-block;
+      transform: translate(var(--hero-heart-offset-x), var(--hero-heart-offset-y));
+    }
+
     @media (max-width:520px){
       .couple-title{ gap:20px; }
-      .couple-title .heart{ /* let mobile sit naturally */ }
     }
 
     /* (1) Date font should match address font, keep size */
@@ -389,7 +396,16 @@
       align-items:stretch;
     }
     .cd-box{
-      background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:var(--radius);
+      /* NEW: white center -> gold rim radial gradient */
+      background:
+        radial-gradient(circle at 50% 45%,
+          #ffffff 0%,
+          #ffffff 48%,
+          #fff3d0 65%,
+          #e6c96a 85%,
+          var(--gold) 100%);
+      border:1px solid rgba(0,0,0,.06);
+      border-radius:var(--radius);
       box-shadow:var(--shadow-sm); padding:16px 12px;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       text-align:center; aspect-ratio:1/1; min-width:0;
@@ -503,6 +519,26 @@
     #cta .btn{ text-transform:none; font-weight:600; }
 
     .invite-inner #invSmall{ display:block; text-align:center; }
+
+    /* NEW: Contact list layout */
+    .contact-list{ display:grid; gap:10px; }
+    .contact-row{
+      display:grid; grid-template-columns: 1fr auto; align-items:center;
+      gap:12px; padding:12px 14px;
+      background:#fff; border:1px solid rgba(0,0,0,.06);
+      border-radius:12px; box-shadow:var(--shadow-sm);
+    }
+    .contact-left{ font-weight:700; color:#0f172a; }
+    .contact-right{ display:flex; align-items:center; gap:10px; color:#6b7280; }
+    .call-btn{
+      width:36px; height:36px; border-radius:999px;
+      display:inline-flex; align-items:center; justify-content:center;
+      background:#fff; border:1px solid var(--gold-strong);
+      color:var(--gold-strong);
+      box-shadow:var(--shadow-sm);
+      text-decoration:none;
+    }
+    .call-btn svg{ width:18px; height:18px; display:block; }
   </style>
 </head>
 <body>
@@ -527,25 +563,14 @@
     <div>
       <div class="tagline" id="heroTag">Wedding Invitation</div>
 
-	  <!-- You can fine-tune positions via the variables on this element or in :root -->
-	  <div class="couple-title"
-         style="--name1-offset-x:0px; --name1-offset-y:0px; --heart-offset-x:0px; --heart-offset-y:0px; --name2-offset-x:0px; --name2-offset-y:0px;"
-         aria-label="Basran love Khairani">
-	    <span class="name n1">Basran</span>
-	    <span class="heart" aria-hidden="true">
-          <svg viewBox="0 0 64 64" role="img" focusable="false">
-            <path d="M32 50
-                     C 28 44, 10 36, 10 22
-                     C 10 14, 16 10, 22 10
-                     C 27 10, 30.5 13.5, 32 17
-                     C 33.5 13.5, 37 10, 42 10
-                     C 48 10, 54 14, 54 22
-                     C 54 36, 36 44, 32 50 Z"/>
-            <path d="M31 51 C 30 56, 24 59, 18 57" />
-          </svg>
-        </span>
-	    <span class="name n2">Khairani</span>
-	  </div>
+      <!-- Names + PNG heart (keep spacing the same; heart is an image now) -->
+      <div class="couple-title"
+           style="--name1-offset-x:0px; --name1-offset-y:0px; --name2-offset-x:0px; --name2-offset-y:0px;"
+           aria-label="Basran love Khairani">
+        <span class="name n1">Basran</span>
+        <img class="hero-heart" src="hero_heart.png" alt="" />
+        <span class="name n2">Khairani</span>
+      </div>
 
       <!-- Date with weekday (Poppins font, bigger than address) -->
       <div class="hero-date" id="heroDate">Saturday, 22 November 2025</div>
@@ -594,10 +619,10 @@
         <div class="invite-card">
           <div class="invite-inner">
             <div class="inv-label" id="invSmall">Undangan Majlis Perkahwinan</div>
-			<div class="inv-label" id="invSmall">WalimatulUrus</div>
+            <div class="inv-label" id="invSmall">WalimatulUrus</div>
 
             <div class="parents-block parents-a">
-			  <div class="inv-couple">Muhammad Basri Bin Patara</div>
+              <div class="inv-couple">Muhammad Basri Bin Patara</div>
               <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,22px)">&amp;</div>
               <div class="inv-couple">Samsah Binti Suda</div>
             </div>
@@ -759,8 +784,8 @@
       <div class="container">
         <div class="card">
           <h2 class="section-title" id="contactTitle">Contact (Bride's family)</h2>
-          <p class="muted" id="contactDesc">Tap a name to call directly.</p>
-          <div id="contactList" class="actions" style="margin-top:6px"></div>
+          <p class="muted" id="contactDesc">Tap the phone icon to call.</p>
+          <div id="contactList" class="contact-list" style="margin-top:6px"></div>
         </div>
       </div>
     </section>
@@ -850,7 +875,7 @@
         locNote: "Tip: You can share the link with friends who are carpooling.",
 
         contactTitle: "Contact (Bride's family)",
-        contactDesc: "Tap a name to call directly.",
+        contactDesc: "Tap the phone icon to call.",
 
         invSmall: "Wedding Invitation",
         invBody: "With heartfelt gratitude, we cordially invite you and your partner to our princess wedding reception.",
@@ -909,7 +934,7 @@
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
 
         contactTitle: "Hubungi (keluarga pengantin perempuan)",
-        contactDesc: "Tekan nama untuk terus membuat panggilan.",
+        contactDesc: "Tekan ikon telefon untuk membuat panggilan.",
 
         invSmall: "Undangan Majlis Perkahwinan",
         invBody: "Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan majlis perkahwinan puteri kami",
@@ -1112,42 +1137,70 @@
       guestRowsEl.innerHTML = '';
       for(let i=0; i<MAX_GUESTS; i++){ guestRowsEl.appendChild(makeGuestRow(i)); }
     }
+
+    // UPDATED: contact rows (name left, number + gold phone icon right; only icon is clickable)
     function renderContacts(){
       const contactList = document.getElementById('contactList');
       if(!contactList) return;
       contactList.innerHTML = '';
       CONTACTS.forEach(c=>{
-        const a = document.createElement('a');
-        a.className = 'btn btn-outline';
-        a.href = `tel:${c.phone.replace(/\s+/g,'')}`;
-        a.textContent = `${c.name} (${c.phone})`;
-        contactList.appendChild(a);
+        const row = document.createElement('div');
+        row.className = 'contact-row';
+
+        const left = document.createElement('div');
+        left.className = 'contact-left';
+        left.textContent = c.name;
+
+        const right = document.createElement('div');
+        right.className = 'contact-right';
+
+        const num = document.createElement('span');
+        num.className = 'contact-num';
+        num.textContent = c.phone;
+
+        const call = document.createElement('a');
+        call.className = 'call-btn';
+        call.href = `tel:${c.phone.replace(/\\s+/g,'')}`;
+        call.setAttribute('aria-label', `Call ${c.name}`);
+        call.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 16.92v2a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h2a2 2 0 0 1 2 1.72c.12.9.34 1.77.65 2.6a2 2 0 0 1-.45 2.11L7.1 9.9a16 16 0 0 0 6 6l1.47-1.16a2 2 0 0 1 2.11-.45c.83.31 1.7.53 2.6.65A2 2 0 0 1 22 16.92z"/>
+          </svg>`;
+
+        right.appendChild(num);
+        right.appendChild(call);
+
+        row.appendChild(left);
+        row.appendChild(right);
+
+        contactList.appendChild(row);
       });
     }
+
     function renderMaps(){
       const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
       const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
       btnGmaps.href = gq; btnWaze.href = wz;
     }
 
-	  function formatWeddingDateWithDay(lang){
-	    const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
-	    const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
-	    const parts = new Intl.DateTimeFormat(locale, {
-		    weekday:'long', day:'2-digit', month:'long', year:'numeric'
-	    }).formatToParts(d);
-	    let out = '';
-	    for (let i = 0; i < parts.length; i++) {
-		    const p = parts[i];
-		    out += p.value;
-		    if (p.type === 'weekday') {
-			    const next = parts[i+1];
-			    const alreadyHasComma = next && next.type === 'literal' && /,/.test(next.value);
-			    if (!alreadyHasComma) out += ', ';
-		    }
-	    }
-	    return out.replace(/\s+,/g, ', ');
-	  }
+    function formatWeddingDateWithDay(lang){
+      const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
+      const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
+      const parts = new Intl.DateTimeFormat(locale, {
+        weekday:'long', day:'2-digit', month:'long', year:'numeric'
+      }).formatToParts(d);
+      let out = '';
+      for (let i = 0; i < parts.length; i++) {
+        const p = parts[i];
+        out += p.value;
+        if (p.type === 'weekday') {
+          const next = parts[i+1];
+          const alreadyHasComma = next && next.type === 'literal' && /,/.test(next.value);
+          if (!alreadyHasComma) out += ', ';
+        }
+      }
+      return out.replace(/\\s+,/g, ', ');
+    }
     function formatDateOnly(lang){
       const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
       const locale = (lang==='ms') ? 'ms-MY' : 'en-GB';
@@ -1249,11 +1302,11 @@
       if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
       if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
       const items = T.schedItems || [];
-      if (items[0]){ s1Title.textContent = items[0].title; s1Desc.innerHTML = items[0].desc.replace(/\n/g,'<br/>'); }
-      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.innerHTML = items[1].desc.replace(/\n/g,'<br/>'); }
-      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.innerHTML = items[2].desc.replace(/\n/g,'<br/>'); }
-      if (items[3]){ s4Title.textContent = items[3].title; s4Desc.innerHTML = items[3].desc.replace(/\n/g,'<br/>'); }
-      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = items[4].desc.replace(/\n/g,'<br/>'); }
+      if (items[0]){ s1Title.textContent = items[0].title; s1Desc.innerHTML = items[0].desc.replace(/\\n/g,'<br/>'); }
+      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.innerHTML = items[1].desc.replace(/\\n/g,'<br/>'); }
+      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.innerHTML = items[2].desc.replace(/\\n/g,'<br/>'); }
+      if (items[3]){ s4Title.textContent = items[3].title; s4Desc.innerHTML = items[3].desc.replace(/\\n/g,'<br/>'); }
+      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = items[4].desc.replace(/\\n/g,'<br/>'); }
 
       // Countdown
       if (countdownTitleEl) countdownTitleEl.textContent = T.countdownTitle || "Countdown";
