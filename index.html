@@ -51,12 +51,12 @@
       --name1-offset-x: 0px;
       --name1-offset-y: -30px;
       --name2-offset-x: 0px;
-      --name2-offset-y: 0px;
+      --name2-offset-y: 10px;
 
       /* NEW: hero heart image controls */
-      --hero-heart-width: 2.05em;
-      --hero-heart-offset-x: 20px;
-      --hero-heart-offset-y: 0px;
+      --hero-heart-width: 1.45em;
+      --hero-heart-offset-x: 28px;
+      --hero-heart-offset-y: -10px;
 
       /* NEW: top buttons sizing */
       --top-btn-height: 28px;
@@ -1620,7 +1620,7 @@
           if(p.y < -10){ p.y = h + 10; p.x = Math.random()*w; }
 
           const rr = p.r * (p.pulse + Math.sin((ts/600)+(p.x+p.y))*0.03);
-          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr*3.2);
+          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr*2.2);
           g.addColorStop(0, p.inner);
           g.addColorStop(0.5, p.inner);
           g.addColorStop(1, p.outer);
