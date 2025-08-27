@@ -457,6 +457,15 @@
       margin-top:4px; font-size:12px; line-height:1.35; color:#6b7280;
       white-space: pre-line; /* (1) ensure \n renders on multiple lines */
     }
+    .tl-bullets{
+      margin-top:4px;
+      padding-left:18px;
+      font-size:12px;
+      line-height:1.35;
+      color:#6b7280;
+    }
+    .tl-bullets li{ margin:2px 0; }
+    
 
     @media (max-width:700px){
       .agenda{ grid-template-columns:1fr; }
@@ -630,16 +639,19 @@
           <div class="invite-inner">
             <div class="inv-label" id="invSmall">Undangan Majlis Perkahwinan</div>
             <div class="inv-label" id="invSmall">WalimatulUrus</div>
+            <div class="spacer-8"></div>
 
             <div class="parents-block parents-a">
               <div class="inv-couple">Muhammad Basri Bin Patara</div>
               <div class="inv-and" style="text-align:center; color:#b89017; font-size:clamp(10px,4.2vw,22px)">&amp;</div>
               <div class="inv-couple">Samsah Binti Suda</div>
-            </div>
+            <div class="spacer-8"></div>
 
             <div class="inv-small" id="invBody">
               Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan Majlis Perkahwinan puteri kami
             </div>
+
+            <div class="spacer-8"></div>
 
             <div class="parents-block parents-b">
               <div class="inv-couple">Noor Khairani Binti Muhammad Basri</div>
@@ -866,7 +878,7 @@ Friends & family shots</div>
       en: {
         tagline: "Wedding Invitation",
         title: "Will you attend our wedding?",
-        subtitle: "We'd love to celebrate with you. Please confirm your attendance.",
+        subtitle: "We'd love to celebrate with you. Please confirm your attendance before 1st Oct 2025.",
         rsvp: "YES",
         no: "NO",
         location: "Location",
@@ -927,7 +939,7 @@ Friends & family shots</div>
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
         title: "Adakah anda akan hadir ke majlis kami?",
-        subtitle: "Kami ingin meraikan bersama anda. Sila sahkan kehadiran anda.",
+        subtitle: "Kami ingin meraikan bersama anda. Sila sahkan kehadiran anda sebelum 1 Oktober 2025.",
         rsvp: "Hadir",
         no: "Tidak Hadir",
         location: "Lokasi",
@@ -1281,6 +1293,28 @@ Friends & family shots</div>
     }
     window.addEventListener('load', applyArrowOffset);
     window.addEventListener('resize', applyArrowOffset);
+    // Render multi-line schedule descriptions as bullet points
+    function renderBullets(container, text){
+      if(!container) return;
+      const raw = (text || '').toString();
+      const lines = raw.split(/
++/).map(s=>s.trim()).filter(Boolean);
+      // Clear existing content
+      while(container.firstChild) container.removeChild(container.firstChild);
+      if(lines.length <= 1){
+        // Fallback to plain text (keeps pre-line style)
+        container.textContent = raw.trim();
+        return;
+      }
+      const ul = document.createElement('ul');
+      ul.className = 'tl-bullets';
+      for(const ln of lines){
+        const li = document.createElement('li');
+        li.textContent = ln;
+        ul.appendChild(li);
+      }
+      container.appendChild(ul);
+    }
 
     function i18n(){
       const T = I18N[LANG];
@@ -1350,11 +1384,11 @@ Friends & family shots</div>
       if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
       if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
       const items = T.schedItems || [];
-      if (items[0]){ s1Title.textContent = items[0].title; s1Desc.textContent = items[0].desc; }
-      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.textContent = items[1].desc; }
-      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.textContent = items[2].desc; }
-      if (items[3]){ s4Title.textContent = items[3].title; s4Desc.textContent = items[3].desc; }
-      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.textContent = items[4].desc; }
+      if (items[0]){ s1Title.textContent = items[0].title; renderBullets(s1Desc, items[0].desc); }
+      if (items[1]){ s2Title.textContent = items[1].title; renderBullets(s2Desc, items[1].desc); }
+      if (items[2]){ s3Title.textContent = items[2].title; renderBullets(s3Desc, items[2].desc); }
+      if (items[3]){ s4Title.textContent = items[3].title; renderBullets(s4Desc, items[3].desc); }
+      if (items[4]){ s5Title.textContent = items[4].title; renderBullets(s5Desc, items[4].desc); }
 
       // Countdown
       if (countdownTitleEl) countdownTitleEl.textContent = T.countdownTitle || "Countdown";
@@ -1650,6 +1684,18 @@ Friends & family shots</div>
     form.addEventListener('submit', (e)=>{
       if((!RESUBMISSION_ENABLE && isSubmitted()) || submitBtn.disabled){ e.preventDefault(); playError(); return; }
       syncHiddenFields(); saveLocal();
+
+      // Immediately lock the button & show "Submitting..." so it feels responsive
+      try{
+        submitBtn.disabled = true;
+        submitBtn.textContent = I18N[LANG].submitting || 'Submitting...';
+        const vm = document.getElementById('validationMsg');
+        if(vm){
+          vm.style.display = 'block';
+          vm.textContent = I18N[LANG].thanks || 'Thank you! Your RSVP has been received.';
+        }
+      }catch(err){ /* no-op */ }
+
       _pendingSubmit = true; // posts to iframe
     });
 
