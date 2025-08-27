@@ -47,11 +47,16 @@
       /* (2) ARROW BOUNCE SPEED VARIABLE */
       --arrow-bounce-duration: 1.3s;
 
-      /* Name position offsets */
+      /* Name position offsets (working & stackable with z) */
       --name1-offset-x: 0px;
       --name1-offset-y: -30px;
       --name2-offset-x: 0px;
       --name2-offset-y: 10px;
+
+      /* Layer control so heart/name can overlap */
+      --name1-z: 2;
+      --heart-z: 1;
+      --name2-z: 2;
 
       /* NEW: hero heart image controls */
       --hero-heart-width: 1.45em;
@@ -224,16 +229,60 @@
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
       position:relative;
     }
-    .couple-title .name{ display:inline-block; }
-    .couple-title .n1{ transform: translate(var(--name1-offset-x), var(--name1-offset-y)); }
-    .couple-title .n2{ transform: translate(var(--name2-offset-x), var(--name2-offset-y)); }
+    .couple-title .name{
+      display:inline-block;
+      position: relative;
+      z-index: 1; /* default; overridden by vars below */
+    }
+    .couple-title .n1{
+      transform: translate(var(--name1-offset-x), var(--name1-offset-y));
+      z-index: var(--name1-z);
+    }
+    .couple-title .n2{
+      transform: translate(var(--name2-offset-x), var(--name2-offset-y));
+      z-index: var(--name2-z);
+    }
 
-    /* NEW: PNG heart between names */
+    /* NEW: PNG heart between names (offset & z controllable) */
     .couple-title .hero-heart{
       width: var(--hero-heart-width);
       height: auto;
       display:inline-block;
       transform: translate(var(--hero-heart-offset-x), var(--hero-heart-offset-y));
+      position: relative;
+      z-index: var(--heart-z);
+    }
+
+    /* ✨ Shining sweep across Name1 → Heart → Name2 */
+    .couple-title .name::after{
+      content: attr(data-text);
+      position:absolute; inset:0;
+      background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.85) 45%, rgba(255,255,255,0) 75%);
+      background-size: 220% 100%;
+      -webkit-background-clip:text; background-clip:text;
+      color: transparent;
+      animation: shine-sweep 3.2s linear infinite;
+      will-change: background-position;
+      pointer-events:none;
+    }
+    .couple-title .n1::after{ animation-delay: 0s; }
+    .couple-title .n2::after{ animation-delay: .7s; }
+
+    .couple-title .hero-heart::after{
+      content:'';
+      position:absolute; inset:0;
+      background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.9) 45%, rgba(255,255,255,0) 75%);
+      background-size: 220% 100%;
+      animation: shine-sweep 3.2s linear infinite .35s;
+      mix-blend-mode: screen;
+      opacity:.6;
+      pointer-events:none;
+      will-change: background-position;
+      border-radius: 6px;
+    }
+    @keyframes shine-sweep{
+      0%   { background-position: -120% 0; }
+      100% { background-position: 120% 0; }
     }
 
     @media (max-width:520px){
@@ -388,38 +437,29 @@
     }
     .toast.show{ opacity:1 }
 
-    /* COUNTDOWN */
+    /* COUNTDOWN — always one line, softer gold */
     #countdown .cd-sub{ margin:6px 0 16px; }
     .countdown-row{
-      display:grid; gap:12px;
-      grid-template-columns:repeat(4, minmax(100px, 1fr));
-      align-items:stretch;
+      display:flex; gap:12px; align-items:stretch; justify-content:stretch;
+      flex-wrap:nowrap;
     }
     .cd-box{
-      /* NEW: white center -> gold rim radial gradient */
       background:
         radial-gradient(circle at 50% 45%,
-          #ffffff 0%,
-          #ffffff 48%,
-          #fff3d0 65%,
-          #e6c96a 85%,
-          var(--gold) 100%);
+          rgba(255,253,245,.88) 0%,
+          rgba(255,245,215,.70) 38%,
+          rgba(248,229,160,.52) 62%,
+          rgba(232,202,110,.48) 82%,
+          rgba(212,175,55,.55) 100%);
       border:1px solid rgba(0,0,0,.06);
       border-radius:var(--radius);
       box-shadow:var(--shadow-sm); padding:16px 12px;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       text-align:center; aspect-ratio:1/1; min-width:0;
+      flex: 1 1 0;
     }
     .cd-num{ font-weight:700; line-height:1; font-size:clamp(22px, 7.2vw, 48px); }
     .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:#6b7280; }
-
-    @media (max-width:520px){ .countdown-row{ grid-template-columns:repeat(2, minmax(120px, 1fr)); } }
-    @media (max-width:400px){
-      .countdown-row{ grid-template-columns:repeat(2, minmax(110px, 1fr)); }
-      .cd-box{ aspect-ratio:auto; }
-      .cd-num{ font-size:clamp(22px, 9vw, 42px); }
-      .cd-label{ letter-spacing:.28em; }
-    }
 
     /* AGENDA */
     .agenda{ display:grid; grid-template-columns: 240px 1fr; gap:24px; --timeline-pad:28px; --tl-line-x:11px; --tl-dot-nudge:1px; }
@@ -445,7 +485,10 @@
     .tl-time{ font-weight:600; color:#0f172a; }
     .tl-what{ color:#0f172a; }
     .tl-title{ font-weight:700; letter-spacing:.02em; }
-    .tl-desc{ margin-top:4px; font-size:12px; line-height:1.35; color:#6b7280; }
+    .tl-desc{
+      margin-top:4px; font-size:12px; line-height:1.35; color:#6b7280;
+      white-space: pre-line; /* (1) ensure \n renders on multiple lines */
+    }
 
     @media (max-width:700px){
       .agenda{ grid-template-columns:1fr; }
@@ -534,9 +577,10 @@
       width:36px; height:36px; border-radius:999px;
       display:inline-flex; align-items:center; justify-content:center;
       background:#fff; border:1px solid var(--gold-strong);
-      color:var(--gold-strong);
+      color:#var(--gold-strong);
       box-shadow:var(--shadow-sm);
       text-decoration:none;
+      color: var(--gold-strong);
     }
     .call-btn svg{ width:18px; height:18px; display:block; }
   </style>
@@ -563,13 +607,11 @@
     <div>
       <div class="tagline" id="heroTag">Wedding Invitation</div>
 
-      <!-- Names + PNG heart (keep spacing the same; heart is an image now) -->
-      <div class="couple-title"
-           style="--name1-offset-x:0px; --name1-offset-y:0px; --name2-offset-x:0px; --name2-offset-y:0px;"
-           aria-label="Basran love Khairani">
-        <span class="name n1">Basran</span>
+      <!-- Names + PNG heart (now offset/z controlled only by CSS variables) -->
+      <div class="couple-title" aria-label="Basran love Khairani">
+        <span class="name n1" data-text="Basran">Basran</span>
         <img class="hero-heart" src="hero_heart.png" alt="" />
-        <span class="name n2">Khairani</span>
+        <span class="name n2" data-text="Khairani">Khairani</span>
       </div>
 
       <!-- Date with weekday (Poppins font, bigger than address) -->
@@ -720,28 +762,33 @@
                 <div class="tl-time">10:30am</div>
                 <div class="tl-what">
                   <div class="tl-title" id="s1Title">GUEST ARRIVAL</div>
-                  <div class="tl-desc" id="s1Desc">Invitation greetings<br/>Find your seat, mingle</div>
+                  <div class="tl-desc" id="s1Desc">Invitation greetings
+Find your seat, mingle</div>
                 </div>
               </div>
               <div class="tl-item">
                 <div class="tl-time">11:00am</div>
                 <div class="tl-what">
                   <div class="tl-title" id="s2Title">NIKAH</div>
-                  <div class="tl-desc" id="s2Desc">Akad nikah ceremony<br/>Family blessings</div>
+                  <div class="tl-desc" id="s2Desc">Akad nikah ceremony
+Family blessings</div>
                 </div>
               </div>
               <div class="tl-item">
                 <div class="tl-time">12:00pm</div>
                 <div class="tl-what">
                   <div class="tl-title" id="s3Title">WEDDING CEREMONY</div>
-                  <div class="tl-desc" id="s3Desc">Procession & doa<br/>Couple entrance</div>
+                  <div class="tl-desc" id="s3Desc">Procession & doa
+Couple entrance</div>
                 </div>
               </div>
               <div class="tl-item">
                 <div class="tl-time">01:00pm</div>
                 <div class="tl-what">
                   <div class="tl-title" id="s4Title">LUNCH & PHOTO SESSION</div>
-                  <div class="tl-desc" id="s4Desc">Please enjoy the meal<br/>Group photos on stage<br/>Friends & family shots</div>
+                  <div class="tl-desc" id="s4Desc">Please enjoy the meal
+Group photos on stage
+Friends & family shots</div>
                 </div>
               </div>
               <div class="tl-item">
@@ -864,9 +911,11 @@
         phoneHeader: "Contact Number",
         phoneHint: "We’ll use this to inform you if anything changes.",
         submit: "Submit RSVP",
+        submitting: "Submitting...",
         total: (n)=>`Total: ${n} Guest(s)`,
         needPhone: "Please add your contact number.",
         needOneName: "At least one name must be confirmed before submitting.",
+        nameNotConfirmed: (n)=>`Name #${n} not yet confirmed.`,
         thanks: "Thank you! Your RSVP has been received.",
         already: "RSVP already submitted. Do contact us if there are any changes.",
 
@@ -923,9 +972,11 @@
         phoneHeader: "Nombor Untuk Dihubungi",
         phoneHint: "Nombor untuk dihubungi jika ada makluman/perubahan.",
         submit: "Hantar Respon",
+        submitting: "Menghantar...",
         total: (n)=>`Jumlah: ${n} Tetamu`,
         needPhone: "Sila isi nombor telefon untuk dihubungi",
         needOneName: "Sekurang-kurangnya satu nama perlu disahkan hadir sebelum hantar.",
+        nameNotConfirmed: (n)=>`Nama #${n} belum disahkan hadir.`,
         thanks: "Terima kasih! Respon anda telah diterima.",
         already: "RSVP telah dihantar. Sila hubungi keluarga pengantin sekiranya terdapat perubahan.",
 
@@ -1055,6 +1106,14 @@
     function getGuestNames(){ return getGuestInputs().map(i=>i.value.trim()); }
     function getConfirmedCount(){ return getGuestInputs().filter(inp => inp.readOnly && inp.value.trim().length>0).length; }
     function anyUnconfirmedTyped(){ return getGuestInputs().some(inp => !inp.readOnly && inp.value.trim().length>0); }
+    function firstUnconfirmedIndexPlus1(){
+      const arr = getGuestInputs();
+      for(let i=0;i<arr.length;i++){
+        const v = arr[i].value.trim();
+        if(v && !arr[i].readOnly) return i+1;
+      }
+      return -1;
+    }
     function updateTotals(){ const n = getGuestNames().filter(Boolean).length; totalGuestsEl.textContent = I18N[LANG].total(n); }
 
     function saveLocal(){
@@ -1072,6 +1131,22 @@
       submitBtn.disabled = true;
       validationMsg.style.display = 'block';
       validationMsg.textContent = I18N[LANG].already;
+    }
+
+    function showSuccessUI(){
+      // Optimistic success (immediate)
+      submitBtn.disabled = true;
+      submitBtn.textContent = I18N[LANG].submit;
+      getGuestInputs().forEach(inp => inp.readOnly = true);
+      getGuestButtons().forEach(btn => btn.disabled = true);
+      phoneInput.readOnly = true;
+
+      validationMsg.style.display = 'block';
+      validationMsg.textContent = I18N[LANG].thanks;
+
+      markSubmitted();
+      saveLocal();
+      showToast(I18N[LANG].thanks);
     }
 
     function resetFormToFreshState(){
@@ -1160,7 +1235,7 @@
 
         const call = document.createElement('a');
         call.className = 'call-btn';
-        call.href = `tel:${c.phone.replace(/\\s+/g,'')}`;
+        call.href = `tel:${c.phone.replace(/\s+/g,'')}`;
         call.setAttribute('aria-label', `Call ${c.name}`);
         call.innerHTML = `
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1199,7 +1274,7 @@
           if (!alreadyHasComma) out += ', ';
         }
       }
-      return out.replace(/\\s+,/g, ', ');
+      return out.replace(/\s+,/g, ', ');
     }
     function formatDateOnly(lang){
       const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
@@ -1241,6 +1316,11 @@
 
     function i18n(){
       const T = I18N[LANG];
+
+      // Update shiny overlay text (keeps animation accurate if language ever affects names)
+      document.querySelectorAll('.couple-title .name').forEach(el=>{
+        el.setAttribute('data-text', el.textContent.trim());
+      });
 
       // Hero
       heroTag.textContent = T.tagline;
@@ -1297,16 +1377,16 @@
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
 
-      // Schedule
+      // Schedule (desc supports \n → multiline; also CSS white-space:pre-line is set)
       if (scheduleTitleEl) scheduleTitleEl.textContent = T.scheduleTitle;
       if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
       if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
       const items = T.schedItems || [];
-      if (items[0]){ s1Title.textContent = items[0].title; s1Desc.innerHTML = items[0].desc.replace(/\\n/g,'<br/>'); }
-      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.innerHTML = items[1].desc.replace(/\\n/g,'<br/>'); }
-      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.innerHTML = items[2].desc.replace(/\\n/g,'<br/>'); }
-      if (items[3]){ s4Title.textContent = items[3].title; s4Desc.innerHTML = items[3].desc.replace(/\\n/g,'<br/>'); }
-      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = items[4].desc.replace(/\\n/g,'<br/>'); }
+      if (items[0]){ s1Title.textContent = items[0].title; s1Desc.textContent = items[0].desc; }
+      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.textContent = items[1].desc; }
+      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.textContent = items[2].desc; }
+      if (items[3]){ s4Title.textContent = items[3].title; s4Desc.textContent = items[3].desc; }
+      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.textContent = items[4].desc; }
 
       // Countdown
       if (countdownTitleEl) countdownTitleEl.textContent = T.countdownTitle || "Countdown";
@@ -1345,19 +1425,38 @@
 
     function maybeEnableSubmit(){
       if(!RESUBMISSION_ENABLE && isSubmitted()){ submitBtn.disabled = true; return; }
+
+      const typedCount = getGuestInputs().filter(inp => inp.value.trim().length>0).length;
       const hasPhone = phoneInput.value.trim().length > 0;
       const confirmedCount = getConfirmedCount();
-      const hasUnconfirmedTyped = anyUnconfirmedTyped();
+      const unconfIdx = firstUnconfirmedIndexPlus1();
 
-      const ok = hasPhone && confirmedCount >= 1 && !hasUnconfirmedTyped;
+      const ok = hasPhone && confirmedCount >= 1 && unconfIdx === -1;
       submitBtn.disabled = !ok;
 
       const T = I18N[LANG];
+      // Error priority/order per request:
+      // 1) All empty → needOneName
+      // 2) There is a name but no phone → needPhone
+      // 3) Multiple names with one not confirmed → nameNotConfirmed(#)
+      // Fallbacks
       validationMsg.style.display = (!ok) ? 'block' : 'none';
-      if(!hasPhone){ validationMsg.textContent = T.needPhone; }
-      else if(confirmedCount < 1){ validationMsg.textContent = T.needOneName; }
-      else if(hasUnconfirmedTyped){ validationMsg.textContent = T.needOneName; }
-      else{ validationMsg.textContent = ''; }
+
+      if (!ok){
+        if (typedCount === 0 && confirmedCount === 0){
+          validationMsg.textContent = T.needOneName;
+        } else if (typedCount > 0 && !hasPhone){
+          validationMsg.textContent = T.needPhone;
+        } else if (unconfIdx !== -1){
+          validationMsg.textContent = T.nameNotConfirmed(unconfIdx);
+        } else if (confirmedCount < 1){
+          validationMsg.textContent = T.needOneName;
+        } else {
+          validationMsg.textContent = '';
+        }
+      } else {
+        validationMsg.textContent = '';
+      }
     }
 
     // Language toggle
@@ -1376,8 +1475,19 @@
       let ok = await tryPlayAudible();
       if(ok) return;
       let tries = 0;
-      const iv = setInterval(async ()=>{ tries++; if(await tryPlayAudible()){ clearInterval(iv); } if(tries > 6){ clearInterval(iv); } }, 900);
-      const unlock = async ()=>{ if(await tryPlayAudible()){ window.removeEventListener('pointerdown', unlock); window.removeEventListener('keydown', unlock); window.removeEventListener('scroll', unlock); window.removeEventListener('touchstart', unlock); } };
+      const iv = setInterval(async ()=>{
+        tries++;
+        if(await tryPlayAudible()){ clearInterval(iv); }
+        if(tries > 6){ clearInterval(iv); }
+      }, 900);
+      const unlock = async ()=>{
+        if(await tryPlayAudible()){
+          window.removeEventListener('pointerdown', unlock);
+          window.removeEventListener('keydown', unlock);
+          window.removeEventListener('scroll', unlock);
+          window.removeEventListener('touchstart', unlock);
+        }
+      };
       window.addEventListener('pointerdown', unlock, { once:true });
       window.addEventListener('keydown', unlock, { once:true });
       window.addEventListener('scroll', unlock, { once:true });
