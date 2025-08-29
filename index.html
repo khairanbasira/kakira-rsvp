@@ -48,10 +48,10 @@
       --arrow-bounce-duration: 1.3s;
 
       /* Name position offsets (working & stackable with z) */
-      --name1-offset-x: 0px;
-      --name1-offset-y: 45px;
-      --name2-offset-x: 0px;
-      --name2-offset-y: -10px;
+      --name1-offset-x: 0px;   /* +ve = right, -ve = left */
+      --name1-offset-y: 45px;  /* +ve = down,  -ve = up   */
+      --name2-offset-x: 0px;   /* +ve = right, -ve = left */
+      --name2-offset-y: -10px; /* +ve = down,  -ve = up   */
 
       /* Layer control so heart/name can overlap */
       --name1-z: 2;
@@ -60,14 +60,8 @@
 
       /* NEW: hero heart image controls */
       --hero-heart-width: 1.45em;
-      --hero-heart-offset-x: 28px;
-      --hero-heart-offset-y: -10px;
-
-      /* HERO item position adjusters (positive X→right, negative X→left; positive Y→down, negative Y→up) */
-      --hero-tag-x: 0px; --hero-tag-y: 0px;
-      --hero-date-x: 0px; --hero-date-y: 0px;
-      --hero-address-x: 0px; --hero-address-y: 0px;
-      --arrow-left-offset: 0px; /* horizontal nudge for scroll arrow */
+      --hero-heart-offset-x: 28px;  /* +ve = right, -ve = left */
+      --hero-heart-offset-y: -10px; /* +ve = down,  -ve = up   */
 
       /* NEW: top buttons sizing */
       --top-btn-height: 28px;
@@ -76,6 +70,18 @@
 
       /* Arrow vertical offset (distance from bottom of the hero) */
       --arrow-bottom-offset: 3px;
+
+      /* NEW: fine position controls for ALL hero items (like name1/name2) */
+      --hero-tag-offset-x: 0px;     /* +ve = right, -ve = left */
+      --hero-tag-offset-y: 0px;     /* +ve = down,  -ve = up   */
+      --hero-date-offset-x: 0px;    /* +ve = right, -ve = left */
+      --hero-date-offset-y: 0px;    /* +ve = down,  -ve = up   */
+      --hero-address-offset-x: 0px; /* +ve = right, -ve = left */
+      --hero-address-offset-y: 0px; /* +ve = down,  -ve = up   */
+      --hero-logo-offset-x: 0px;    /* +ve = right, -ve = left */
+      --hero-logo-offset-y: 0px;    /* +ve = down,  -ve = up   */
+      --hero-arrow-offset-x: 0px;   /* +ve = right, -ve = left */
+      --hero-arrow-offset-y: 0px;   /* +ve = away from bottom (adds), -ve = closer to bottom */
 
       /* Parents spacing */
       --parentsA-gap: 3px;
@@ -198,9 +204,12 @@
     /* Push hero content down by variable to avoid overlap with top buttons */
     .hero > div{ padding-top: var(--hero-top-safe); }
 
-    /* Scroll arrow (uses adjustable bottom offset) */
+    /* Scroll arrow (uses adjustable offsets) */
     .hero-scroll{
-      position:absolute; left: calc(50% + var(--arrow-left-offset)); bottom:var(--arrow-bottom-offset); transform:translateX(-50%);
+      position:absolute;
+      left: calc(50% + var(--hero-arrow-offset-x));
+      bottom: calc(var(--arrow-bottom-offset) + var(--hero-arrow-offset-y));
+      transform: translateX(-50%);
       width:56px; height:56px; border-radius:999px;
       background:transparent; border:0; color:var(--gold-strong);
       display:flex; align-items:center; justify-content:center;
@@ -221,8 +230,8 @@
       text-transform:uppercase;
       color:#6b4b00;
       margin-bottom:28px;
-    
-      transform: translate(var(--hero-tag-x), var(--hero-tag-y));}
+      transform: translate(var(--hero-tag-offset-x), var(--hero-tag-offset-y));
+    }
 
     .couple-title{
       display:flex; flex-direction:column; /* Force 3 lines on web too */
@@ -271,8 +280,8 @@
       letter-spacing:.02em;
       color:#5b5b5b;
       margin-bottom:36px;
-    
-      transform: translate(var(--hero-date-x), var(--hero-date-y));}
+      transform: translate(var(--hero-date-offset-x), var(--hero-date-offset-y));
+    }
 
     /* LOGO + ADDRESS grouped */
     .hero-address-wrap{
@@ -281,8 +290,8 @@
       padding:0 12px;
       display:flex; align-items:center; justify-content:center; gap:16px;
       flex-wrap:nowrap;
-    
-      transform: translate(var(--hero-address-x), var(--hero-address-y));}
+      transform: translate(var(--hero-address-offset-x), var(--hero-address-offset-y));
+    }
     .hero-address{
       max-width:720px;
       font-size:clamp(13px,3.2vw,16px);
@@ -297,6 +306,7 @@
       max-height:160px;
       width:auto; object-fit:contain;
       flex:0 0 auto;
+      transform: translate(var(--hero-logo-offset-x), var(--hero-logo-offset-y));
     }
     @media (max-width:560px){
       .hero-address-wrap{
@@ -408,7 +418,7 @@
     .brandline .brand-link:hover{ color:var(--gold-strong); }
 
     .toast{
-      position:fixed; left: calc(50% + var(--arrow-left-offset)); bottom:22px; transform:translateX(-50%);
+      position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
       background:#111; color:#fff; padding:12px 16px; border-radius:12px;
       opacity:0; pointer-events:none; transition:.25s ease; box-shadow:0 8px 24px rgba(0,0,0,.3)
     }
@@ -464,8 +474,10 @@
     .tl-title{ font-weight:700; letter-spacing:.02em; }
     .tl-desc{
       margin-top:4px; font-size:12px; line-height:1.35; color:#6b7280;
-      white-space: pre-line; /* (1) ensure \n renders on multiple lines */
     }
+    /* NEW: bullet styling inside schedule descriptions */
+    .tl-desc ul{ list-style: disc; margin:6px 0 0 18px; padding:0; }
+    .tl-desc li{ margin:2px 0; }
 
     @media (max-width:700px){
       .agenda{ grid-template-columns:1fr; }
@@ -540,11 +552,12 @@
 
     .invite-inner #invSmall{ display:block; text-align:center; }
 
-    
-    /* Minor spacing requested around invitation parents blocks */
-    .invite-inner .parents-a{ margin-top:8px; margin-bottom:8px; }
-    .invite-inner .parents-b{ margin-top:8px; }
-/* NEW: Contact list layout */
+    /* NEW: spacing tweaks requested for Invitation section */
+    .invite-inner .inv-label + .parents-a{ margin-top:8px; }   /* space between "WalimatulUrus" and first parent name */
+    .parents-a{ margin-bottom:8px; }                           /* a bit more space below Samsah block */
+    .parents-b{ margin-top:8px; }                              /* space before Noor Khairani block */
+
+    /* NEW: Contact list layout */
     .contact-list{ display:grid; gap:10px; }
     .contact-row{
       display:grid; grid-template-columns: 1fr auto; align-items:center;
@@ -564,10 +577,6 @@
       color: var(--gold-strong);
     }
     .call-btn svg{ width:18px; height:18px; display:block; }
-  
-    /* Bullet styling for schedule descriptions converted from lines */
-    .tl-desc ul{ margin:6px 0 0; padding-left:18px; }
-    .tl-desc li{ margin:2px 0; }
   </style>
 </head>
 <body>
@@ -630,7 +639,7 @@
       <div class="container">
         <div class="card" style="text-align:center">
           <div class="heading" id="titleText">Will you attend our wedding?</div>
-          <div class="sub" id="subtitleText">We'd love to celebrate with you. Please confirm your attendance.</div>
+          <div class="sub" id="subtitleText">We'd love to celebrate with you. Please confirm your attendance before 1st Oct 2025.</div>
           <div class="cta-row" style="justify-content:center">
             <a class="btn" href="#rsvp" id="rsvpBtn" data-smooth>YES</a>
             <button class="btn btn-outline" id="noBtn" type="button">NO</button>
@@ -883,12 +892,12 @@ Friends & family shots</div>
       en: {
         tagline: "Wedding Invitation",
         title: "Will you attend our wedding?",
-        subtitle: \"We'd love to celebrate with you. Please confirm your attendance before 1 October 2025.\",
+        subtitle: "We'd love to celebrate with you. Please confirm your attendance before 1st Oct 2025.",
         rsvp: "YES",
         no: "NO",
         location: "Location",
         contactNav: "Contact",
-        rsvpIntro: "Please confirm your attendance before 1 October 2025, so we may welcome you with joy on our special day.",
+        rsvpIntro: "Please confirm your attendance before 1st Oct 2025, so we may welcome you with joy on our special day.",
         fullNameFirst: "Your Full Name",
         fullNameOthers: "Attend With",
         confirm: "Confirm",
@@ -944,12 +953,12 @@ Friends & family shots</div>
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
         title: "Adakah anda akan hadir ke majlis kami?",
-        subtitle: \"Kami ingin meraikan bersama anda. Sila sahkan kehadiran anda sebelum 1 Oktober 2025.\",
+        subtitle: "Kami ingin meraikan bersama anda. Mohon sahkan kehadiran sebelum 1 Okt 2025.",
         rsvp: "Hadir",
         no: "Tidak Hadir",
         location: "Lokasi",
         contactNav: "Hubungi",
-        rsvpIntro: "Mohon sahkan kehadiran anda sebelum 1 Oktober 2025, agar kami dapat menyambut anda dengan mesra di hari bahagia kami.",
+        rsvpIntro: "Mohon sahkan kehadiran anda sebelum 1 Okt 2025, agar kami dapat menyambut anda dengan mesra di hari bahagia kami.",
         fullNameFirst: "Nama Penuh Anda",
         fullNameOthers: "Hadir Bersama",
         confirm: "Hadir",
@@ -1071,15 +1080,6 @@ Friends & family shots</div>
     const cdHoursLabel = document.getElementById('cdHoursLabel');
     const cdMinsLabel = document.getElementById('cdMinsLabel');
     const cdSecsLabel = document.getElementById('cdSecsLabel');
-
-    // Convert multi-line text into bullet list for schedule descriptions
-    function setDescBullets(el, text){
-      const lines = String(text||'').split(/\n+/).map(s=>s.trim()).filter(Boolean);
-      if(!lines.length){ el.textContent = ''; return; }
-      const ul = document.createElement('ul');
-      lines.forEach(t=>{ const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
-      el.innerHTML = ''; el.appendChild(ul);
-    }
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'ms'; // default Malay
@@ -1302,11 +1302,27 @@ Friends & family shots</div>
     // Ensure arrow offset variable applies (fix for some browsers)
     function applyArrowOffset(){
       if(!scrollArrow) return;
-      const v = getComputedStyle(document.documentElement).getPropertyValue('--arrow-bottom-offset').trim();
-      if(v){ scrollArrow.style.bottom = v; }
+      // Keep both bottom offsets combined so manual tuning works:
+      scrollArrow.style.bottom = `calc(var(--arrow-bottom-offset) + var(--hero-arrow-offset-y))`;
     }
     window.addEventListener('load', applyArrowOffset);
     window.addEventListener('resize', applyArrowOffset);
+
+    // Helper: escape HTML for safe bullet rendering
+    function esc(s){
+      return String(s)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#39;');
+    }
+    // Helper: turn "line1\nline2" into bullets
+    function bulletsFromText(text){
+      const lines = String(text).split(/\n+/).map(l=>l.trim()).filter(Boolean);
+      if(!lines.length) return '';
+      return `<ul class="tl-list">${lines.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>`;
+    }
 
     function i18n(){
       const T = I18N[LANG];
@@ -1371,16 +1387,16 @@ Friends & family shots</div>
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
 
-      // Schedule (desc supports \n → multiline; also CSS white-space:pre-line is set)
+      // Schedule (now rendered as bullets from \n text)
       if (scheduleTitleEl) scheduleTitleEl.textContent = T.scheduleTitle;
       if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
       if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
       const items = T.schedItems || [];
-      if (items[0]){ s1Title.textContent = items[0].title; setDescBullets(s1Desc, items[0].desc); }
-      if (items[1]){ s2Title.textContent = items[1].title; setDescBullets(s2Desc, items[1].desc); }
-      if (items[2]){ s3Title.textContent = items[2].title; setDescBullets(s3Desc, items[2].desc); }
-      if (items[3]){ s4Title.textContent = items[3].title; setDescBullets(s4Desc, items[3].desc); }
-      if (items[4]){ s5Title.textContent = items[4].title; setDescBullets(s5Desc, items[4].desc); }
+      if (items[0]){ s1Title.textContent = items[0].title; s1Desc.innerHTML = bulletsFromText(items[0].desc); }
+      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.innerHTML = bulletsFromText(items[1].desc); }
+      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.innerHTML = bulletsFromText(items[2].desc); }
+      if (items[3]){ s4Title.textContent = items[3].title; s4Desc.innerHTML = bulletsFromText(items[3].desc); }
+      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = bulletsFromText(items[4].desc); }
 
       // Countdown
       if (countdownTitleEl) countdownTitleEl.textContent = T.countdownTitle || "Countdown";
@@ -1674,19 +1690,17 @@ Friends & family shots</div>
     });
 
     form.addEventListener('submit', (e)=>{
-      if((!RESUBMISSION_ENABLE && isSubmitted()) || submitBtn.disabled){ e.preventDefault(); playError(); return; }
-      if(_pendingSubmit){ e.preventDefault(); return; } // prevent double submit
+      // Guard against duplicates and ensure responsive feel + "one click only"
+      if((!RESUBMISSION_ENABLE && isSubmitted()) || submitBtn.disabled){
+        e.preventDefault(); playError(); return;
+      }
+      // Disable immediately & show success immediately (optimistic UI)
+      submitBtn.disabled = true;
+      submitBtn.textContent = I18N[LANG].submitting;
       syncHiddenFields(); saveLocal();
       _pendingSubmit = true; // posts to iframe
-
-      // Disable the button immediately and show loading state
-      submitBtn.disabled = true;
-      submitBtn.setAttribute('aria-disabled','true');
-      submitBtn.textContent = I18N[LANG].submitting;
-
-      // Show success message immediately so guest knows it's submitted
-      validationMsg.style.display = 'block';
-      validationMsg.textContent = I18N[LANG].thanks;
+      // Immediately show success message & lock inputs so multiple entries don't happen
+      showSuccessUI();
     });
 
     // Particles (unchanged)
