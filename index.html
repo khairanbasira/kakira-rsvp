@@ -269,21 +269,34 @@
       z-index: var(--heart-z);
     }
 
-    /* (NEW #5) Twinkling sparkles around couple name */
-    .couple-title .sparkle{
-      position:absolute;
-      width:0.55em; height:0.55em;
-      border-radius:50%;
+    /* (NEW) twinkling stars around the couple name */
+    .hero-stars{ position:absolute; inset:0; pointer-events:none; z-index:0; }
+    .hero-stars .star{
+      position:absolute; width:10px; height:10px; opacity:0.0;
+      transform-origin:center;
+      animation: twinkle 2.8s infinite ease-in-out;
+      filter: drop-shadow(0 0 6px rgba(255,255,200,.65));
       background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.95) 35%, rgba(212,175,55,.85) 60%, rgba(212,175,55,0) 75%);
-      box-shadow:0 0 12px rgba(212,175,55,.65), 0 0 22px rgba(212,175,55,.35);
-      animation: sparkle-blink var(--sparkle-dur, 1.8s) infinite ease-in-out;
-      opacity:.85;
-      pointer-events:none;
+        radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,.85) 35%, rgba(255,255,255,0) 70%),
+        conic-gradient(from 45deg, rgba(255,255,255,.0) 0 25%, rgba(255,246,200,.95) 25% 50%, rgba(255,255,255,.0) 50% 75%, rgba(255,246,200,.95) 75% 100%);
+      mask: radial-gradient(circle at center, #000 0 45%, transparent 46%);
+      border-radius:50%;
     }
-    @keyframes sparkle-blink{
-      0%,100%{ transform:scale(.8) rotate(0.001deg); opacity:.55; filter:brightness(1); }
-      50%    { transform:scale(1.25) rotate(0.001deg); opacity:1; filter:brightness(1.15); }
+    /* star positions */
+    .hero-stars .s1{ top: -10px; left: 8%;   animation-delay:.0s }
+    .hero-stars .s2{ top: 18%;  right: 10%;  animation-delay:.4s }
+    .hero-stars .s3{ bottom: 6%; left: 14%;  animation-delay:.8s }
+    .hero-stars .s4{ top: 40%;  left: -4%;   animation-delay:1.2s }
+    .hero-stars .s5{ top: -6%;  right: 22%;  animation-delay:1.6s }
+    .hero-stars .s6{ bottom: 10%; right: 6%; animation-delay:2.0s }
+    .hero-stars .s7{ top: 54%;  right: -2%;  animation-delay:2.4s }
+    .hero-stars .s8{ top: 72%;  left: 4%;    animation-delay:2.8s }
+
+    @keyframes twinkle{
+      0%, 100% { transform: scale(.4) rotate(0deg); opacity:0; }
+      10%      { opacity:.95; transform: scale(1) rotate(45deg); }
+      40%      { opacity:.35; transform: scale(.6) rotate(90deg); }
+      70%      { opacity:.9; transform: scale(1.05) rotate(135deg); }
     }
 
     @media (max-width:520px){
@@ -336,6 +349,7 @@
 
     .heading{ font-size:clamp(28px,5vw,52px); line-height:1.12; }
     .sub{ color:var(--muted); margin-top:8px }
+    .sub.tiny{ font-size:12px; line-height:1.4; }
 
     .cta-row{ margin-top:26px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
     .btn{
@@ -353,20 +367,7 @@
     .btn-outline{ background:#fff; color:#111; border:1px solid var(--gold-strong) }
 
     #submitBtn{ background:var(--gold); color:#111; border:1px solid var(--gold-strong); }
-    /* (NEW #3) Keep gold before submission even if disabled; grey only after submitted */
-    #submitBtn[disabled]:not(.is-submitted){
-      background:var(--gold);
-      color:#111;
-      border-color:var(--gold-strong);
-      opacity:.65;
-      cursor:not-allowed;
-      box-shadow:none;
-      transform:none;
-    }
-    #submitBtn.is-submitted{
-      background:#eee; color:#999; border-color:#ddd;
-      cursor:not-allowed; box-shadow:none; transform:none;
-    }
+    #submitBtn[disabled]{ background:#eee; color:#999; border-color:#ddd; cursor:not-allowed; box-shadow:none; transform:none; }
 
     .btn.disabled,
     .btn[aria-disabled="true"]{
@@ -597,19 +598,15 @@
     }
     .contact-left{ font-weight:700; color:#0f172a; }
     .contact-right{ display:flex; align-items:center; gap:10px; color:#6b7280; }
-
-    /* (NEW #4) iOS-like green call button, slightly bigger */
+    /* UPDATED: iOS phone app-like icon (green handset on black rounded square), slightly bigger */
     .call-btn{
-      width:42px; height:42px; border-radius:12px;
+      width:42px; height:42px; border-radius:10px;
       display:inline-flex; align-items:center; justify-content:center;
-      background:#34c759;             /* iOS Phone green */
-      border:0;
-      color:#fff;                      /* makes the SVG stroke white via currentColor */
-      box-shadow:0 6px 16px rgba(0,0,0,.12), inset 0 -2px 0 rgba(0,0,0,.08);
+      background:#000; border:0;
+      box-shadow:var(--shadow-sm);
       text-decoration:none;
     }
-    .call-btn svg{ width:22px; height:22px; display:block; }
-    .call-btn:hover{ filter:brightness(1.05); }
+    .call-btn svg{ width:24px; height:24px; display:block; }
   </style>
 </head>
 <body>
@@ -636,15 +633,15 @@
 
       <!-- Names + PNG heart (now offset/z controlled only by CSS variables) -->
       <div class="couple-title" aria-label="Basran love Khairani">
+        <!-- twinkling stars -->
+        <div class="hero-stars" aria-hidden="true">
+          <span class="star s1"></span><span class="star s2"></span><span class="star s3"></span><span class="star s4"></span>
+          <span class="star s5"></span><span class="star s6"></span><span class="star s7"></span><span class="star s8"></span>
+        </div>
+
         <span class="name n1" data-text="Basran">Basran</span>
         <img class="hero-heart" src="hero_heart.png" alt="" />
         <span class="name n2" data-text="Khairani">Khairani</span>
-        <!-- (NEW #5) Sparkles; positions scale with font via em offsets -->
-        <span class="sparkle" style="--sparkle-dur:1.8s; transform:translate(calc(-50% - 6.5em), calc(-50% - 0.8em)); left:50%; top:50%;"></span>
-        <span class="sparkle" style="--sparkle-dur:2.2s; transform:translate(calc(-50% + 6.3em),  calc(-50% - 0.5em)); left:50%; top:50%;"></span>
-        <span class="sparkle" style="--sparkle-dur:1.6s; transform:translate(calc(-50% - 4.2em),  calc(-50% + 2.4em)); left:50%; top:50%;"></span>
-        <span class="sparkle" style="--sparkle-dur:2.0s; transform:translate(calc(-50% + 7.2em),  calc(-50% + 2.0em)); left:50%; top:50%;"></span>
-        <span class="sparkle" style="--sparkle-dur:2.4s; transform:translate(calc(-50% + 0em),     calc(-50% - 3.6em)); left:50%; top:50%;"></span>
       </div>
 
       <!-- Date with weekday (Poppins font, bigger than address) -->
@@ -678,8 +675,9 @@
       <div class="container">
         <div class="card" style="text-align:center">
           <div class="heading" id="titleText">Will you attend our wedding?</div>
-          <!-- (NEW #2) Small like RSVP description + line break after every period -->
-          <div class="tiny muted" id="subtitleText">We'd love to celebrate with you.</div>
+          <div class="sub tiny" id="subtitleText">We'd love to celebrate with you.
+Please confirm your attendance
+before 1 October 2025.</div>
           <div class="cta-row" style="justify-content:center">
             <a class="btn" href="#rsvp" id="rsvpBtn" data-smooth>YES</a>
             <button class="btn btn-outline" id="noBtn" type="button">NO</button>
@@ -740,7 +738,6 @@
     <section id="rsvp">
       <div class="container">
         <div class="card">
-          <!-- (NEW #3) i18n-able RSVP/RESPON title -->
           <h2 class="section-title" id="rsvpTitle">RSVP</h2>
           <p class="tiny muted" id="rsvpIntro">Kindly share your full name, so we may welcome you with joy on our special day.</p>
 
@@ -845,13 +842,11 @@ Friends & family shots</div>
     <section id="location">
       <div class="container">
         <div class="card location-card">
-          <!-- (NEW #1) Title becomes LOCATION in EN, LOKASI in MS -->
           <h2 class="section-title" id="locTitle">LOCATION</h2>
 
           <img id="venuePhoto" class="loc-photo" src="wedding_avenue.jpg" alt="Wedding Avenue location photo" />
 
-          <!-- (NEW #1) Small description like RSVP, with clickable coordinates -->
-          <p class="muted tiny" id="locDesc">Direction to wedding avenue<br><br>Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="noopener">5.9752036,116.06877</a>)</p>
+          <p class="tiny muted" id="locDesc">Direction to wedding avenue<br><br>Promanade Hotel, Kota Kinabalu (<a href="https://www.google.com/maps?q=5.9752036,116.06877" target="_blank" rel="noopener">5.9752036,116.06877</a>)</p>
 
           <div class="actions" style="margin:10px 0 18px">
             <a class="btn btn-outline" id="btnWaze" target="_blank" rel="noopener">Waze</a>
@@ -938,9 +933,9 @@ Friends & family shots</div>
         subtitle: "We'd love to celebrate with you. Please confirm your attendance before 1 October 2025.",
         rsvp: "YES",
         no: "NO",
+        rsvpTitle: "RSVP",
         location: "Location",
         contactNav: "Contact",
-        rsvpTitle: "RSVP",
         rsvpIntro: "We would be delighted for you to come and celebrate with us. Kindly confirm your attendance before 1 October 2025 by filling in your full name below:",
         fullNameFirst: "Your Full Name",
         fullNameOthers: "Attend With",
@@ -957,9 +952,9 @@ Friends & family shots</div>
         thanks: "Thank you! Your RSVP has been received.",
         already: "RSVP already submitted. Do contact us if there are any changes.",
 
-        /* (NEW #1) LOCATION title + description with clickable coords */
         locTitle: "LOCATION",
-        locDesc: "Direction to wedding avenue<br><br>Promanade Hotel, Kota Kinabalu (<a id='coordLink' href='#' target='_blank' rel='noopener'>5.9752036,116.06877</a>)",
+        // clickable coordinates link
+        locDesc: `Direction to wedding avenue<br><br>Promanade Hotel, Kota Kinabalu (<a href="https://www.google.com/maps?q=5.9752036,116.06877" target="_blank" rel="noopener">5.9752036,116.06877</a>)`,
         locNote: "Tip: You can share the link with friends who are carpooling.",
 
         contactTitle: "CONTACT (Bride's Family)",
@@ -1001,9 +996,9 @@ Friends & family shots</div>
         subtitle: "Kami ingin meraikan bersama anda. Sila sahkan kehadiran anda sebelum 1 Oktober 2025.",
         rsvp: "Hadir",
         no: "Tidak Hadir",
+        rsvpTitle: "RESPON",
         location: "Lokasi",
         contactNav: "Hubungi",
-        rsvpTitle: "RESPON",
         rsvpIntro: "Kami amat berbesar hati sekiranya anda hadir meraikan bersama kami. Sila sahkan kehadiran anda sebelum 1 Oktober 2025 dengan mengisi nama penuh anda dibawah:",
         fullNameFirst: "Nama Penuh Anda",
         fullNameOthers: "Hadir Bersama",
@@ -1020,9 +1015,8 @@ Friends & family shots</div>
         thanks: "Terima kasih! Respon anda telah diterima.",
         already: "RSVP telah dihantar. Sila hubungi keluarga pengantin sekiranya terdapat perubahan.",
 
-        /* (NEW #1) Malay LOCATION text + clickable coords */
         locTitle: "LOKASI",
-        locDesc: "Arah ke lokasi majlis<br><br>Promanade Hotel, Kota Kinabalu (<a id='coordLink' href='#' target='_blank' rel='noopener'>5.9752036,116.06877</a>)",
+        locDesc: `Arah ke lokasi majlis<br><br>Promanade Hotel, Kota Kinabalu (<a href="https://www.google.com/maps?q=5.9752036,116.06877" target="_blank" rel="noopener">5.9752036,116.06877</a>)`,
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
 
         contactTitle: "HUBUNGI (Keluarga Pengantin Perempuan)",
@@ -1128,8 +1122,6 @@ Friends & family shots</div>
     const cdMinsLabel = document.getElementById('cdMinsLabel');
     const cdSecsLabel = document.getElementById('cdSecsLabel');
 
-    const rsvpTitleEl = document.getElementById('rsvpTitle');
-
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'ms'; // default Malay
     function refreshLangToggleLabel(){ langToggle.textContent = (LANG === 'en') ? 'Malay' : 'English'; }
@@ -1172,7 +1164,6 @@ Friends & family shots</div>
       getGuestButtons().forEach(btn => { btn.disabled = true; btn.classList.remove('confirm-state'); btn.classList.add('edit-state'); });
       phoneInput.readOnly = true;
       submitBtn.disabled = true;
-      submitBtn.classList.add('is-submitted'); // NEW #3: grey state only after submit
       validationMsg.style.display = 'block';
       validationMsg.textContent = I18N[LANG].already;
     }
@@ -1180,7 +1171,6 @@ Friends & family shots</div>
     function showSuccessUI(){
       // Optimistic success (immediate)
       submitBtn.disabled = true;
-      submitBtn.classList.add('is-submitted'); // NEW #3: grey state only after submit
       submitBtn.textContent = I18N[LANG].submit;
       getGuestInputs().forEach(inp => inp.readOnly = true);
       getGuestButtons().forEach(btn => btn.disabled = true);
@@ -1211,7 +1201,6 @@ Friends & family shots</div>
       });
       phoneInput.readOnly = false;
       phoneInput.value = '';
-      submitBtn.classList.remove('is-submitted'); // NEW #3
       updateTotals();
       maybeEnableSubmit();
     }
@@ -1259,7 +1248,7 @@ Friends & family shots</div>
       for(let i=0; i<MAX_GUESTS; i++){ guestRowsEl.appendChild(makeGuestRow(i)); }
     }
 
-    // UPDATED: contact rows (name left, number + phone icon right)
+    // UPDATED: contact rows (name left, number right; icon is clickable and iOS-styled)
     function renderContacts(){
       const contactList = document.getElementById('contactList');
       if(!contactList) return;
@@ -1283,9 +1272,11 @@ Friends & family shots</div>
         call.className = 'call-btn';
         call.href = `tel:${c.phone.replace(/\s+/g,'')}`;
         call.setAttribute('aria-label', `Call ${c.name}`);
+        // black rounded square with green handset
         call.innerHTML = `
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M22 16.92v2a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h2a2 2 0 0 1 2 1.72c.12.9.34 1.77.65 2.6a2 2 0 0 1-.45 2.11L7.1 9.9a16 16 0 0 0 6 6l1.47-1.16a2 2 0 0 1 2.11-.45c.83.31 1.7.53 2.6.65A2 2 0 0 1 22 16.92z"/>
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <rect x="4" y="4" width="40" height="40" rx="10" fill="#000"/>
+            <path d="M31.6 28.2l-3.2 2.5c-4.6-2-8.4-5.7-10.4-10.4l2.5-3.2c.5-.6.6-1.5.3-2.3l-1.5-4c-.4-1-1.5-1.6-2.5-1.4l-4.7.9c-1 .2-1.8 1-1.9 2.1-.3 4.8 1.5 10 5.7 14.2 4.2 4.2 9.4 6 14.2 5.7 1.1-.1 1.9-.9 2.1-1.9l.9-4.7c.2-1.1-.4-2.1-1.4-2.5l-4-1.5c-.8-.3-1.7-.1-2.3.3z" fill="#34C759"/>
           </svg>`;
 
         right.appendChild(num);
@@ -1302,12 +1293,6 @@ Friends & family shots</div>
       const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
       const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
       btnGmaps.href = gq; btnWaze.href = wz;
-
-      // (NEW #1) Clickable coordinates in description open the location directly
-      const coordA = document.getElementById('coordLink');
-      if(coordA){
-        coordA.href = 'https://www.google.com/maps?q=5.9752036,116.06877';
-      }
     }
 
     function formatWeddingDateWithDay(lang){
@@ -1415,11 +1400,8 @@ Friends & family shots</div>
 
       // CTA
       titleText.textContent = T.title;
-      // (NEW #2) small + newline after every '.'
-      if(subtitleText){
-        const withBreaks = String(T.subtitle).replace(/\.\s*/g, '.<br/>');
-        subtitleText.innerHTML = withBreaks;
-      }
+      // Make the subtitle small and put a new line after each full stop.
+      subtitleText.innerHTML = T.subtitle.replace(/\.\s*/g, '.<br/>');
       if(rsvpBtn) rsvpBtn.textContent = T.rsvp;
       if(noBtn)   noBtn.textContent   = T.no;
       if(locationBtn) locationBtn.textContent = T.location;
@@ -1428,10 +1410,9 @@ Friends & family shots</div>
       if(quickLocation) quickLocation.textContent = T.location;
       if(quickContact)  quickContact.textContent  = T.contactNav;
 
-      // RSVP title (NEW #3)
-      if(rsvpTitleEl) rsvpTitleEl.textContent = T.rsvpTitle || "RSVP";
-
-      // RSVP body/phone
+      // RSVP title + body/phone
+      const rsvpTitleEl = document.getElementById('rsvpTitle');
+      if(rsvpTitleEl) rsvpTitleEl.textContent = T.rsvpTitle;
       if(rsvpIntro)   rsvpIntro.textContent = T.rsvpIntro;
       if(phoneHeader) phoneHeader.textContent = T.phoneHeader;
       if(phoneHint)   phoneHint.textContent   = T.phoneHint;
@@ -1443,9 +1424,9 @@ Friends & family shots</div>
         noMsg.style.display = 'none';
       }
 
-      // Location/Direction (NEW #1)
+      // Location/Direction (allow HTML for link)
       locTitle.textContent = T.locTitle;
-      if (locDesc) locDesc.innerHTML = T.locDesc;
+      locDesc.innerHTML = T.locDesc;
       if(locNote) locNote.textContent = T.locNote;
 
       // Contacts
@@ -1493,10 +1474,9 @@ Friends & family shots</div>
       maybeEnableSubmit();
       if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
 
-      // resync heights and arrow offset + coord link href
+      // resync heights and arrow offset
       syncLogoHeight();
       applyArrowOffset();
-      renderMaps(); // ensure coordLink href matches
     }
 
     function maybeEnableSubmit(){
