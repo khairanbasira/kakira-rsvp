@@ -1014,11 +1014,11 @@ Friends & family shots</div>
 
         scheduleTitle: "EVENT SCHEDULE",
         schedItems: [
-          { title: "GUEST ARRIVAL", desc: "Find your seat, mingle" },
-          { title: "AKAD NIKAH CEREMONY"},
-          { title: "WEDDING CEREMONY"},
-          { title: "LUNCH\nPHOTO SESSION"},
-          { title: "FAREWELL"},
+  { title: "GUEST ARRIVAL", desc: "- Guest take their seats" }, // bullet
+  { title: "AKAD NIKAH CEREMONY",    desc: "" },                                // no desc
+  { title: "WEDDING CEREMONY",  desc: "" },                                // no desc
+  { title: "LUNCH",         desc: "PHOTO SESSION" },                  // extra heading (plain line)
+  { title: "FAREWELL",             desc: "" },     
         ],
         countdownTitle: "Countdown Timer",
         cdSub: "Our big day’s coming soon!",
@@ -1087,11 +1087,11 @@ Friends & family shots</div>
 
         scheduleTitle: "ATUR CARA MAJLIS",
         schedItems: [
-          { title: "KETIBAAN PARA TETAMU", desc: "Tetamu mengambil tempat duduk" },
-          { title: "MAJLIS AKAD NIKAH"},
-          { title: "MAJLIS PERSANDINGAN"},
-          { title: "JAMUAN MAKAN\nSESI BERGAMBAR"},
-          { title: "BERSURAI"},
+  { title: "KETIBAAN PARA TETAMU", desc: "- Tetamu mengambil tempat duduk" }, // bullet
+  { title: "MAJLIS AKAD NIKAH",    desc: "" },                                // no desc
+  { title: "MAJLIS PERSANDINGAN",  desc: "" },                                // no desc
+  { title: "JAMUAN MAKAN",         desc: "SESI BERGAMBAR" },                  // extra heading (plain line)
+  { title: "BERSURAI",             desc: "" },     
         ],
         countdownTitle: "KIRAAN DETIK",
         cdSub: "Hari istimewa kami semakin hampir!",
@@ -1432,11 +1432,21 @@ Friends & family shots</div>
         .replace(/'/g,'&#39;');
     }
     // Helper: turn "line1\nline2" into bullets
-    function bulletsFromText(text){
-      const lines = String(text).split(/\n+/).map(l=>l.trim()).filter(Boolean);
-      if(!lines.length) return '';
-      return `<ul class="tl-list">${lines.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>`;
-    }
+// replace bulletsFromText(...) with this:
+function renderDesc(text){
+  const t = String(text || '').trim();
+  if (!t) return '';
+
+  const lines = t.split(/\n+/).map(l => l.trim()).filter(Boolean);
+  const allBullets = lines.every(l => l.startsWith('-'));
+
+  if (allBullets){
+    const clean = lines.map(l => l.replace(/^-+\s*/, ''));
+    return `<ul class="tl-list">${clean.map(l => `<li>${esc(l)}</li>`).join('')}</ul>`;
+  }
+  // plain lines (no bullets)
+  return `<div class="tl-desc">${esc(lines.join('\n')).replace(/\n/g,'<br/>')}</div>`;
+}
 
     function i18n(){
       const T = I18N[LANG];
@@ -1517,11 +1527,11 @@ Friends & family shots</div>
       if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
       if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
       const items = T.schedItems || [];
-      if (items[0]){ s1Title.textContent = items[0].title; s1Desc.innerHTML = bulletsFromText(items[0].desc); }
-      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.innerHTML = bulletsFromText(items[1].desc); }
-      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.innerHTML = bulletsFromText(items[2].desc); }
-      if (items[3]){ s4Title.textContent = items[3].title; s4Desc.innerHTML = bulletsFromText(items[3].desc); }
-      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = bulletsFromText(items[4].desc); }
+      if (items[0]){ s1Title.textContent = items[0].title; s1Desc.innerHTML = renderDesc(items[0].desc); }
+      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.innerHTML = renderDesc(items[1].desc); }
+      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.innerHTML = renderDesc(items[2].desc); }
+      if (items[3]){ s4Title.textContent = items[3].title; s4Desc.innerHTML = renderDesc(items[3].desc); }
+      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = renderDesc(items[4].desc); }
 
       // Countdown
       if (countdownTitleEl) countdownTitleEl.textContent = T.countdownTitle || "Countdown";
