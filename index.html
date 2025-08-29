@@ -589,6 +589,12 @@
 
     /* (1) make the small location description respect line breaks */
     #locSmall, #subtitleText { white-space: pre-line; }
+
+    /* (1) ensure the location small text is left-aligned beneath the title */
+    #locSmall{ align-self:flex-start; text-align:left !important; }
+
+    /* (1) centered hotel label under the photo */
+    .loc-hotel{ text-align:center; font-weight:600; margin-top:4px; }
   </style>
 </head>
 <body>
@@ -596,7 +602,7 @@
   <canvas id="bg-particles" aria-hidden="true"></canvas>
 
   <div class="top-controls">
-    <!-- (NEW ORDER) Home (icon) → Location → Contact → Mute → Language -->
+    <!-- (NEW ORDER) Home (icon) → Location → Contact → Photos → Mute → Language -->
     <button id="quickHome" class="icon-btn icon-only" aria-label="Go to Home" title="Home">
       <!-- simple home SVG icon -->
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -605,6 +611,8 @@
     </button>
     <button id="quickLocation" class="icon-btn" aria-label="Jump to location">Location</button>
     <button id="quickContact"  class="icon-btn" aria-label="Jump to contact">Contact</button>
+    <!-- (2) New Photos/Gambar quick button -->
+    <button id="quickPhotos"   class="icon-btn" aria-label="Jump to photos">Photos</button>
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
     <button id="langToggle" class="icon-btn" aria-label="Toggle language">Malay</button>
   </div>
@@ -821,12 +829,14 @@ Friends & family shots</div>
         <div class="card location-card">
           <!-- (1) Change title to LOCATION / LOKASI -->
           <h2 class="section-title" id="locTitle">LOCATION</h2>
-          <!-- (1) Small description like RSVP, with clickable coordinates -->
+          <!-- (1) Small description (left-aligned) with clickable coordinates -->
           <p class="tiny muted" id="locSmall">Direction to wedding avenue
-
-Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="noopener">5.9752036,116.06877</a>)</p>
+(<a id="coordLink" href="#" target="_blank" rel="noopener">5.9752036,116.06877</a>)</p>
 
           <img id="venuePhoto" class="loc-photo" src="wedding_avenue.jpg" alt="Wedding Avenue location photo" />
+
+          <!-- (1) Centered hotel name under the photo -->
+          <div id="locHotel" class="loc-hotel">Promanade Hotel, Kota Kinabalu</div>
 
           <p class="muted" id="locDesc">Tap the button below to open directions.</p>
 
@@ -851,11 +861,11 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
       </div>
     </section>
 
-    <!-- (6) LIVE PHOTO (before countdown) -->
+    <!-- (6) LIVE PHOTO (renamed to PHOTOS/GAMBAR) -->
     <section id="live">
       <div class="container">
         <div class="card">
-          <h2 class="section-title" id="liveTitle">LIVE PHOTO</h2>
+          <h2 class="section-title" id="liveTitle">PHOTOS</h2>
           <p class="tiny muted" id="liveHelp">Show a slideshow from a folder named “PHOTOS”.<br/>
 • Easiest: put a <code>manifest.json</code> in <code>/PHOTOS</code> that lists image URLs (see code).<br/>
 • Or publish a Google Apps Script Web App that returns a JSON array of public image URLs and paste it into <code>DRIVE_WEBAPP_URL</code> in the script.</p>
@@ -889,7 +899,8 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
   <footer class="footer">
     <div class="brandline">
       <span>made with</span>
-      <a href="https://example.com" target="_blank" rel="noopener" class="brand-link">
+      <!-- (3) Alippu clicks → force Google login then continue to Drive folder -->
+      <a href="#" id="alippuLink" class="brand-link">
         <span class="brand-strong">ALIP</span><span class="brand-light">PU</span>
       </a>
     </div>
@@ -912,6 +923,10 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
     // (1) Displayed clickable coordinates (as requested)
     const DISPLAY_COORDS = { lat: 5.9752036, lng: 116.06877 };
 
+    // (3) Private Google Drive folder for photos/RSVP tracking
+    // Replace the value below with your *restricted* Drive folder link so Google prompts login.
+    const DRIVE_PRIVATE_URL = ""; // e.g. "https://drive.google.com/drive/folders/XXXXXXXXXXXX"
+
     const CONTACTS = [
       { name: "Muhammad Basri", phone: "+60195365338" },
       { name: "Samsah Suda", phone: "+60102517562" },
@@ -932,26 +947,7 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
     const ARROW_AUTO_DELAY_MS = 7000;
 
     // (6) LIVE PHOTOS
-    // Option A: static manifest in your web root: /PHOTOS/manifest.json -> ["PHOTOS/img1.jpg", "PHOTOS/img2.jpg", ...]
     const PHOTOS_MANIFEST_URL = 'PHOTOS/manifest.json';
-    // Option B: Google Apps Script Web App that returns a JSON array of **publicly accessible** image URLs from Drive folder "PHOTOS".
-    // How:
-    // 1) In Google Drive, create folder "PHOTOS" and put images (set folder sharing: Anyone with the link -> Viewer).
-    // 2) Apps Script (code.gs) example (simple):
-    //    function doGet() {
-    //      var folder = DriveApp.getFoldersByName('PHOTOS').next();
-    //      var files = folder.getFiles();
-    //      var out = [];
-    //      while (files.hasNext()) {
-    //        var f = files.next();
-    //        // For public file URL, use https://drive.google.com/uc?export=view&id=FILE_ID
-    //        out.push('https://drive.google.com/uc?export=view&id=' + f.getId());
-    //      }
-    //      return ContentService.createTextOutput(JSON.stringify(out))
-    //        .setMimeType(ContentService.MimeType.JSON);
-    //    }
-    // 3) Deploy > New deployment > Type: Web App > Who has access: Anyone.
-    // 4) Paste the Web App URL below:
     const DRIVE_WEBAPP_URL = ''; // e.g. 'https://script.google.com/macros/s/XXXX/exec'
 
     // ====== i18n strings ======
@@ -959,12 +955,12 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
       en: {
         tagline: "Wedding Invitation",
         title: "Will you attend our wedding?",
-        // (2) Keep clear sentences; we'll auto-insert newlines after periods in i18n()
         subtitle: "We'd love to celebrate with you. Please confirm your attendance before 1 October 2025.",
         rsvp: "YES",
         no: "NO",
         location: "Location",
         contactNav: "Contact",
+        photosNav: "Photos",           // (2) Top Photos button label
         rsvpTitle: "RSVP",
         rsvpIntro: "We would be delighted for you to come and celebrate with us. Kindly confirm your attendance before 1 October 2025 by filling in your full name below:",
         fullNameFirst: "Your Full Name",
@@ -986,9 +982,11 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
         locTitle: "LOCATION",
         locDesc: "Tap the button below to open directions.",
         locNote: "Tip: You can share the link with friends who are carpooling.",
+        // Left-aligned description + clickable coordinates
         locSmallHTML: `Direction to wedding avenue
-
-Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="noopener">5.9752036,116.06877</a>)`,
+(<a id="coordLink" href="#" target="_blank" rel="noopener">5.9752036,116.06877</a>)`,
+        // Centered label under photo
+        locHotelText: "Promanade Hotel, Kota Kinabalu",
 
         contactTitle: "CONTACT (Bride's Family)",
         contactDesc: "Tap the phone icon to call.",
@@ -1023,7 +1021,8 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
         cdSub: "Our big day’s coming soon!",
         cdLabels: { days: "DAYS", hours: "HOURS", mins: "MINS", secs: "SECS" },
 
-        liveTitle: "LIVE PHOTO",
+        // (2) Renamed section title
+        liveTitle: "PHOTOS",
         liveEmpty: "No photos yet.",
         liveHelp: `Show a slideshow from a folder named “PHOTOS”.
 • Easiest: put a manifest.json in /PHOTOS that lists image URLs (see code).
@@ -1037,6 +1036,7 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
         no: "Tidak Hadir",
         location: "Lokasi",
         contactNav: "Hubungi",
+        photosNav: "Gambar",          // (2) Top Photos button label (BM)
         rsvpTitle: "RESPON",
         rsvpIntro: "Kami amat berbesar hati sekiranya anda hadir meraikan bersama kami. Sila sahkan kehadiran anda sebelum 1 Oktober 2025 dengan mengisi nama penuh anda dibawah:",
         fullNameFirst: "Nama Penuh Anda",
@@ -1058,8 +1058,8 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
         locDesc: "Tekan butang dibawah untuk buka peta ke lokasi.",
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
         locSmallHTML: `Arah ke lokasi majlis
-
-Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="noopener">5.9752036,116.06877</a>)`,
+(<a id="coordLink" href="#" target="_blank" rel="noopener">5.9752036,116.06877</a>)`,
+        locHotelText: "Promanade Hotel, Kota Kinabalu",
 
         contactTitle: "HUBUNGI (Keluarga Pengantin Perempuan)",
         contactDesc: "Tekan ikon telefon untuk membuat panggilan.",
@@ -1094,7 +1094,7 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
         cdSub: "Hari istimewa kami semakin hampir!",
         cdLabels: { days: "HARI", hours: "JAM", mins: "MIN", secs: "SAAT" },
 
-        liveTitle: "LIVE PHOTO",
+        liveTitle: "GAMBAR",
         liveEmpty: "Belum ada gambar.",
         liveHelp: `Paparkan slaid dari folder bernama “PHOTOS”.
 • Paling mudah: letak manifest.json dalam /PHOTOS yang menyenaraikan URL imej (rujuk kod).
@@ -1128,11 +1128,13 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
     const locDesc = document.getElementById('locDesc');
     const locNote = document.getElementById('locNote');
     const locSmall = document.getElementById('locSmall');
+    const locHotel = document.getElementById('locHotel'); // (1) centered hotel below photo
     const contactTitle = document.getElementById('contactTitle');
     const contactDesc = document.getElementById('contactDesc');
     const quickHome     = document.getElementById('quickHome');
     const quickLocation = document.getElementById('quickLocation');
     const quickContact  = document.getElementById('quickContact');
+    const quickPhotos   = document.getElementById('quickPhotos'); // (2) new quick button
     const noBtn = document.getElementById('noBtn');
     const noMsg = document.getElementById('noMsg');
     const scrollArrow = document.getElementById('scrollArrow');
@@ -1470,9 +1472,10 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
       if(noBtn)   noBtn.textContent   = T.no;
       if(locationBtn) locationBtn.textContent = T.location;
 
-      // Top control labels for Location/Contact (Home stays as icon)
+      // Top control labels for Location/Contact/Photos (Home stays as icon)
       if(quickLocation) quickLocation.textContent = T.location;
       if(quickContact)  quickContact.textContent  = T.contactNav;
+      if(quickPhotos)   quickPhotos.textContent   = T.photosNav;
 
       // RSVP title per language (3)
       if (rsvpTitleEl) rsvpTitleEl.textContent = T.rsvpTitle;
@@ -1494,6 +1497,7 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
       locDesc.textContent = T.locDesc;
       if(locNote) locNote.textContent = T.locNote;
       if(locSmall) locSmall.innerHTML = T.locSmallHTML;
+      if(locHotel) locHotel.textContent = T.locHotelText;
 
       // Contacts
       contactTitle.textContent = T.contactTitle;
@@ -1518,7 +1522,7 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
       if (cdMinsLabel)  cdMinsLabel.textContent  = (T.cdLabels && T.cdLabels.mins)  || "MINS";
       if (cdSecsLabel)  cdSecsLabel.textContent  = (T.cdLabels && T.cdLabels.secs)  || "SECS";
 
-      // Live section i18n
+      // Photos section i18n (renamed)
       if (liveTitleEl) liveTitleEl.textContent = T.liveTitle;
       if (liveHelpEl)  liveHelpEl.innerHTML = T.liveHelp.replace(/\n/g,'<br/>');
       if (liveEmpty)   liveEmpty.textContent = T.liveEmpty;
@@ -1669,6 +1673,20 @@ Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="
     handleSmoothLink(quickHome, 'header.hero');
     handleSmoothLink(quickLocation, '#location');
     handleSmoothLink(quickContact,  '#contact');
+    handleSmoothLink(quickPhotos,   '#live');   // (2) jump to Photos/Gambar
+
+    // (3) Force Google login then go to Drive folder when clicking ALIPPU
+    const alippuLink = document.getElementById('alippuLink');
+    if (alippuLink){
+      alippuLink.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const target = (DRIVE_PRIVATE_URL && DRIVE_PRIVATE_URL.trim().length)
+          ? DRIVE_PRIVATE_URL.trim()
+          : 'https://drive.google.com/';
+        const loginRedirect = 'https://accounts.google.com/ServiceLogin?service=wise&continue=' + encodeURIComponent(target);
+        window.location.href = loginRedirect;
+      });
+    }
 
     // NO button behavior
     if(noBtn){
