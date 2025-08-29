@@ -51,7 +51,7 @@
       --name1-offset-x: 0px;
       --name1-offset-y: 45px;
       --name2-offset-x: 0px;
-      --name2-offset-y: -40px;
+      --name2-offset-y: -10px;
 
       /* Layer control so heart/name can overlap */
       --name1-z: 2;
@@ -62,6 +62,12 @@
       --hero-heart-width: 1.45em;
       --hero-heart-offset-x: 28px;
       --hero-heart-offset-y: -10px;
+
+      /* HERO item position adjusters (positive X→right, negative X→left; positive Y→down, negative Y→up) */
+      --hero-tag-x: 0px; --hero-tag-y: 0px;
+      --hero-date-x: 0px; --hero-date-y: 0px;
+      --hero-address-x: 0px; --hero-address-y: 0px;
+      --arrow-left-offset: 0px; /* horizontal nudge for scroll arrow */
 
       /* NEW: top buttons sizing */
       --top-btn-height: 28px;
@@ -194,7 +200,7 @@
 
     /* Scroll arrow (uses adjustable bottom offset) */
     .hero-scroll{
-      position:absolute; left:50%; bottom:var(--arrow-bottom-offset); transform:translateX(-50%);
+      position:absolute; left: calc(50% + var(--arrow-left-offset)); bottom:var(--arrow-bottom-offset); transform:translateX(-50%);
       width:56px; height:56px; border-radius:999px;
       background:transparent; border:0; color:var(--gold-strong);
       display:flex; align-items:center; justify-content:center;
@@ -215,7 +221,8 @@
       text-transform:uppercase;
       color:#6b4b00;
       margin-bottom:28px;
-    }
+    
+      transform: translate(var(--hero-tag-x), var(--hero-tag-y));}
 
     .couple-title{
       display:flex; flex-direction:column; /* Force 3 lines on web too */
@@ -264,7 +271,8 @@
       letter-spacing:.02em;
       color:#5b5b5b;
       margin-bottom:36px;
-    }
+    
+      transform: translate(var(--hero-date-x), var(--hero-date-y));}
 
     /* LOGO + ADDRESS grouped */
     .hero-address-wrap{
@@ -273,7 +281,8 @@
       padding:0 12px;
       display:flex; align-items:center; justify-content:center; gap:16px;
       flex-wrap:nowrap;
-    }
+    
+      transform: translate(var(--hero-address-x), var(--hero-address-y));}
     .hero-address{
       max-width:720px;
       font-size:clamp(13px,3.2vw,16px);
@@ -399,7 +408,7 @@
     .brandline .brand-link:hover{ color:var(--gold-strong); }
 
     .toast{
-      position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
+      position:fixed; left: calc(50% + var(--arrow-left-offset)); bottom:22px; transform:translateX(-50%);
       background:#111; color:#fff; padding:12px 16px; border-radius:12px;
       opacity:0; pointer-events:none; transition:.25s ease; box-shadow:0 8px 24px rgba(0,0,0,.3)
     }
@@ -531,7 +540,11 @@
 
     .invite-inner #invSmall{ display:block; text-align:center; }
 
-    /* NEW: Contact list layout */
+    
+    /* Minor spacing requested around invitation parents blocks */
+    .invite-inner .parents-a{ margin-top:8px; margin-bottom:8px; }
+    .invite-inner .parents-b{ margin-top:8px; }
+/* NEW: Contact list layout */
     .contact-list{ display:grid; gap:10px; }
     .contact-row{
       display:grid; grid-template-columns: 1fr auto; align-items:center;
@@ -551,6 +564,10 @@
       color: var(--gold-strong);
     }
     .call-btn svg{ width:18px; height:18px; display:block; }
+  
+    /* Bullet styling for schedule descriptions converted from lines */
+    .tl-desc ul{ margin:6px 0 0; padding-left:18px; }
+    .tl-desc li{ margin:2px 0; }
   </style>
 </head>
 <body>
@@ -866,7 +883,7 @@ Friends & family shots</div>
       en: {
         tagline: "Wedding Invitation",
         title: "Will you attend our wedding?",
-        subtitle: "We'd love to celebrate with you. Please confirm your attendance.",
+        subtitle: \"We'd love to celebrate with you. Please confirm your attendance before 1 October 2025.\",
         rsvp: "YES",
         no: "NO",
         location: "Location",
@@ -927,7 +944,7 @@ Friends & family shots</div>
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
         title: "Adakah anda akan hadir ke majlis kami?",
-        subtitle: "Kami ingin meraikan bersama anda. Sila sahkan kehadiran anda.",
+        subtitle: \"Kami ingin meraikan bersama anda. Sila sahkan kehadiran anda sebelum 1 Oktober 2025.\",
         rsvp: "Hadir",
         no: "Tidak Hadir",
         location: "Lokasi",
@@ -1054,6 +1071,15 @@ Friends & family shots</div>
     const cdHoursLabel = document.getElementById('cdHoursLabel');
     const cdMinsLabel = document.getElementById('cdMinsLabel');
     const cdSecsLabel = document.getElementById('cdSecsLabel');
+
+    // Convert multi-line text into bullet list for schedule descriptions
+    function setDescBullets(el, text){
+      const lines = String(text||'').split(/\n+/).map(s=>s.trim()).filter(Boolean);
+      if(!lines.length){ el.textContent = ''; return; }
+      const ul = document.createElement('ul');
+      lines.forEach(t=>{ const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+      el.innerHTML = ''; el.appendChild(ul);
+    }
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'ms'; // default Malay
@@ -1350,11 +1376,11 @@ Friends & family shots</div>
       if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
       if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
       const items = T.schedItems || [];
-      if (items[0]){ s1Title.textContent = items[0].title; s1Desc.textContent = items[0].desc; }
-      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.textContent = items[1].desc; }
-      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.textContent = items[2].desc; }
-      if (items[3]){ s4Title.textContent = items[3].title; s4Desc.textContent = items[3].desc; }
-      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.textContent = items[4].desc; }
+      if (items[0]){ s1Title.textContent = items[0].title; setDescBullets(s1Desc, items[0].desc); }
+      if (items[1]){ s2Title.textContent = items[1].title; setDescBullets(s2Desc, items[1].desc); }
+      if (items[2]){ s3Title.textContent = items[2].title; setDescBullets(s3Desc, items[2].desc); }
+      if (items[3]){ s4Title.textContent = items[3].title; setDescBullets(s4Desc, items[3].desc); }
+      if (items[4]){ s5Title.textContent = items[4].title; setDescBullets(s5Desc, items[4].desc); }
 
       // Countdown
       if (countdownTitleEl) countdownTitleEl.textContent = T.countdownTitle || "Countdown";
@@ -1649,8 +1675,18 @@ Friends & family shots</div>
 
     form.addEventListener('submit', (e)=>{
       if((!RESUBMISSION_ENABLE && isSubmitted()) || submitBtn.disabled){ e.preventDefault(); playError(); return; }
+      if(_pendingSubmit){ e.preventDefault(); return; } // prevent double submit
       syncHiddenFields(); saveLocal();
       _pendingSubmit = true; // posts to iframe
+
+      // Disable the button immediately and show loading state
+      submitBtn.disabled = true;
+      submitBtn.setAttribute('aria-disabled','true');
+      submitBtn.textContent = I18N[LANG].submitting;
+
+      // Show success message immediately so guest knows it's submitted
+      validationMsg.style.display = 'block';
+      validationMsg.textContent = I18N[LANG].thanks;
     });
 
     // Particles (unchanged)
