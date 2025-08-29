@@ -1017,7 +1017,7 @@ Friends & family shots</div>
   { title: "GUEST ARRIVAL", desc: "- Guest take their seats" }, // bullet
   { title: "AKAD NIKAH CEREMONY",    desc: "" },                                // no desc
   { title: "WEDDING CEREMONY",  desc: "" },                                // no desc
-  { title: "LUNCH",         desc: "PHOTO SESSION" },                  // extra heading (plain line)
+{ title: "LUNCH\nPHOTO SESSION", desc: "" }
   { title: "FAREWELL",             desc: "" },     
         ],
         countdownTitle: "Countdown Timer",
@@ -1090,7 +1090,7 @@ Friends & family shots</div>
   { title: "KETIBAAN PARA TETAMU", desc: "- Tetamu mengambil tempat duduk" }, // bullet
   { title: "MAJLIS AKAD NIKAH",    desc: "" },                                // no desc
   { title: "MAJLIS PERSANDINGAN",  desc: "" },                                // no desc
-  { title: "JAMUAN MAKAN",         desc: "SESI BERGAMBAR" },                  // extra heading (plain line)
+{ title: "JAMUAN MAKAN\nSESI BERGAMBAR", desc: "" }                  // extra heading (plain line)
   { title: "BERSURAI",             desc: "" },     
         ],
         countdownTitle: "KIRAAN DETIK",
@@ -1527,11 +1527,11 @@ function renderDesc(text){
       if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
       if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
       const items = T.schedItems || [];
-      if (items[0]){ s1Title.textContent = items[0].title; s1Desc.innerHTML = renderDesc(items[0].desc); }
-      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.innerHTML = renderDesc(items[1].desc); }
-      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.innerHTML = renderDesc(items[2].desc); }
-      if (items[3]){ s4Title.textContent = items[3].title; s4Desc.innerHTML = renderDesc(items[3].desc); }
-      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = renderDesc(items[4].desc); }
+      if (items[0]){ s1Title.innerHTML = titleHTML(items[0].title); s1Desc.innerHTML = renderDesc(items[0].desc); }
+      if (items[1]){ s2Title.innerHTML = titleHTML(items[1].title); s2Desc.innerHTML = renderDesc(items[1].desc); }
+      if (items[2]){ s3Title.innerHTML = titleHTML(items[2].title); s3Desc.innerHTML = renderDesc(items[2].desc); }
+      if (items[3]){ s4Title.innerHTML = titleHTML(items[3].title); s4Desc.innerHTML = renderDesc(items[3].desc); }
+      if (items[4]){ s5Title.innerHTML = titleHTML(items[4].title); s5Desc.innerHTML = renderDesc(items[4].desc); }
 
       // Countdown
       if (countdownTitleEl) countdownTitleEl.textContent = T.countdownTitle || "Countdown";
