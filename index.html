@@ -1347,16 +1347,22 @@ Friends & family shots</div>
       });
     }
 
-    function renderMaps(){
-      const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
-      const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
-      btnGmaps.href = gq; btnWaze.href = wz;
+	function renderMaps(){
+	const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
+	const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
+	btnGmaps.href = gq; 
+	btnWaze.href  = wz;
+	
+	// Re-select the freshly-rendered link (the old reference becomes stale after i18n)
+	const coordEl = document.getElementById('coordLink');
+	if (coordEl) {
+		const direct = `https://www.google.com/maps/search/?api=1&query=${DISPLAY_COORDS.lat},${DISPLAY_COORDS.lng}`;
+		coordEl.href = direct;
+		coordEl.target = '_blank';
+		coordEl.rel = 'noopener';
+	}
+	}
 
-      if (coordLink) {
-        const direct = `https://www.google.com/maps/search/?api=1&query=${DISPLAY_COORDS.lat},${DISPLAY_COORDS.lng}`;
-        coordLink.href = direct;
-      }
-    }
 
     function formatWeddingDateWithDay(lang){
       const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
@@ -1586,12 +1592,16 @@ Friends & family shots</div>
     }
 
     // Language toggle
-    langToggle.addEventListener('click', (e)=>{
-      e.preventDefault();
-      LANG = (LANG === 'en') ? 'ms' : 'en';
-      localStorage.setItem('rsvp_lang', LANG);
-      i18n(); saveLocal(); maybeEnableSubmit();
-    });
+	langToggle.addEventListener('click', (e)=>{
+	e.preventDefault();
+	LANG = (LANG === 'en') ? 'ms' : 'en';
+	localStorage.setItem('rsvp_lang', LANG);
+	i18n();
+	renderMaps(); // <-- add this line
+	saveLocal(); 
+	maybeEnableSubmit();
+	});
+
 
     // Music
     bgm.volume = 0.2;
