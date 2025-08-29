@@ -269,36 +269,6 @@
       z-index: var(--heart-z);
     }
 
-    /* (NEW) twinkling stars around the couple name */
-    .hero-stars{ position:absolute; inset:0; pointer-events:none; z-index:0; }
-    .hero-stars .star{
-      position:absolute; width:10px; height:10px; opacity:0.0;
-      transform-origin:center;
-      animation: twinkle 2.8s infinite ease-in-out;
-      filter: drop-shadow(0 0 6px rgba(255,255,200,.65));
-      background:
-        radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,.85) 35%, rgba(255,255,255,0) 70%),
-        conic-gradient(from 45deg, rgba(255,255,255,.0) 0 25%, rgba(255,246,200,.95) 25% 50%, rgba(255,255,255,.0) 50% 75%, rgba(255,246,200,.95) 75% 100%);
-      mask: radial-gradient(circle at center, #000 0 45%, transparent 46%);
-      border-radius:50%;
-    }
-    /* star positions */
-    .hero-stars .s1{ top: -10px; left: 8%;   animation-delay:.0s }
-    .hero-stars .s2{ top: 18%;  right: 10%;  animation-delay:.4s }
-    .hero-stars .s3{ bottom: 6%; left: 14%;  animation-delay:.8s }
-    .hero-stars .s4{ top: 40%;  left: -4%;   animation-delay:1.2s }
-    .hero-stars .s5{ top: -6%;  right: 22%;  animation-delay:1.6s }
-    .hero-stars .s6{ bottom: 10%; right: 6%; animation-delay:2.0s }
-    .hero-stars .s7{ top: 54%;  right: -2%;  animation-delay:2.4s }
-    .hero-stars .s8{ top: 72%;  left: 4%;    animation-delay:2.8s }
-
-    @keyframes twinkle{
-      0%, 100% { transform: scale(.4) rotate(0deg); opacity:0; }
-      10%      { opacity:.95; transform: scale(1) rotate(45deg); }
-      40%      { opacity:.35; transform: scale(.6) rotate(90deg); }
-      70%      { opacity:.9; transform: scale(1.05) rotate(135deg); }
-    }
-
     @media (max-width:520px){
       .couple-title{ gap:20px; }
     }
@@ -349,7 +319,6 @@
 
     .heading{ font-size:clamp(28px,5vw,52px); line-height:1.12; }
     .sub{ color:var(--muted); margin-top:8px }
-    .sub.tiny{ font-size:12px; line-height:1.4; }
 
     .cta-row{ margin-top:26px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
     .btn{
@@ -598,15 +567,17 @@
     }
     .contact-left{ font-weight:700; color:#0f172a; }
     .contact-right{ display:flex; align-items:center; gap:10px; color:#6b7280; }
-    /* UPDATED: iOS phone app-like icon (green handset on black rounded square), slightly bigger */
     .call-btn{
-      width:42px; height:42px; border-radius:10px;
+      width:36px; height:36px; border-radius:999px;
       display:inline-flex; align-items:center; justify-content:center;
-      background:#000; border:0;
+      background:#fff; border:1px solid var(--gold-strong);
+      color:#var(--gold-strong);
       box-shadow:var(--shadow-sm);
       text-decoration:none;
+      color: var(--gold-strong);
     }
-    .call-btn svg{ width:24px; height:24px; display:block; }
+    .call-btn svg{ width:18px; height:18px; display:block; }
+    .call-btn img{ width:18px; height:18px; display:block; } /* for PNG icon */
   </style>
 </head>
 <body>
@@ -633,12 +604,6 @@
 
       <!-- Names + PNG heart (now offset/z controlled only by CSS variables) -->
       <div class="couple-title" aria-label="Basran love Khairani">
-        <!-- twinkling stars -->
-        <div class="hero-stars" aria-hidden="true">
-          <span class="star s1"></span><span class="star s2"></span><span class="star s3"></span><span class="star s4"></span>
-          <span class="star s5"></span><span class="star s6"></span><span class="star s7"></span><span class="star s8"></span>
-        </div>
-
         <span class="name n1" data-text="Basran">Basran</span>
         <img class="hero-heart" src="hero_heart.png" alt="" />
         <span class="name n2" data-text="Khairani">Khairani</span>
@@ -675,7 +640,8 @@
       <div class="container">
         <div class="card" style="text-align:center">
           <div class="heading" id="titleText">Will you attend our wedding?</div>
-          <div class="sub tiny" id="subtitleText">We'd love to celebrate with you.
+          <!-- (2) smaller like RSVP description + break line after every full stop -->
+          <div class="tiny muted" id="subtitleText">We'd love to celebrate with you.
 Please confirm your attendance
 before 1 October 2025.</div>
           <div class="cta-row" style="justify-content:center">
@@ -842,11 +808,12 @@ Friends & family shots</div>
     <section id="location">
       <div class="container">
         <div class="card location-card">
-          <h2 class="section-title" id="locTitle">LOCATION</h2>
+          <h2 class="section-title" id="locTitle">DIRECTION TO WEDDING AVENUE</h2>
 
           <img id="venuePhoto" class="loc-photo" src="wedding_avenue.jpg" alt="Wedding Avenue location photo" />
 
-          <p class="tiny muted" id="locDesc">Direction to wedding avenue<br><br>Promanade Hotel, Kota Kinabalu (<a href="https://www.google.com/maps?q=5.9752036,116.06877" target="_blank" rel="noopener">5.9752036,116.06877</a>)</p>
+          <!-- (1) smaller description + hotel + clickable coordinates -->
+          <p class="tiny muted" id="locDesc">Tap the button below to open directions.</p>
 
           <div class="actions" style="margin:10px 0 18px">
             <a class="btn btn-outline" id="btnWaze" target="_blank" rel="noopener">Waze</a>
@@ -912,6 +879,10 @@ Friends & family shots</div>
       { name: "Mohd Ridzuan", phone: "+60134061314" },
     ];
 
+    // For display of the exact coordinates text in Location description
+    const COORD_TEXT = "5.9752036,116.06877";
+    const COORD_URL  = `https://www.google.com/maps?q=${COORD_TEXT}`;
+
     // Single source of truth for the date/time
     const WEDDING_DATE_ISO = '2025-11-22';
     const WEDDING_TIME = '10:30:00'; // local time for countdown target
@@ -952,9 +923,10 @@ Friends & family shots</div>
         thanks: "Thank you! Your RSVP has been received.",
         already: "RSVP already submitted. Do contact us if there are any changes.",
 
+        /* (1) Location strings */
         locTitle: "LOCATION",
-        // clickable coordinates link
-        locDesc: `Direction to wedding avenue<br><br>Promanade Hotel, Kota Kinabalu (<a href="https://www.google.com/maps?q=5.9752036,116.06877" target="_blank" rel="noopener">5.9752036,116.06877</a>)`,
+        locDescLead: "Direction to wedding avenue",
+        locDescVenue: "Promenade Hotel, Kota Kinabalu",
         locNote: "Tip: You can share the link with friends who are carpooling.",
 
         contactTitle: "CONTACT (Bride's Family)",
@@ -1015,8 +987,10 @@ Friends & family shots</div>
         thanks: "Terima kasih! Respon anda telah diterima.",
         already: "RSVP telah dihantar. Sila hubungi keluarga pengantin sekiranya terdapat perubahan.",
 
+        /* (1) Location strings (Malay) */
         locTitle: "LOKASI",
-        locDesc: `Arah ke lokasi majlis<br><br>Promanade Hotel, Kota Kinabalu (<a href="https://www.google.com/maps?q=5.9752036,116.06877" target="_blank" rel="noopener">5.9752036,116.06877</a>)`,
+        locDescLead: "Arah ke lokasi majlis",
+        locDescVenue: "Promenade Hotel, Kota Kinabalu",
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
 
         contactTitle: "HUBUNGI (Keluarga Pengantin Perempuan)",
@@ -1121,6 +1095,8 @@ Friends & family shots</div>
     const cdHoursLabel = document.getElementById('cdHoursLabel');
     const cdMinsLabel = document.getElementById('cdMinsLabel');
     const cdSecsLabel = document.getElementById('cdSecsLabel');
+
+    const rsvpTitleEl = document.getElementById('rsvpTitle');
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'ms'; // default Malay
@@ -1248,7 +1224,7 @@ Friends & family shots</div>
       for(let i=0; i<MAX_GUESTS; i++){ guestRowsEl.appendChild(makeGuestRow(i)); }
     }
 
-    // UPDATED: contact rows (name left, number right; icon is clickable and iOS-styled)
+    // UPDATED: contact rows (name left, number + gold phone icon right; only icon is clickable)
     function renderContacts(){
       const contactList = document.getElementById('contactList');
       if(!contactList) return;
@@ -1272,12 +1248,8 @@ Friends & family shots</div>
         call.className = 'call-btn';
         call.href = `tel:${c.phone.replace(/\s+/g,'')}`;
         call.setAttribute('aria-label', `Call ${c.name}`);
-        // black rounded square with green handset
-        call.innerHTML = `
-          <svg viewBox="0 0 48 48" aria-hidden="true">
-            <rect x="4" y="4" width="40" height="40" rx="10" fill="#000"/>
-            <path d="M31.6 28.2l-3.2 2.5c-4.6-2-8.4-5.7-10.4-10.4l2.5-3.2c.5-.6.6-1.5.3-2.3l-1.5-4c-.4-1-1.5-1.6-2.5-1.4l-4.7.9c-1 .2-1.8 1-1.9 2.1-.3 4.8 1.5 10 5.7 14.2 4.2 4.2 9.4 6 14.2 5.7 1.1-.1 1.9-.9 2.1-1.9l.9-4.7c.2-1.1-.4-2.1-1.4-2.5l-4-1.5c-.8-.3-1.7-.1-2.3.3z" fill="#34C759"/>
-          </svg>`;
+        // (4) use PNG icon you uploaded
+        call.innerHTML = `<img src="phone_icon.png" alt="">`;
 
         right.appendChild(num);
         right.appendChild(call);
@@ -1400,8 +1372,10 @@ Friends & family shots</div>
 
       // CTA
       titleText.textContent = T.title;
-      // Make the subtitle small and put a new line after each full stop.
-      subtitleText.innerHTML = T.subtitle.replace(/\.\s*/g, '.<br/>');
+      // (2) small + line breaks after every "."
+      const subtitleHtml = T.subtitle.replace(/\.\s*/g, '.<br/>').trim();
+      subtitleText.innerHTML = subtitleHtml;
+
       if(rsvpBtn) rsvpBtn.textContent = T.rsvp;
       if(noBtn)   noBtn.textContent   = T.no;
       if(locationBtn) locationBtn.textContent = T.location;
@@ -1410,9 +1384,10 @@ Friends & family shots</div>
       if(quickLocation) quickLocation.textContent = T.location;
       if(quickContact)  quickContact.textContent  = T.contactNav;
 
-      // RSVP title + body/phone
-      const rsvpTitleEl = document.getElementById('rsvpTitle');
-      if(rsvpTitleEl) rsvpTitleEl.textContent = T.rsvpTitle;
+      // RSVP title (3)
+      if (rsvpTitleEl) rsvpTitleEl.textContent = T.rsvpTitle;
+
+      // RSVP body/phone
       if(rsvpIntro)   rsvpIntro.textContent = T.rsvpIntro;
       if(phoneHeader) phoneHeader.textContent = T.phoneHeader;
       if(phoneHint)   phoneHint.textContent   = T.phoneHint;
@@ -1424,9 +1399,10 @@ Friends & family shots</div>
         noMsg.style.display = 'none';
       }
 
-      // Location/Direction (allow HTML for link)
+      // (1) Location
       locTitle.textContent = T.locTitle;
-      locDesc.innerHTML = T.locDesc;
+      const locHtml = `${esc(T.locDescLead)}<br/><br/>${esc(T.locDescVenue)} (<a href="${COORD_URL}" target="_blank" rel="noopener">${COORD_TEXT}</a>)`;
+      locDesc.innerHTML = locHtml;
       if(locNote) locNote.textContent = T.locNote;
 
       // Contacts
