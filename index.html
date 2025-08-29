@@ -553,9 +553,9 @@
     .invite-inner #invSmall{ display:block; text-align:center; }
 
     /* NEW: spacing tweaks requested for Invitation section */
-    .invite-inner .inv-label + .parents-a{ margin-top:8px; }   /* space between "WalimatulUrus" and first parent name */
-    .parents-a{ margin-bottom:8px; }                           /* a bit more space below Samsah block */
-    .parents-b{ margin-top:8px; }                              /* space before Noor Khairani block */
+    .invite-inner .inv-label + .parents-a{ margin-top:10px; }   /* space between "WalimatulUrus" and first parent name */
+    .parents-a{ margin-bottom:10px; }                           /* a bit more space below Samsah block */
+    .parents-b{ margin-top:10px; }                              /* space before Noor Khairani block */
 
     /* NEW: Contact list layout */
     .contact-list{ display:grid; gap:10px; }
@@ -639,7 +639,9 @@
       <div class="container">
         <div class="card" style="text-align:center">
           <div class="heading" id="titleText">Will you attend our wedding?</div>
-          <div class="sub" id="subtitleText">We'd love to celebrate with you. Please confirm your attendance before 1st Oct 2025.</div>
+          <div class="sub" id="subtitleText">We'd love to celebrate with you.
+Please confirm your attendance
+before 1 October 2025.</div>
           <div class="cta-row" style="justify-content:center">
             <a class="btn" href="#rsvp" id="rsvpBtn" data-smooth>YES</a>
             <button class="btn btn-outline" id="noBtn" type="button">NO</button>
@@ -664,7 +666,7 @@
             </div>
 
             <div class="inv-small" id="invBody">
-              Dengan penuh rasa kesyukuran, kami menjemput Dato’/Datin/Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan Majlis Perkahwinan puteri kami
+              Dengan penuh rasa kesyukuran, kami menjemput Tuan/Puan/Encik/Cik beserta suami/isteri/pasangan untuk memeriahkan Majlis Perkahwinan puteri kami
             </div>
 
             <div class="parents-block parents-b">
@@ -687,7 +689,7 @@
                 <div class="inv-value" id="inviteVenue">Promenade Hotel, Rafflesia Ballroom</div>
               </div>
               <div class="inv-row">
-                <div class="inv-label" id="invDressLabel">Kod Pakaian</div>
+                <div class="inv-label" id="invDressLabel">Etika Pakaian</div>
                 <div class="inv-value" id="inviteDress">Sopan dan Menutup Aurat</div>
               </div>
             </div>
@@ -720,7 +722,7 @@
 
             <div class="submit-wrap">
               <div>
-                <h2 class="section-title" id="phoneHeader">Phone Number</h2>
+                <h2 class="section-title" id="phoneHeader">PHONE NUMBER</h2>
                 <p class="tiny muted" id="phoneHint">We’ll use this to contact you if there are any updates or changes.</p>
                 <input class="input" id="phone" name="phone" autocomplete="tel" placeholder="e.g. +60 12 345 6789" required />
               </div>
@@ -745,7 +747,7 @@
     <section id="schedule">
       <div class="container">
         <div class="card">
-          <h2 class="section-title" id="scheduleTitle">Schedule</h2>
+          <h2 class="section-title" id="scheduleTitle">SCHEDULE</h2>
           <div class="agenda">
             <div>
               <div class="agenda-date" id="agendaDate">November 22, 2025</div>
@@ -804,7 +806,7 @@ Friends & family shots</div>
     <section id="location">
       <div class="container">
         <div class="card location-card">
-          <h2 class="section-title" id="locTitle">Direction to Wedding Avenue</h2>
+          <h2 class="section-title" id="locTitle">DIRECTION TO WEDDING AVENUE</h2>
 
           <img id="venuePhoto" class="loc-photo" src="wedding_avenue.jpg" alt="Wedding Avenue location photo" />
 
@@ -824,7 +826,7 @@ Friends & family shots</div>
     <section id="contact">
       <div class="container">
         <div class="card">
-          <h2 class="section-title" id="contactTitle">Contact (Bride's family)</h2>
+          <h2 class="section-title" id="contactTitle">CONTACT (Bride's family)</h2>
           <p class="muted" id="contactDesc">Tap the phone icon to call.</p>
           <div id="contactList" class="contact-list" style="margin-top:6px"></div>
         </div>
@@ -835,7 +837,7 @@ Friends & family shots</div>
     <section id="countdown">
       <div class="container">
         <div class="card">
-          <h2 class="section-title" id="countdownTitle">Countdown Timer</h2>
+          <h2 class="section-title" id="countdownTitle">COUNTDOWN TIMER</h2>
           <p class="muted cd-sub" id="cdSub">Our big day’s coming soon!</p>
           <div class="countdown-row" role="timer" aria-live="polite">
             <div class="cd-box"><div id="cdDays" class="cd-num">0</div><div class="cd-label" id="cdDaysLabel">DAYS</div></div>
@@ -881,7 +883,7 @@ Friends & family shots</div>
 
     const BGM_STOP_AFTER_LOOPS = 1;
 
-    // ===== RESUBMISSION TOGGLE =====
+    // ===== RESUBMISSION TOGGLE (1 - able to resubmit) =====
     const RESUBMISSION_ENABLE = 0;
 
     // Auto-scroll delay variable (ms)
@@ -892,18 +894,18 @@ Friends & family shots</div>
       en: {
         tagline: "Wedding Invitation",
         title: "Will you attend our wedding?",
-        subtitle: "We'd love to celebrate with you. Please confirm your attendance before 1st Oct 2025.",
+        subtitle: "We'd love to celebrate with you. Please confirm your attendance before 1 October 2025.",
         rsvp: "YES",
         no: "NO",
         location: "Location",
         contactNav: "Contact",
-        rsvpIntro: "Please confirm your attendance before 1st Oct 2025, so we may welcome you with joy on our special day.",
+        rsvpIntro: "We would be delighted for you to come and celebrate with us. Kindly confirm your attendance before 1 October 2025 by filling in your full name below:",
         fullNameFirst: "Your Full Name",
         fullNameOthers: "Attend With",
         confirm: "Confirm",
         edit: "Edit",
         phoneHeader: "Contact Number",
-        phoneHint: "We’ll use this to inform you if anything changes.",
+        phoneHint: "We’ll use this to contact you if there are any updates or changes.",
         submit: "Submit RSVP",
         submitting: "Submitting...",
         total: (n)=>`Total: ${n} Guest(s)`,
@@ -913,20 +915,20 @@ Friends & family shots</div>
         thanks: "Thank you! Your RSVP has been received.",
         already: "RSVP already submitted. Do contact us if there are any changes.",
 
-        locTitle: "Direction to Wedding Avenue",
+        locTitle: "DIRECTION TO WEDDING AVENUE",
         locDesc: "Tap the button below to open directions.",
         locNote: "Tip: You can share the link with friends who are carpooling.",
 
-        contactTitle: "Contact (Bride's family)",
+        contactTitle: "CONTACT (Bride's family)",
         contactDesc: "Tap the phone icon to call.",
 
         invSmall: "Wedding Invitation",
-        invBody: "With heartfelt gratitude, we cordially invite you and your partner to our princess wedding reception.",
+        invBody: "With heartfelt gratitude, we cordially invite Mr/Mdm/Mrs/Ms and your partner to our princess wedding reception.",
         invDateLabel: "Date",
         invTimeLabel: "Time",
         invVenueLabel: "Venue",
         invDressLabel: "Dress Code",
-        invDressValue: "Modest and aurat-covering",
+        invDressValue: "Modest and Aurat-covering",
 
         addrLines: [
           "Rafflesia Ballroom",
@@ -941,7 +943,7 @@ Friends & family shots</div>
         scheduleTitle: "Schedule",
         schedItems: [
           { title: "GUEST ARRIVAL", desc: "Invitation greetings\nFind your seat, mingle" },
-          { title: "NIKAH", desc: "Akad nikah ceremony\nFamily blessings" },
+          { title: "NIKAH", desc: "Akad Nikah ceremony\nFamily blessings" },
           { title: "WEDDING CEREMONY", desc: "Procession & doa\nCouple entrance" },
           { title: "LUNCH & PHOTO SESSION", desc: "Please enjoy the meal\nGroup photos on stage\nFriends & family shots" },
           { title: "FAREWELL SESSION", desc: "End of event" },
@@ -953,12 +955,12 @@ Friends & family shots</div>
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
         title: "Adakah anda akan hadir ke majlis kami?",
-        subtitle: "Kami ingin meraikan bersama anda. Mohon sahkan kehadiran sebelum 1 Okt 2025.",
+        subtitle: "Kami ingin meraikan bersama anda. Sila sahkan kehadiran anda sebelum 1 Oktober 2025.",
         rsvp: "Hadir",
         no: "Tidak Hadir",
         location: "Lokasi",
         contactNav: "Hubungi",
-        rsvpIntro: "Mohon sahkan kehadiran anda sebelum 1 Okt 2025, agar kami dapat menyambut anda dengan mesra di hari bahagia kami.",
+        rsvpIntro: "Kami amat berbesar hati sekiranya anda hadir meraikan bersama kami. Sila sahkan kehadiran anda sebelum 1 Oktober 2025 dengan mengisi nama penuh anda dibawah:",
         fullNameFirst: "Nama Penuh Anda",
         fullNameOthers: "Hadir Bersama",
         confirm: "Hadir",
@@ -974,11 +976,11 @@ Friends & family shots</div>
         thanks: "Terima kasih! Respon anda telah diterima.",
         already: "RSVP telah dihantar. Sila hubungi keluarga pengantin sekiranya terdapat perubahan.",
 
-        locTitle: "Lokasi ke Majlis Perkahwinan",
-        locDesc: "Tekan butang untuk buka arah ke lokasi.",
+        locTitle: "LOKASI KE MAJLIS PERKAHWINAN",
+        locDesc: "Tekan butang dibawah untuk buka peta ke lokasi.",
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
 
-        contactTitle: "Hubungi (keluarga pengantin perempuan)",
+        contactTitle: "HUBUNGI (Keluarga Pengantin Perempuan)",
         contactDesc: "Tekan ikon telefon untuk membuat panggilan.",
 
         invSmall: "Undangan Majlis Perkahwinan",
@@ -1002,12 +1004,12 @@ Friends & family shots</div>
         scheduleTitle: "Atur Cara",
         schedItems: [
           { title: "KETIBAAN TETAMU", desc: "Alu-aluan jemputan\nCari tempat duduk, beramah mesra" },
-          { title: "NIKAH", desc: "Majlis akad nikah\nDoa & restu keluarga" },
+          { title: "NIKAH", desc: "Majlis Akad Nikah\nDoa & restu keluarga" },
           { title: "MAJLIS PERKAHWINAN", desc: "Perarakan & doa\nKetibaan pasangan" },
           { title: "JAMUAN MAKAN & SESI BERGAMBAR", desc: "Sila nikmati hidangan\nBergambar di pelamin\nBersama keluarga & rakan" },
           { title: "SESI BERSURAI", desc: "Majlis tamat" },
         ],
-        countdownTitle: "Kiraan Detik",
+        countdownTitle: "KIRAAN DETIK",
         cdSub: "Hari istimewa kami semakin hampir!",
         cdLabels: { days: "HARI", hours: "JAM", mins: "MIN", secs: "SAAT" }
       }
