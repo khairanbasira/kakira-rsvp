@@ -335,8 +335,9 @@
     .btn:active{ transform:translateY(0); }
     .btn-outline{ background:#fff; color:#111; border:1px solid var(--gold-strong) }
 
-    #submitBtn{ background:var(--gold); color:#111; border:1px solid var(--gold-strong); }
-    #submitBtn[disabled]{ background:#eee; color:#999; border-color:#ddd; cursor:not-allowed; box-shadow:none; transform:none; }
+    /* (5) Ensure gold-filled submit when enabled; grey when disabled/submitted */
+    button#submitBtn{ background:var(--gold) !important; color:#111 !important; border:1px solid var(--gold-strong) !important; }
+    #submitBtn[disabled]{ background:#eee !important; color:#999 !important; border-color:#ddd !important; cursor:not-allowed; box-shadow:none; transform:none; }
 
     .btn.disabled,
     .btn[aria-disabled="true"]{
@@ -567,17 +568,27 @@
     }
     .contact-left{ font-weight:700; color:#0f172a; }
     .contact-right{ display:flex; align-items:center; gap:10px; color:#6b7280; }
+
+    /* (4) Phone icon button: use PNG directly, no frame */
     .call-btn{
-      width:36px; height:36px; border-radius:999px;
+      width:36px; height:36px;
       display:inline-flex; align-items:center; justify-content:center;
-      background:#fff; border:1px solid var(--gold-strong);
-      color:#var(--gold-strong);
-      box-shadow:var(--shadow-sm);
-      text-decoration:none;
-      color: var(--gold-strong);
+      background:transparent; border:0; box-shadow:none; border-radius:0;
+      text-decoration:none; padding:0;
     }
-    .call-btn svg{ width:18px; height:18px; display:block; }
-    .call-btn img{ width:18px; height:18px; display:block; } /* for PNG icon */
+    .call-btn img{ width:100%; height:100%; object-fit:contain; display:block; }
+
+    /* (6) LIVE PHOTO gallery */
+    .live-gallery{
+      display:flex; align-items:center; justify-content:center; gap:12px;
+      margin-top:8px;
+    }
+    .live-gallery img{
+      max-width:100%; max-height:420px; border-radius:12px; box-shadow:var(--shadow-sm);
+    }
+
+    /* (1) make the small location description respect line breaks */
+    #locSmall, #subtitleText { white-space: pre-line; }
   </style>
 </head>
 <body>
@@ -640,7 +651,7 @@
       <div class="container">
         <div class="card" style="text-align:center">
           <div class="heading" id="titleText">Will you attend our wedding?</div>
-          <!-- (2) smaller like RSVP description + break line after every full stop -->
+          <!-- (2) Make small like RSVP description + show new lines -->
           <div class="tiny muted" id="subtitleText">We'd love to celebrate with you.
 Please confirm your attendance
 before 1 October 2025.</div>
@@ -659,7 +670,7 @@ before 1 October 2025.</div>
         <div class="invite-card">
           <div class="invite-inner">
             <div class="inv-label" id="invSmall">Undangan Majlis Perkahwinan</div>
-            <div class="inv-label" id="invSmall">WalimatulUrus</div>
+            <div class="inv-label" id="invSmall2">WalimatulUrus</div>
 
             <div class="parents-block parents-a">
               <div class="inv-couple">Muhammad Basri Bin Patara</div>
@@ -808,12 +819,16 @@ Friends & family shots</div>
     <section id="location">
       <div class="container">
         <div class="card location-card">
-          <h2 class="section-title" id="locTitle">DIRECTION TO WEDDING AVENUE</h2>
+          <!-- (1) Change title to LOCATION / LOKASI -->
+          <h2 class="section-title" id="locTitle">LOCATION</h2>
+          <!-- (1) Small description like RSVP, with clickable coordinates -->
+          <p class="tiny muted" id="locSmall">Direction to wedding avenue
+
+Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="noopener">5.9752036,116.06877</a>)</p>
 
           <img id="venuePhoto" class="loc-photo" src="wedding_avenue.jpg" alt="Wedding Avenue location photo" />
 
-          <!-- (1) smaller description + hotel + clickable coordinates -->
-          <p class="tiny muted" id="locDesc">Tap the button below to open directions.</p>
+          <p class="muted" id="locDesc">Tap the button below to open directions.</p>
 
           <div class="actions" style="margin:10px 0 18px">
             <a class="btn btn-outline" id="btnWaze" target="_blank" rel="noopener">Waze</a>
@@ -832,6 +847,24 @@ Friends & family shots</div>
           <h2 class="section-title" id="contactTitle">CONTACT (Bride's Family)</h2>
           <p class="muted" id="contactDesc">Tap the phone icon to call.</p>
           <div id="contactList" class="contact-list" style="margin-top:6px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- (6) LIVE PHOTO (before countdown) -->
+    <section id="live">
+      <div class="container">
+        <div class="card">
+          <h2 class="section-title" id="liveTitle">LIVE PHOTO</h2>
+          <p class="tiny muted" id="liveHelp">Show a slideshow from a folder named “PHOTOS”.<br/>
+• Easiest: put a <code>manifest.json</code> in <code>/PHOTOS</code> that lists image URLs (see code).<br/>
+• Or publish a Google Apps Script Web App that returns a JSON array of public image URLs and paste it into <code>DRIVE_WEBAPP_URL</code> in the script.</p>
+          <div id="liveGallery" class="live-gallery" aria-live="polite">
+            <button id="livePrev" class="icon-btn" type="button" aria-label="Previous photo">‹</button>
+            <img id="liveImage" alt="Live photo"/>
+            <button id="liveNext" class="icon-btn" type="button" aria-label="Next photo">›</button>
+          </div>
+          <div class="tiny muted" id="liveEmpty" style="display:none;">No photos yet.</div>
         </div>
       </div>
     </section>
@@ -870,18 +903,20 @@ Friends & family shots</div>
     // ====== CONFIG ======
     const MAX_GUESTS = 4;
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbWUzpJp8IH7eIJ4PorTtVFEJK9npyGY8HR6o0HfaNj9_Adin081iRrvof4V_LVMs/exec";
+
+    // Original map button coords (kept)
     const GMAPS_COORDS = { lat: 5.975194, lng: 116.0688396 };
     const WAZE_COORDS  = { lat: 5.975194, lng: 116.0688396 };
     const VENUE_LABEL  = encodeURIComponent("Kak Ira Wedding Venue");
+
+    // (1) Displayed clickable coordinates (as requested)
+    const DISPLAY_COORDS = { lat: 5.9752036, lng: 116.06877 };
+
     const CONTACTS = [
       { name: "Muhammad Basri", phone: "+60195365338" },
       { name: "Samsah Suda", phone: "+60102517562" },
       { name: "Mohd Ridzuan", phone: "+60134061314" },
     ];
-
-    // For display of the exact coordinates text in Location description
-    const COORD_TEXT = "5.9752036,116.06877";
-    const COORD_URL  = `https://www.google.com/maps?q=${COORD_TEXT}`;
 
     // Single source of truth for the date/time
     const WEDDING_DATE_ISO = '2025-11-22';
@@ -896,17 +931,41 @@ Friends & family shots</div>
     // Auto-scroll delay variable (ms)
     const ARROW_AUTO_DELAY_MS = 7000;
 
+    // (6) LIVE PHOTOS
+    // Option A: static manifest in your web root: /PHOTOS/manifest.json -> ["PHOTOS/img1.jpg", "PHOTOS/img2.jpg", ...]
+    const PHOTOS_MANIFEST_URL = 'PHOTOS/manifest.json';
+    // Option B: Google Apps Script Web App that returns a JSON array of **publicly accessible** image URLs from Drive folder "PHOTOS".
+    // How:
+    // 1) In Google Drive, create folder "PHOTOS" and put images (set folder sharing: Anyone with the link -> Viewer).
+    // 2) Apps Script (code.gs) example (simple):
+    //    function doGet() {
+    //      var folder = DriveApp.getFoldersByName('PHOTOS').next();
+    //      var files = folder.getFiles();
+    //      var out = [];
+    //      while (files.hasNext()) {
+    //        var f = files.next();
+    //        // For public file URL, use https://drive.google.com/uc?export=view&id=FILE_ID
+    //        out.push('https://drive.google.com/uc?export=view&id=' + f.getId());
+    //      }
+    //      return ContentService.createTextOutput(JSON.stringify(out))
+    //        .setMimeType(ContentService.MimeType.JSON);
+    //    }
+    // 3) Deploy > New deployment > Type: Web App > Who has access: Anyone.
+    // 4) Paste the Web App URL below:
+    const DRIVE_WEBAPP_URL = ''; // e.g. 'https://script.google.com/macros/s/XXXX/exec'
+
     // ====== i18n strings ======
     const I18N = {
       en: {
         tagline: "Wedding Invitation",
         title: "Will you attend our wedding?",
+        // (2) Keep clear sentences; we'll auto-insert newlines after periods in i18n()
         subtitle: "We'd love to celebrate with you. Please confirm your attendance before 1 October 2025.",
         rsvp: "YES",
         no: "NO",
-        rsvpTitle: "RSVP",
         location: "Location",
         contactNav: "Contact",
+        rsvpTitle: "RSVP",
         rsvpIntro: "We would be delighted for you to come and celebrate with us. Kindly confirm your attendance before 1 October 2025 by filling in your full name below:",
         fullNameFirst: "Your Full Name",
         fullNameOthers: "Attend With",
@@ -923,11 +982,13 @@ Friends & family shots</div>
         thanks: "Thank you! Your RSVP has been received.",
         already: "RSVP already submitted. Do contact us if there are any changes.",
 
-        /* (1) Location strings */
+        // (1) Location text
         locTitle: "LOCATION",
-        locDescLead: "Direction to wedding avenue",
-        locDescVenue: "Promenade Hotel, Kota Kinabalu",
+        locDesc: "Tap the button below to open directions.",
         locNote: "Tip: You can share the link with friends who are carpooling.",
+        locSmallHTML: `Direction to wedding avenue
+
+Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="noopener">5.9752036,116.06877</a>)`,
 
         contactTitle: "CONTACT (Bride's Family)",
         contactDesc: "Tap the phone icon to call.",
@@ -960,7 +1021,13 @@ Friends & family shots</div>
         ],
         countdownTitle: "Countdown Timer",
         cdSub: "Our big day’s coming soon!",
-        cdLabels: { days: "DAYS", hours: "HOURS", mins: "MINS", secs: "SECS" }
+        cdLabels: { days: "DAYS", hours: "HOURS", mins: "MINS", secs: "SECS" },
+
+        liveTitle: "LIVE PHOTO",
+        liveEmpty: "No photos yet.",
+        liveHelp: `Show a slideshow from a folder named “PHOTOS”.
+• Easiest: put a manifest.json in /PHOTOS that lists image URLs (see code).
+• Or publish a Google Apps Script Web App that returns a JSON array of public image URLs and paste it into DRIVE_WEBAPP_URL in the script.`
       },
       ms: {
         tagline: "Undangan Majlis Perkahwinan",
@@ -968,9 +1035,9 @@ Friends & family shots</div>
         subtitle: "Kami ingin meraikan bersama anda. Sila sahkan kehadiran anda sebelum 1 Oktober 2025.",
         rsvp: "Hadir",
         no: "Tidak Hadir",
-        rsvpTitle: "RESPON",
         location: "Lokasi",
         contactNav: "Hubungi",
+        rsvpTitle: "RESPON",
         rsvpIntro: "Kami amat berbesar hati sekiranya anda hadir meraikan bersama kami. Sila sahkan kehadiran anda sebelum 1 Oktober 2025 dengan mengisi nama penuh anda dibawah:",
         fullNameFirst: "Nama Penuh Anda",
         fullNameOthers: "Hadir Bersama",
@@ -987,11 +1054,12 @@ Friends & family shots</div>
         thanks: "Terima kasih! Respon anda telah diterima.",
         already: "RSVP telah dihantar. Sila hubungi keluarga pengantin sekiranya terdapat perubahan.",
 
-        /* (1) Location strings (Malay) */
         locTitle: "LOKASI",
-        locDescLead: "Arah ke lokasi majlis",
-        locDescVenue: "Promenade Hotel, Kota Kinabalu",
+        locDesc: "Tekan butang dibawah untuk buka peta ke lokasi.",
         locNote: "Tip: Kongsikan pautan dengan rakan yang menumpang.",
+        locSmallHTML: `Arah ke lokasi majlis
+
+Promanade Hotel, Kota Kinabalu (<a id="coordLink" href="#" target="_blank" rel="noopener">5.9752036,116.06877</a>)`,
 
         contactTitle: "HUBUNGI (Keluarga Pengantin Perempuan)",
         contactDesc: "Tekan ikon telefon untuk membuat panggilan.",
@@ -1024,7 +1092,13 @@ Friends & family shots</div>
         ],
         countdownTitle: "KIRAAN DETIK",
         cdSub: "Hari istimewa kami semakin hampir!",
-        cdLabels: { days: "HARI", hours: "JAM", mins: "MIN", secs: "SAAT" }
+        cdLabels: { days: "HARI", hours: "JAM", mins: "MIN", secs: "SAAT" },
+
+        liveTitle: "LIVE PHOTO",
+        liveEmpty: "Belum ada gambar.",
+        liveHelp: `Paparkan slaid dari folder bernama “PHOTOS”.
+• Paling mudah: letak manifest.json dalam /PHOTOS yang menyenaraikan URL imej (rujuk kod).
+• Atau terbitkan Google Apps Script Web App yang memulangkan senarai URL imej umum dan tampal ke DRIVE_WEBAPP_URL dalam skrip.`
       }
     };
 
@@ -1047,11 +1121,13 @@ Friends & family shots</div>
     const rsvpBtn = document.getElementById('rsvpBtn');
     const locationBtn = document.getElementById('locationBtn'); // may be null (legacy)
     const rsvpIntro = document.getElementById('rsvpIntro');
+    const rsvpTitleEl = document.getElementById('rsvpTitle');
     const phoneHeader = document.getElementById('phoneHeader');
     const phoneHint = document.getElementById('phoneHint');
     const locTitle = document.getElementById('locTitle');
     const locDesc = document.getElementById('locDesc');
     const locNote = document.getElementById('locNote');
+    const locSmall = document.getElementById('locSmall');
     const contactTitle = document.getElementById('contactTitle');
     const contactDesc = document.getElementById('contactDesc');
     const quickHome     = document.getElementById('quickHome');
@@ -1067,6 +1143,7 @@ Friends & family shots</div>
     const inviteDressEl = document.getElementById('inviteDress');
 
     const invSmall = document.getElementById('invSmall');
+    const invSmall2 = document.getElementById('invSmall2');
     const invBody  = document.getElementById('invBody');
     const invDateLabel  = document.getElementById('invDateLabel');
     const invTimeLabel  = document.getElementById('invTimeLabel');
@@ -1096,7 +1173,15 @@ Friends & family shots</div>
     const cdMinsLabel = document.getElementById('cdMinsLabel');
     const cdSecsLabel = document.getElementById('cdSecsLabel');
 
-    const rsvpTitleEl = document.getElementById('rsvpTitle');
+    // Live photos
+    const liveTitleEl = document.getElementById('liveTitle');
+    const liveHelpEl  = document.getElementById('liveHelp');
+    const liveImg     = document.getElementById('liveImage');
+    const livePrev    = document.getElementById('livePrev');
+    const liveNext    = document.getElementById('liveNext');
+    const liveEmpty   = document.getElementById('liveEmpty');
+
+    const coordLink = document.getElementById('coordLink');
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'ms'; // default Malay
@@ -1224,7 +1309,7 @@ Friends & family shots</div>
       for(let i=0; i<MAX_GUESTS; i++){ guestRowsEl.appendChild(makeGuestRow(i)); }
     }
 
-    // UPDATED: contact rows (name left, number + gold phone icon right; only icon is clickable)
+    // UPDATED: contact rows (name left, number + PNG phone icon right; only icon is clickable)
     function renderContacts(){
       const contactList = document.getElementById('contactList');
       if(!contactList) return;
@@ -1248,8 +1333,7 @@ Friends & family shots</div>
         call.className = 'call-btn';
         call.href = `tel:${c.phone.replace(/\s+/g,'')}`;
         call.setAttribute('aria-label', `Call ${c.name}`);
-        // (4) use PNG icon you uploaded
-        call.innerHTML = `<img src="phone_icon.png" alt="">`;
+        call.innerHTML = `<img src="phone_icon.png" alt="Call ${c.name}" />`;
 
         right.appendChild(num);
         right.appendChild(call);
@@ -1265,6 +1349,11 @@ Friends & family shots</div>
       const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
       const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
       btnGmaps.href = gq; btnWaze.href = wz;
+
+      if (coordLink) {
+        const direct = `https://www.google.com/maps/search/?api=1&query=${DISPLAY_COORDS.lat},${DISPLAY_COORDS.lng}`;
+        coordLink.href = direct;
+      }
     }
 
     function formatWeddingDateWithDay(lang){
@@ -1317,7 +1406,6 @@ Friends & family shots</div>
     // Ensure arrow offset variable applies (fix for some browsers)
     function applyArrowOffset(){
       if(!scrollArrow) return;
-      // Keep both bottom offsets combined so manual tuning works:
       scrollArrow.style.bottom = `calc(var(--arrow-bottom-offset) + var(--hero-arrow-offset-y))`;
     }
     window.addEventListener('load', applyArrowOffset);
@@ -1342,7 +1430,7 @@ Friends & family shots</div>
     function i18n(){
       const T = I18N[LANG];
 
-      // Update shiny overlay text (keeps animation accurate if language ever affects names)
+      // Update shiny overlay text
       document.querySelectorAll('.couple-title .name').forEach(el=>{
         el.setAttribute('data-text', el.textContent.trim());
       });
@@ -1360,6 +1448,7 @@ Friends & family shots</div>
 
       // Invitation section
       invSmall.textContent = T.invSmall;
+      if (invSmall2) invSmall2.textContent = T.invSmall.replace(/Invitation/i,'WalimatulUrus');
       invBody.textContent = T.invBody;
       invDateLabel.textContent  = T.invDateLabel;
       invTimeLabel.textContent  = T.invTimeLabel;
@@ -1372,10 +1461,11 @@ Friends & family shots</div>
 
       // CTA
       titleText.textContent = T.title;
-      // (2) small + line breaks after every "."
-      const subtitleHtml = T.subtitle.replace(/\.\s*/g, '.<br/>').trim();
-      subtitleText.innerHTML = subtitleHtml;
-
+      // (2) After every full stop, new line (handled with white-space:pre-line in CSS)
+      if (subtitleText) {
+        const nl = (T.subtitle || '').replace(/\.\s*/g, '.\n');
+        subtitleText.textContent = nl;
+      }
       if(rsvpBtn) rsvpBtn.textContent = T.rsvp;
       if(noBtn)   noBtn.textContent   = T.no;
       if(locationBtn) locationBtn.textContent = T.location;
@@ -1384,7 +1474,7 @@ Friends & family shots</div>
       if(quickLocation) quickLocation.textContent = T.location;
       if(quickContact)  quickContact.textContent  = T.contactNav;
 
-      // RSVP title (3)
+      // RSVP title per language (3)
       if (rsvpTitleEl) rsvpTitleEl.textContent = T.rsvpTitle;
 
       // RSVP body/phone
@@ -1399,17 +1489,17 @@ Friends & family shots</div>
         noMsg.style.display = 'none';
       }
 
-      // (1) Location
+      // Location/Direction
       locTitle.textContent = T.locTitle;
-      const locHtml = `${esc(T.locDescLead)}<br/><br/>${esc(T.locDescVenue)} (<a href="${COORD_URL}" target="_blank" rel="noopener">${COORD_TEXT}</a>)`;
-      locDesc.innerHTML = locHtml;
+      locDesc.textContent = T.locDesc;
       if(locNote) locNote.textContent = T.locNote;
+      if(locSmall) locSmall.innerHTML = T.locSmallHTML;
 
       // Contacts
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
 
-      // Schedule (now rendered as bullets from \n text)
+      // Schedule (bullets from \n text)
       if (scheduleTitleEl) scheduleTitleEl.textContent = T.scheduleTitle;
       if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
       if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
@@ -1427,6 +1517,11 @@ Friends & family shots</div>
       if (cdHoursLabel) cdHoursLabel.textContent = (T.cdLabels && T.cdLabels.hours) || "HOURS";
       if (cdMinsLabel)  cdMinsLabel.textContent  = (T.cdLabels && T.cdLabels.mins)  || "MINS";
       if (cdSecsLabel)  cdSecsLabel.textContent  = (T.cdLabels && T.cdLabels.secs)  || "SECS";
+
+      // Live section i18n
+      if (liveTitleEl) liveTitleEl.textContent = T.liveTitle;
+      if (liveHelpEl)  liveHelpEl.innerHTML = T.liveHelp.replace(/\n/g,'<br/>');
+      if (liveEmpty)   liveEmpty.textContent = T.liveEmpty;
 
       // Re-render guest rows with proper texts
       const savedNames = getStoredNames();
@@ -1467,11 +1562,6 @@ Friends & family shots</div>
       submitBtn.disabled = !ok;
 
       const T = I18N[LANG];
-      // Error priority/order per request:
-      // 1) All empty → needOneName
-      // 2) There is a name but no phone → needPhone
-      // 3) Multiple names with one not confirmed → nameNotConfirmed(#)
-      // Fallbacks
       validationMsg.style.display = (!ok) ? 'block' : 'none';
 
       if (!ok){
@@ -1712,16 +1802,13 @@ Friends & family shots</div>
     });
 
     form.addEventListener('submit', (e)=>{
-      // Guard against duplicates and ensure responsive feel + "one click only"
       if((!RESUBMISSION_ENABLE && isSubmitted()) || submitBtn.disabled){
         e.preventDefault(); playError(); return;
       }
-      // Disable immediately & show success immediately (optimistic UI)
       submitBtn.disabled = true;
       submitBtn.textContent = I18N[LANG].submitting;
       syncHiddenFields(); saveLocal();
       _pendingSubmit = true; // posts to iframe
-      // Immediately show success message & lock inputs so multiple entries don't happen
       showSuccessUI();
     });
 
@@ -1826,6 +1913,58 @@ Friends & family shots</div>
       window.addEventListener('orientationchange', apply);
       window.addEventListener('resize', apply);
     })();
+
+    // ===== (6) LIVE PHOTOS loader =====
+    let LIVE_PHOTOS = []; // array of image URLs
+    let liveIndex = 0;
+
+    function showLivePhoto(){
+      if (!LIVE_PHOTOS.length){
+        liveImg.style.display = 'none';
+        liveEmpty.style.display = 'block';
+        return;
+      }
+      liveEmpty.style.display = 'none';
+      liveImg.style.display = 'block';
+      liveImg.src = LIVE_PHOTOS[liveIndex];
+    }
+
+    function nextPhoto(){ if (!LIVE_PHOTOS.length) return; liveIndex = (liveIndex + 1) % LIVE_PHOTOS.length; showLivePhoto(); }
+    function prevPhoto(){ if (!LIVE_PHOTOS.length) return; liveIndex = (liveIndex - 1 + LIVE_PHOTOS.length) % LIVE_PHOTOS.length; showLivePhoto(); }
+
+    liveNext.addEventListener('click', nextPhoto);
+    livePrev.addEventListener('click', prevPhoto);
+
+    async function tryFetchJSON(url){
+      try{
+        const r = await fetch(url, { cache: 'no-store' });
+        if(!r.ok) return null;
+        return await r.json();
+      }catch(_){ return null; }
+    }
+
+    async function loadLivePhotos(){
+      // Priority 1: local manifest /PHOTOS/manifest.json
+      let arr = await tryFetchJSON(PHOTOS_MANIFEST_URL);
+      if (Array.isArray(arr) && arr.length){
+        LIVE_PHOTOS = arr.filter(u=>typeof u === 'string');
+        showLivePhoto();
+        return;
+      }
+      // Priority 2: Apps Script web app
+      if (DRIVE_WEBAPP_URL){
+        arr = await tryFetchJSON(DRIVE_WEBAPP_URL);
+        if (Array.isArray(arr) && arr.length){
+          LIVE_PHOTOS = arr.filter(u=>typeof u === 'string');
+          showLivePhoto();
+          return;
+        }
+      }
+      // Nothing found
+      LIVE_PHOTOS = [];
+      showLivePhoto();
+    }
+    loadLivePhotos();
   </script>
 </body>
 </html>
