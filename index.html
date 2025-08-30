@@ -779,43 +779,39 @@ before 1 October 2025.</div>
             </div>
             <div class="timeline">
               <div class="tl-item">
-                <div class="tl-time">10:30am</div>
+                <div class="tl-time" id="s1Time">10:30am</div>
                 <div class="tl-what">
                   <div class="tl-title" id="s1Title">GUEST ARRIVAL</div>
-                  <div class="tl-desc" id="s1Desc">Invitation greetings
-Find your seat, mingle</div>
+                  <div class="tl-desc" id="s1Desc"></div>
                 </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">11:00am</div>
+                <div class="tl-time" id="s2Time">11:00am</div>
                 <div class="tl-what">
                   <div class="tl-title" id="s2Title">NIKAH</div>
-                  <div class="tl-desc" id="s2Desc">Akad nikah ceremony
-Family blessings</div>
+                  <div class="tl-desc" id="s2Desc"></div>
                 </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">12:00pm</div>
+                <div class="tl-time" id="s3Time">12:00pm</div>
                 <div class="tl-what">
                   <div class="tl-title" id="s3Title">WEDDING CEREMONY</div>
-                  <div class="tl-desc" id="s3Desc">Procession & doa
-Couple entrance</div>
+                  <div class="tl-desc" id="s3Desc"></div>
                 </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">01:00pm</div>
+                <div class="tl-time" id="s4Time">01:00pm</div>
                 <div class="tl-what">
-                  <div class="tl-title" id="s4Title">LUNCH & PHOTO SESSION</div>
-                  <div class="tl-desc" id="s4Desc">Please enjoy the meal
-Group photos on stage
-Friends & family shots</div>
+                  <div class="tl-title" id="s4Title">LUNCH</div>
+                  <div class="tl-title" id="s4Title2" style="margin-top:4px;">PHOTO SESSION</div>
+                  <div class="tl-desc" id="s4Desc"></div>
                 </div>
               </div>
               <div class="tl-item">
-                <div class="tl-time">03:00pm</div>
+                <div class="tl-time" id="s5Time">03:00pm</div>
                 <div class="tl-what">
                   <div class="tl-title" id="s5Title">FAREWELL SESSION</div>
-                  <div class="tl-desc" id="s5Desc">End of event</div>
+                  <div class="tl-desc" id="s5Desc"></div>
                 </div>
               </div>
 
@@ -901,7 +897,7 @@ Friends & family shots</div>
 
   <footer class="footer">
     <div class="brandline">
-      <span>made with</span>
+      <span>made by</span>
       <!-- (3) Alippu clicks → force Google login then continue to Drive folder -->
       <a href="#" id="alippuLink" class="brand-link">
         <span class="brand-strong">ALIP</span><span class="brand-light">PU</span>
@@ -1013,12 +1009,15 @@ Friends & family shots</div>
         noMsg: "Please refresh the page if you change your mind.",
 
         scheduleTitle: "SCHEDULE",
+        // NEW: explicit times per language
+        scheduleTimes: ["10:30 AM","11:00 AM","12:00 PM","1:00 PM","3:00 PM"],
+        // NEW: items match requested structure (only first has a bullet; 1pm shows two titles)
         schedItems: [
-          { title: "GUEST ARRIVAL", desc: "Invitation greetings\nFind your seat, mingle" },
-          { title: "NIKAH", desc: "Akad Nikah ceremony\nFamily blessings" },
-          { title: "WEDDING CEREMONY", desc: "Procession & doa\nCouple entrance" },
-          { title: "LUNCH & PHOTO SESSION", desc: "Please enjoy the meal\nGroup photos on stage\nFriends & family shots" },
-          { title: "FAREWELL SESSION", desc: "End of event" },
+          { title: "GUEST ARRIVAL", desc: "Guests take their seats" },
+          { title: "NIKAH CEREMONY", desc: "" },
+          { title: "BERSANDING CEREMONY", desc: "" },
+          { title: "LUNCH", extraTitle: "PHOTO SESSION", desc: "" },
+          { title: "FAREWELL", desc: "" },
         ],
         countdownTitle: "Countdown Timer",
         cdSub: "Our big day’s coming soon!",
@@ -1086,12 +1085,15 @@ Friends & family shots</div>
         noMsg: "Sila muat semula laman ini jika berubah fikiran.",
 
         scheduleTitle: "ATUR CARA",
+        // NEW: explicit times in Malay
+        scheduleTimes: ["10:30 pagi","11:00 pagi","12:00 tengah hari","1:00 petang","3:00 petang"],
+        // NEW: items exactly as requested (only first has a bullet; 1pm has two titles)
         schedItems: [
-          { title: "KETIBAAN TETAMU", desc: "Alu-aluan jemputan\nCari tempat duduk, beramah mesra" },
-          { title: "NIKAH", desc: "Majlis Akad Nikah\nDoa & Restu keluarga" },
-          { title: "MAJLIS PERKAHWINAN", desc: "Perarakan & Doa\nKetibaan pasangan" },
-          { title: "JAMUAN MAKAN & SESI BERGAMBAR", desc: "Sila nikmati hidangan\nBergambar di pelamin\nGambar bersama keluarga & rakan" },
-          { title: "SESI BERSURAI", desc: "Majlis tamat" },
+          { title: "KETIBAAN PARA TETAMU", desc: "Tetamu mengambil tempat duduk" },
+          { title: "MAJLIS AKAD NIKAH", desc: "" },
+          { title: "MAJLIS PERSANDINGAN", desc: "" },
+          { title: "JAMUAN MAKAN", extraTitle: "SESI BERGAMBAR", desc: "" },
+          { title: "BERSURAI", desc: "" },
         ],
         countdownTitle: "KIRAAN DETIK",
         cdSub: "Hari istimewa kami semakin hampir!",
@@ -1165,10 +1167,16 @@ Friends & family shots</div>
     const scheduleTitleEl = document.getElementById('scheduleTitle');
     const agendaDateEl = document.getElementById('agendaDate');
     const agendaDayEl  = document.getElementById('agendaDay');
+    const s1Time = document.getElementById('s1Time');
+    const s2Time = document.getElementById('s2Time');
+    const s3Time = document.getElementById('s3Time');
+    const s4Time = document.getElementById('s4Time');
+    const s5Time = document.getElementById('s5Time');
     const s1Title = document.getElementById('s1Title'); const s1Desc = document.getElementById('s1Desc');
     const s2Title = document.getElementById('s2Title'); const s2Desc = document.getElementById('s2Desc');
     const s3Title = document.getElementById('s3Title'); const s3Desc = document.getElementById('s3Desc');
     const s4Title = document.getElementById('s4Title'); const s4Desc = document.getElementById('s4Desc');
+    const s4Title2 = document.getElementById('s4Title2');
     const s5Title = document.getElementById('s5Title'); const s5Desc = document.getElementById('s5Desc');
 
     const countdownTitleEl = document.getElementById('countdownTitle');
@@ -1513,16 +1521,34 @@ Friends & family shots</div>
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
 
-      // Schedule (bullets from \n text)
+      // Schedule (exact structure per request)
       if (scheduleTitleEl) scheduleTitleEl.textContent = T.scheduleTitle;
       if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
       if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
+
+      const times = T.scheduleTimes || [];
+      if (s1Time && times[0]) s1Time.textContent = times[0];
+      if (s2Time && times[1]) s2Time.textContent = times[1];
+      if (s3Time && times[2]) s3Time.textContent = times[2];
+      if (s4Time && times[3]) s4Time.textContent = times[3];
+      if (s5Time && times[4]) s5Time.textContent = times[4];
+
       const items = T.schedItems || [];
       if (items[0]){ s1Title.textContent = items[0].title; s1Desc.innerHTML = bulletsFromText(items[0].desc); }
-      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.innerHTML = bulletsFromText(items[1].desc); }
-      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.innerHTML = bulletsFromText(items[2].desc); }
-      if (items[3]){ s4Title.textContent = items[3].title; s4Desc.innerHTML = bulletsFromText(items[3].desc); }
-      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = bulletsFromText(items[4].desc); }
+      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.innerHTML = ''; }
+      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.innerHTML = ''; }
+      if (items[3]){
+        s4Title.textContent  = items[3].title || '';
+        if (items[3].extraTitle){
+          s4Title2.style.display = '';
+          s4Title2.textContent = items[3].extraTitle;
+        } else {
+          s4Title2.style.display = 'none';
+          s4Title2.textContent = '';
+        }
+        s4Desc.innerHTML = '';
+      }
+      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = ''; }
 
       // Countdown
       if (countdownTitleEl) countdownTitleEl.textContent = T.countdownTitle || "Countdown";
