@@ -1160,6 +1160,8 @@ newConfirmedHint: (k)=> k===1
     const totalGuestsEl = document.getElementById('totalGuests');
     const validationMsg = document.getElementById('validationMsg');
     const submitBtn = document.getElementById('submitBtn');
+    // after: const submitBtn = document.getElementById('submitBtn');
+let _isSubmitting = false;   // 🚦 single-click guard
     const phoneInput = document.getElementById('phone');
     const toast = document.getElementById('toast');
     const bgm = document.getElementById('bgm');
@@ -1676,6 +1678,11 @@ newConfirmedHint: (k)=> k===1
     }
 
 function maybeEnableSubmit(){
+    if (_isSubmitting) {
+    submitBtn.disabled = true;
+    return;
+  }
+  
   const T = I18N[LANG];
 
   // Start clean
@@ -2055,6 +2062,7 @@ if (!ok){
     hiddenIframe.addEventListener('load', ()=>{
       if(!_pendingSubmit) return;
       _pendingSubmit = false;
+      _isSubmitting = false;
       showToast(I18N[LANG].thanks);
 
       // Update submission counters and UI
@@ -2066,62 +2074,66 @@ if (!ok){
       updateTotals();
     });
 
-    async function attemptSubmit(){
-      const T = I18N[LANG];
-      
-// Block re-submit if nothing new was confirmed since last submit
-const prevCount = getSubmittedCount();
-const currConfirmed = getConfirmedCount();
-if (isSubmitted() && prevCount < MAX_GUESTS && currConfirmed <= prevCount){
-  validationMsg.style.display = 'block';
-  validationMsg.textContent = T.thanksMore(MAX_GUESTS - prevCount);
+async function attemptSubmit(){
+  const T = I18N[LANG];
+
+  // already submitting? ignore extra clicks
+  if (_isSubmitting) return;
+  _isSubmitting = true;
+
+  // lock immediately + optimistic message
   submitBtn.disabled = true;
-  playError();
-  return;
-}
+  submitBtn.textContent = T.submitting;
+  validationMsg.style.display = 'block';
+  validationMsg.textContent = T.thanks; // show success instantly
 
-      // block if fully locked
-      if(isSubmitted() && getSubmittedCount() >= MAX_GUESTS){
-        validationMsg.style.display = 'block';
-        validationMsg.textContent = T.resubmitBlocked;
-        return;
-      }
+  // --- re-submit guards (same logic, but now they also clear the guard) ---
+  const prevCount     = getSubmittedCount();
+  const currConfirmed = getConfirmedCount();
 
-// Block re-submit if nothing new was confirmed
-  {
-    const prevCount     = getSubmittedCount();
-    const currConfirmed = getConfirmedCount();
-    if (isSubmitted() && prevCount < MAX_GUESTS && currConfirmed <= prevCount){
-      validationMsg.style.display = 'block';
-      validationMsg.textContent = T.thanksMore(MAX_GUESTS - prevCount);
-      submitBtn.disabled = true;
-      playError();
-      return;
-    }
+  if (isSubmitted() && prevCount < MAX_GUESTS && currConfirmed <= prevCount){
+    validationMsg.textContent = T.thanksMore(MAX_GUESTS - prevCount);
+    submitBtn.textContent = T.submit;
+    _isSubmitting = false;
+    maybeEnableSubmit();
+    playError();
+    return;
   }
 
-      // duplicate phone guard (block if another device, allow if same device resubmitting)
-      const canon = canonicalPhone();
-      const exists = await phoneExistsOnServer(canon);
+  if (isSubmitted() && getSubmittedCount() >= MAX_GUESTS){
+    validationMsg.textContent = T.resubmitBlocked;
+    submitBtn.textContent = T.submit;
+    _isSubmitting = false;
+    maybeEnableSubmit();
+    return;
+  }
 
-      const sameDevice = isSubmitted(); // same device already has a submission
-      if (exists && !sameDevice){
-        validationMsg.style.display = 'block';
-        validationMsg.textContent = T.duplicatePhone;
-        submitBtn.disabled = false;
-        submitBtn.textContent = T.submit;
-        playError();
-        return;
-      }
+  // --- duplicate phone check (allow same device resubmits) ---
+  const canon = canonicalPhone();
+  const exists = await phoneExistsOnServer(canon);
+  const sameDevice = isSubmitted();
 
-      // proceed
-      submitBtn.disabled = true;
-      submitBtn.textContent = T.submitting;
-      syncHiddenFields(); saveLocal();
-      _pendingSubmit = true;
-      showSuccessUI();       // optimistic UX
-      form.submit();         // post to iframe
-    }
+  if (exists && !sameDevice){
+    // revert optimistic success → show error and re-enable logic
+    validationMsg.textContent = T.duplicatePhone;
+    submitBtn.textContent = T.submit;
+    _isSubmitting = false;
+    maybeEnableSubmit();
+    playError();
+    return;
+  }
+
+  // --- proceed with real submit ---
+  syncHiddenFields();
+  saveLocal();
+  _pendingSubmit = true;
+
+  // lock UI optimistically (marks submitted, disables edits)
+  showSuccessUI();
+
+  // post to iframe
+  form.submit();
+}
 
     form.addEventListener('submit', async (e)=>{
       e.preventDefault();
