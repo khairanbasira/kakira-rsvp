@@ -48,10 +48,10 @@
       --arrow-bounce-duration: 1.3s;
 
       /* Name position offsets (working & stackable with z) */
-      --name1-offset-x: 0px;
-      --name1-offset-y: 10px;
-      --name2-offset-x: -15px;
-      --name2-offset-y: -65px;
+      --name1-offset-x: 0px;   /* +ve = right, -ve = left */
+      --name1-offset-y: 10px;  /* +ve = down,  -ve = up   */
+      --name2-offset-x: -15px;   /* +ve = right, -ve = left */
+      --name2-offset-y: -65px; /* +ve = down,  -ve = up   */
 
       /* Layer control so heart/name can overlap */
       --name1-z: 2;
@@ -60,8 +60,8 @@
 
       /* NEW: hero heart image controls */
       --hero-heart-width: 1.45em;
-      --hero-heart-offset-x: 15px;
-      --hero-heart-offset-y: -30px;
+      --hero-heart-offset-x: 15px;  /* +ve = right, -ve = left */
+      --hero-heart-offset-y: -30px; /* +ve = down,  -ve = up   */
 
       /* NEW: top buttons sizing */
       --top-btn-height: 28px;
@@ -71,17 +71,17 @@
       /* Arrow vertical offset (distance from bottom of the hero) */
       --arrow-bottom-offset: 3px;
 
-      /* NEW: fine position controls for ALL hero items */
-      --hero-tag-offset-x: 0px;
-      --hero-tag-offset-y: 15px;
-      --hero-date-offset-x: 0px;
-      --hero-date-offset-y: -58px;
-      --hero-address-offset-x: 0px;
-      --hero-address-offset-y: -60px;
-      --hero-logo-offset-x: 0px;
-      --hero-logo-offset-y: 0px;
-      --hero-arrow-offset-x: 0px;
-      --hero-arrow-offset-y: 30px;
+      /* NEW: fine position controls for ALL hero items (like name1/name2) */
+      --hero-tag-offset-x: 0px;     /* +ve = right, -ve = left */
+      --hero-tag-offset-y: 15px;     /* +ve = down,  -ve = up   */
+      --hero-date-offset-x: 0px;    /* +ve = right, -ve = left */
+      --hero-date-offset-y: -58px;    /* +ve = down,  -ve = up   */
+      --hero-address-offset-x: 0px; /* +ve = right, -ve = left */
+      --hero-address-offset-y: -60px; /* +ve = down,  -ve = up   */
+      --hero-logo-offset-x: 0px;    /* +ve = right, -ve = left */
+      --hero-logo-offset-y: 0px;    /* +ve = down,  -ve = up   */
+      --hero-arrow-offset-x: 0px;   /* +ve = right, -ve = left */
+      --hero-arrow-offset-y: 30px;   /* +ve = away from bottom (adds), -ve = closer to bottom */
 
       /* Parents spacing */
       --parentsA-gap: 3px;
@@ -111,6 +111,7 @@
       :root{ --wallpaper:url('rsvpwallpaper_web.png'); }
     }
 
+    /* Extra safeguard: keep colors the same even if system prefers dark */
     @media (prefers-color-scheme: dark){
       html, body { background: var(--cream) !important; color: var(--text) !important; }
       .card, .btn, .input, .confirm-btn { background:#fff !important; color:#111 !important; }
@@ -125,6 +126,7 @@
       background:var(--cream);
     }
 
+    /* Default font for many headings (but we'll override hero date below) */
     h1,h2,h3,h4,h5,h6,
     .heading,
     .section-title,
@@ -146,6 +148,7 @@
     .card,
     .footer { position:relative; z-index:10; }
 
+    /* Top-centered controls */
     .top-controls{
       position: fixed;
       left: 50%;
@@ -181,10 +184,12 @@
 	/* Hide the Photos/Gambar top button */
 	#quickPhotos { display:none !important; }
 
+    /* Hero */
     .hero{
       position:relative;
       min-height:100svh;
       display:grid; place-items:center; text-align:center; color:#222;
+
       background-image:
         linear-gradient(
           180deg,
@@ -199,8 +204,10 @@
       background-attachment: scroll, scroll;
     }
 
+    /* Push hero content down by variable to avoid overlap with top buttons */
     .hero > div{ padding-top: var(--hero-top-safe); }
 
+    /* Scroll arrow (uses adjustable offsets) */
     .hero-scroll{
       position:absolute;
       left: calc(50% + var(--hero-arrow-offset-x));
@@ -230,7 +237,7 @@
     }
 
     .couple-title{
-      display:flex; flex-direction:column;
+      display:flex; flex-direction:column; /* Force 3 lines on web too */
       align-items:center; justify-content:center; gap:18px;
       margin-bottom:28px;
       font-family:'Great Vibes', cursive;
@@ -241,10 +248,21 @@
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
       position:relative;
     }
-    .couple-title .name{ position: relative; z-index: 1; }
-    .couple-title .n1{ transform: translate(var(--name1-offset-x), var(--name1-offset-y)); z-index: var(--name1-z); }
-    .couple-title .n2{ transform: translate(var(--name2-offset-x), var(--name2-offset-y)); z-index: var(--name2-z); }
+    .couple-title .name{
+      display:inline-block;
+      position: relative;
+      z-index: 1; /* default; overridden by vars below */
+    }
+    .couple-title .n1{
+      transform: translate(var(--name1-offset-x), var(--name1-offset-y));
+      z-index: var(--name1-z);
+    }
+    .couple-title .n2{
+      transform: translate(var(--name2-offset-x), var(--name2-offset-y));
+      z-index: var(--name2-z);
+    }
 
+    /* NEW: PNG heart between names (offset & z controllable) */
     .couple-title .hero-heart{
       width: var(--hero-heart-width);
       height: auto;
@@ -258,6 +276,7 @@
       .couple-title{ gap:20px; }
     }
 
+    /* (1) Date font should match address font, keep size */
     .hero-date{
       font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif !important;
       font-size:clamp(16px,4vw,22px);
@@ -267,6 +286,7 @@
       transform: translate(var(--hero-date-offset-x), var(--hero-date-offset-y));
     }
 
+    /* LOGO + ADDRESS grouped */
     .hero-address-wrap{
       max-width:900px;
       margin:0 auto 36px;
@@ -284,11 +304,18 @@
       margin:0;
     }
     .hero-logo{
-      display:block; height:auto; max-height:160px; width:auto; object-fit:contain; flex:0 0 auto;
+      display:block;
+      height:auto;
+      max-height:160px;
+      width:auto; object-fit:contain;
+      flex:0 0 auto;
       transform: translate(var(--hero-logo-offset-x), var(--hero-logo-offset-y));
     }
     @media (max-width:560px){
-      .hero-address-wrap{ gap:12px; padding:0 10px; flex-direction:column; align-items:center; text-align:center; }
+      .hero-address-wrap{
+        gap:12px; padding:0 10px;
+        flex-direction:column; align-items:center; text-align:center;
+      }
       .hero-logo{ max-height:var(--mobile-logo-max-height); max-width:60vw; }
       .hero-address{ text-align:center; }
     }
@@ -311,6 +338,7 @@
     .btn:active{ transform:translateY(0); }
     .btn-outline{ background:#fff; color:#111; border:1px solid var(--gold-strong) }
 
+    /* (5) Ensure gold-filled submit when enabled; grey when disabled/submitted */
     button#submitBtn{ background:var(--gold) !important; color:#111 !important; border:1px solid var(--gold-strong) !important; }
     #submitBtn[disabled]{ background:#eee !important; color:#999 !important; border-color:#ddd !important; cursor:not-allowed; box-shadow:none; transform:none; }
 
@@ -373,9 +401,22 @@
     .footer{ text-align:center; color:#6b7280; padding:30px 16px 70px; background:transparent; }
 
     .brandline{
-      display:inline-flex; align-items:baseline; gap:8px; color:#c9c3b9; letter-spacing:.18em; text-transform:lowercase; font-size:14px;
+      display:inline-flex;
+      align-items:baseline;
+      gap:8px;
+      color:#c9c3b9;
+      letter-spacing:.18em;
+      text-transform:lowercase;
+      font-size:14px;
     }
-    .brandline .brand-link{ letter-spacing:.04em; text-transform:uppercase; color:#c9c3b9; text-decoration:none; transition:color .15s ease, transform .15s ease; line-height:1; }
+    .brandline .brand-link{
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      color:#c9c3b9;
+      text-decoration:none;
+      transition:color .15s ease, transform .15s ease;
+      line-height:1;
+    }
     .brandline .brand-strong{ font-weight:800; }
     .brandline .brand-light{ font-weight:300; }
     .brandline .brand-link:hover{ color:var(--gold-strong); }
@@ -387,13 +428,26 @@
     }
     .toast.show{ opacity:1 }
 
-    /* COUNTDOWN */
+    /* COUNTDOWN — always one line, softer gold */
     #countdown .cd-sub{ margin:6px 0 16px; }
-    .countdown-row{ display:flex; gap:12px; align-items:stretch; justify-content:stretch; flex-wrap:nowrap; }
+    .countdown-row{
+      display:flex; gap:12px; align-items:stretch; justify-content:stretch;
+      flex-wrap:nowrap;
+    }
     .cd-box{
       background:
-        radial-gradient(circle at 50% 45%, rgba(255,253,245,.88) 0%, rgba(255,245,215,.70) 38%, rgba(248,229,160,.52) 62%, rgba(232,202,110,.48) 82%, rgba(212,175,55,.55) 100%);
-      border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow-sm); padding:16px 12px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; aspect-ratio:1/1; min-width:0; flex: 1 1 0;
+        radial-gradient(circle at 50% 45%,
+          rgba(255,253,245,.88) 0%,
+          rgba(255,245,215,.70) 38%,
+          rgba(248,229,160,.52) 62%,
+          rgba(232,202,110,.48) 82%,
+          rgba(212,175,55,.55) 100%);
+      border:1px solid rgba(0,0,0,.06);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow-sm); padding:16px 12px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; aspect-ratio:1/1; min-width:0;
+      flex: 1 1 0;
     }
     .cd-num{ font-weight:700; line-height:1; font-size:clamp(22px, 7.2vw, 48px); }
     .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:#6b7280; }
@@ -402,18 +456,30 @@
     .agenda{ display:grid; grid-template-columns: 240px 1fr; gap:24px; --timeline-pad:28px; --tl-line-x:11px; --tl-dot-nudge:1px; }
     .agenda-date{ font-size:clamp(18px,2.6vw,24px); }
     .agenda-day{ color:#6b7280; margin-top:6px; }
+
     .timeline{ position:relative; padding-left:var(--timeline-pad); }
     .timeline::before{ content:''; position:absolute; left:var(--tl-line-x); top:6px; bottom:6px; width:2px; background:var(--gold-strong); }
+
     .tl-item{ position:relative; display:grid; grid-template-columns: 120px 1fr; align-items:center; gap:10px; margin:20px 0; }
     .tl-mid{ display:none; }
+
     .tl-item::before{
-      content:''; position:absolute; left: calc( (var(--tl-line-x) - var(--timeline-pad)) + var(--tl-dot-nudge) ); top:50%;
-      width:14px; height:14px; border-radius:50%; background:var(--gold-strong); transform:translate(-50%, -50%); box-shadow:0 0 0 3px var(--gold-soft);
+      content:''; position:absolute;
+      left: calc( (var(--tl-line-x) - var(--timeline-pad)) + var(--tl-dot-nudge) );
+      top:50%;
+      width:14px; height:14px; border-radius:50%;
+      background:var(--gold-strong);
+      transform:translate(-50%, -50%);
+      box-shadow:0 0 0 3px var(--gold-soft);
     }
+
     .tl-time{ font-weight:600; color:#0f172a; }
     .tl-what{ color:#0f172a; }
     .tl-title{ font-weight:700; letter-spacing:.02em; }
-    .tl-desc{ margin-top:4px; font-size:12px; line-height:1.35; color:#6b7280; }
+    .tl-desc{
+      margin-top:4px; font-size:12px; line-height:1.35; color:#6b7280;
+    }
+    /* NEW: bullet styling inside schedule descriptions */
     .tl-desc ul{ list-style: disc; margin:6px 0 0 18px; padding:0; }
     .tl-desc li{ margin:2px 0; }
 
@@ -439,7 +505,8 @@
       background:
         linear-gradient(#fff,#fff) padding-box,
         linear-gradient(135deg, rgba(255,255,255,.7), rgba(212,175,55,.9), rgba(255,255,255,.7)) border-box;
-      border:2px solid transparent; text-align:center;
+      border:2px solid transparent;
+      text-align:center;
     }
 
     .inv-small{ text-align:center; font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:#6b4b00; }
@@ -448,6 +515,7 @@
 
     .parents-block .inv-couple{ font-size: var(--parent-name-size); }
     #invBody{ letter-spacing: var(--inv-body-letter-spacing); }
+
     .parents-block .inv-couple{ margin: var(--pair-gap, 6px) 0; }
     .parents-block .inv-and{ margin: var(--pair-gap, 6px) 0; }
     .parents-a{ --pair-gap: var(--parentsA-gap); }
@@ -458,11 +526,22 @@
 
     .inv-label{
       font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--inv-label-color); font-size:var(--inv-label-size);
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--inv-label-color);
+      font-size:var(--inv-label-size);
     }
     .inv-value{ margin-top:4px; color:#0f172a; }
 
-    .loc-photo{ display:block; margin:12px auto 12px; max-width:100%; height:auto; border-radius:12px; box-shadow:var(--shadow-sm); }
+    .loc-photo{
+      display:block;
+      margin:12px auto 12px;
+      max-width:100%;
+      height:auto;
+      border-radius:12px;
+      box-shadow:var(--shadow-sm);
+    }
 
     .location-card{ text-align:center; display:flex; flex-direction:column; align-items:center; }
     .location-card .actions{ justify-content:center; }
@@ -470,15 +549,19 @@
     .location-card .section-title{ align-self:flex-start; text-align:left; }
 
     #locNote{ display:none; }
+
     #noMsg{ text-align:center; margin-top:16px; display:none; }
+
     #cta .btn{ text-transform:none; font-weight:600; }
 
     .invite-inner #invSmall{ display:block; text-align:center; }
 
-    .invite-inner .inv-label + .parents-a{ margin-top:10px; }
-    .parents-a{ margin-bottom:10px; }
-    .parents-b{ margin-top:10px; }
+    /* NEW: spacing tweaks requested for Invitation section */
+    .invite-inner .inv-label + .parents-a{ margin-top:10px; }   /* space between "WalimatulUrus" and first parent name */
+    .parents-a{ margin-bottom:10px; }                           /* a bit more space below Samsah block */
+    .parents-b{ margin-top:10px; }                              /* space before Noor Khairani block */
 
+    /* NEW: Contact list layout */
     .contact-list{ display:grid; gap:10px; }
     .contact-row{
       display:grid; grid-template-columns: 1fr auto; align-items:center;
@@ -489,40 +572,60 @@
     .contact-left{ font-weight:700; color:#0f172a; }
     .contact-right{ display:flex; align-items:center; gap:10px; color:#6b7280; }
 
-    .call-btn{ width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; background:transparent; border:0; box-shadow:none; border-radius:0; text-decoration:none; padding:0; }
+    /* (4) Phone icon button: use PNG directly, no frame */
+    .call-btn{
+      width:36px; height:36px;
+      display:inline-flex; align-items:center; justify-content:center;
+      background:transparent; border:0; box-shadow:none; border-radius:0;
+      text-decoration:none; padding:0;
+    }
     .call-btn img{ width:100%; height:100%; object-fit:contain; display:block; }
 
-    .live-gallery{ display:flex; align-items:center; justify-content:center; gap:12px; margin-top:8px; }
-    .live-gallery img{ max-width:100%; max-height:420px; border-radius:12px; box-shadow:var(--shadow-sm); }
+    /* (6) LIVE PHOTO gallery */
+    .live-gallery{
+      display:flex; align-items:center; justify-content:center; gap:12px;
+      margin-top:8px;
+    }
+    .live-gallery img{
+      max-width:100%; max-height:420px; border-radius:12px; box-shadow:var(--shadow-sm);
+    }
 
+    /* (1) make the small location description respect line breaks */
     #locSmall, #subtitleText { white-space: pre-line; }
+
+    /* (1) ensure the location small text is left-aligned beneath the title */
     #locSmall{ align-self:flex-start; text-align:left !important; }
+
+    /* (1) centered hotel label under the photo */
     .loc-hotel{ text-align:center; font-weight:600; margin-top:4px; }
 
-    /* [NEW] Phone row with country select */
+    /* ===== (2) Country code selector styles ===== */
     .phone-row{
       display:grid;
-      grid-template-columns: auto 1fr;
+      grid-template-columns: auto 1fr; /* selector + input */
       gap:10px;
       align-items:center;
     }
-    .country-select{
+    .cc-select{
+      appearance:none;
       height:48px;
-      min-width:70px;
-      padding:0 12px;
+      min-width:68px;
+      padding:0 14px;
       border-radius:12px;
       border:1px solid var(--gold-strong);
-      background:#fff;
+      background:linear-gradient(180deg, #fffaec, #ffe7b9);
       font-weight:700;
-      color:#111;
+      color:#6b4b00;
       box-shadow:var(--shadow-sm);
-      cursor:pointer;
-      appearance:none;
-      background-image:
-        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="%23b89017"><path d="M7 10l5-5 5 5z"/><path d="M7 14l5 5 5-5z"/></svg>');
-      background-repeat:no-repeat;
-      background-position:right 10px center;
-      padding-right:34px;
+      position:relative;
+    }
+    .cc-select:focus{ outline:none; box-shadow:0 0 0 3px rgba(212,175,55,.20); }
+    .cc-wrap{ position:relative; }
+    .cc-wrap::after{
+      content:'▾';
+      position:absolute; right:10px; top:50%;
+      transform:translateY(-50%);
+      pointer-events:none; color:#6b4b00; font-size:12px;
     }
   </style>
 </head>
@@ -531,13 +634,16 @@
   <canvas id="bg-particles" aria-hidden="true"></canvas>
 
   <div class="top-controls">
+    <!-- (NEW ORDER) Home (icon) → Location → Contact → Photos → Mute → Language -->
     <button id="quickHome" class="icon-btn icon-only" aria-label="Go to Home" title="Home">
+      <!-- simple home SVG icon -->
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
         <path d="M3 10.5L12 3l9 7.5v8.5a1 1 0 0 1-1 1h-5.5a.5.5 0 0 1-.5-.5V15a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4.5a.5.5 0 0 1-.5.5H4a1 1 0 0 1-1-1v-8.5z" fill="currentColor"/>
       </svg>
     </button>
     <button id="quickLocation" class="icon-btn" aria-label="Jump to location">Location</button>
     <button id="quickContact"  class="icon-btn" aria-label="Jump to contact">Contact</button>
+    <!-- (2) New Photos/Gambar quick button -->
     <button id="quickPhotos"   class="icon-btn" aria-label="Jump to photos">Photos</button>
     <button id="muteBtn" class="icon-btn" aria-label="Toggle sound">🔊</button>
     <button id="langToggle" class="icon-btn" aria-label="Toggle language">Malay</button>
@@ -547,14 +653,17 @@
     <div>
       <div class="tagline" id="heroTag">Wedding Invitation</div>
 
+      <!-- Names + PNG heart (now offset/z controlled only by CSS variables) -->
       <div class="couple-title" aria-label="Basran love Khairani">
         <span class="name n1" data-text="Basran">Basran</span>
         <img class="hero-heart" src="hero_heart.png" alt="" />
         <span class="name n2" data-text="Khairani">Khairani</span>
       </div>
 
+      <!-- Date with weekday (Poppins font, bigger than address) -->
       <div class="hero-date" id="heroDate">Saturday, 22 November 2025</div>
 
+      <!-- LOGO + ADDRESS -->
       <div class="hero-address-wrap" id="heroAddressWrap">
         <img id="hotelLogo" class="hero-logo" src="promanade_hotel_logo_ai.png" alt="Promenade Hotel Kota Kinabalu logo"/>
         <div class="hero-address" id="heroAddress">
@@ -567,6 +676,7 @@
       </div>
     </div>
 
+    <!-- Bouncy double-chevron in gold -->
     <button id="scrollArrow" class="hero-scroll" aria-label="Scroll to details" title="Scroll">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
         <path d="M4 7.5 L12 15.5 L20 7.5" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -581,6 +691,7 @@
       <div class="container">
         <div class="card" style="text-align:center">
           <div class="heading" id="titleText">Will you attend our wedding?</div>
+          <!-- (2) Make small like RSVP description + show new lines -->
           <div class="tiny muted" id="subtitleText">We'd love to celebrate with you.
 Please confirm your attendance
 before 1 October 2025.</div>
@@ -667,15 +778,16 @@ before 1 October 2025.</div>
                 <h2 class="section-title" id="phoneHeader">PHONE NUMBER</h2>
                 <p class="tiny muted" id="phoneHint">We’ll use this to contact you if there are any updates or changes.</p>
 
-                <!-- [NEW] Country code + phone input row -->
+                <!-- (2) Country code + phone in a compact row -->
                 <div class="phone-row">
-                  <select id="ccSelect" class="country-select" aria-label="Country code">
-                    <option value="+60 ">MY</option>
-                    <option value="+62 ">ID</option>
-                  </select>
+                  <div class="cc-wrap">
+                    <select id="ccSelect" class="cc-select" aria-label="Country code">
+                      <option value="MY">MY</option>
+                      <option value="ID">ID</option>
+                    </select>
+                  </div>
                   <input class="input" id="phone" name="phone" autocomplete="tel" placeholder="e.g. +60 12 345 6789" required />
                 </div>
-                <!-- /[NEW] -->
               </div>
 
               <div class="spacer-16"></div>
@@ -753,11 +865,15 @@ before 1 October 2025.</div>
     <section id="location">
       <div class="container">
         <div class="card location-card">
+          <!-- (1) Change title to LOCATION / LOKASI -->
           <h2 class="section-title" id="locTitle">LOCATION</h2>
+          <!-- (1) Small description (left-aligned) with clickable coordinates -->
           <p class="tiny muted" id="locSmall">Direction to wedding avenue
 (<a id="coordLink" href="#" target="_blank" rel="noopener">5.9752036,116.06877</a>)</p>
 
           <img id="venuePhoto" class="loc-photo" src="wedding_avenue.jpg" alt="Wedding Avenue location photo" />
+
+          <!-- (1) Centered hotel name under the photo -->
           <div id="locHotel" class="loc-hotel">Promanade Hotel, Kota Kinabalu</div>
 
           <p class="muted" id="locDesc">Tap the button below to open directions.</p>
@@ -783,7 +899,7 @@ before 1 October 2025.</div>
       </div>
     </section>
 
-    <!-- PHOTOS (hidden by default) -->
+    <!-- (6) LIVE PHOTO (renamed to PHOTOS/GAMBAR) -->
     <section id="live" hidden>
       <div class="container">
         <div class="card">
@@ -821,6 +937,7 @@ before 1 October 2025.</div>
   <footer class="footer">
     <div class="brandline">
       <span>made by</span>
+      <!-- (3) Alippu clicks → force Google login then continue to Drive folder -->
       <a href="#" id="alippuLink" class="brand-link">
         <span class="brand-strong">ALIP</span><span class="brand-light">PU</span>
       </a>
@@ -836,13 +953,17 @@ before 1 October 2025.</div>
     const MAX_GUESTS = 4;
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbWUzpJp8IH7eIJ4PorTtVFEJK9npyGY8HR6o0HfaNj9_Adin081iRrvof4V_LVMs/exec";
 
+    // Original map button coords (kept)
     const GMAPS_COORDS = { lat: 5.975194, lng: 116.0688396 };
     const WAZE_COORDS  = { lat: 5.975194, lng: 116.0688396 };
     const VENUE_LABEL  = encodeURIComponent("Kak Ira Wedding Venue");
 
+    // (1) Displayed clickable coordinates (as requested)
     const DISPLAY_COORDS = { lat: 5.9752036, lng: 116.06877 };
 
-    const DRIVE_PRIVATE_URL = "";
+    // (3) Private Google Drive folder for photos/RSVP tracking
+    // Replace the value below with your *restricted* Drive folder link so Google prompts login.
+    const DRIVE_PRIVATE_URL = ""; // e.g. "https://drive.google.com/drive/folders/XXXXXXXXXXXX"
 
     const CONTACTS = [
       { name: "Muhammad Basri", phone: "+60195365338" },
@@ -850,20 +971,23 @@ before 1 October 2025.</div>
       { name: "Mohd Ridzuan", phone: "+60134061314" },
     ];
 
+    // Single source of truth for the date/time
     const WEDDING_DATE_ISO = '2025-11-22';
-    const WEDDING_TIME = '10:30:00';
+    const WEDDING_TIME = '10:30:00'; // local time for countdown target
     let COUNTDOWN_TARGET = new Date(`${WEDDING_DATE_ISO}T${WEDDING_TIME}`);
 
     const BGM_STOP_AFTER_LOOPS = 1;
 
-    // ===== RESUBMISSION TOGGLE (legacy, keep off) =====
+    // ===== RESUBMISSION TOGGLE (1 - able to resubmit) =====
     const RESUBMISSION_ENABLE = 0;
 
+    // Auto-scroll delay variable (ms)
     const ARROW_AUTO_DELAY_MS = 7000;
 
+    // (6) LIVE PHOTOS
     const PHOTOS_MANIFEST_URL = 'PHOTOS/manifest.json';
     const DRIVE_WEBAPP_URL = APPS_SCRIPT_URL + '?type=photos&v=8';
-
+	  
     // ====== i18n strings ======
     const I18N = {
       en: {
@@ -891,15 +1015,17 @@ before 1 October 2025.</div>
         nameNotConfirmed: (n)=>`Name #${n} not yet confirmed.`,
         thanks: "Thank you! Your RSVP has been received.",
         already: "RSVP already submitted. Do contact us if there are any changes.",
-        // [NEW]
-        resubTipRemaining: (n)=>`Your response has been received. You still have ${n} more guest slot(s). Add names and submit again if you change your mind.`,
+        thanksMore: (n)=>`Response submitted. You can still add ${n} more name(s) (max 4) and resubmit if you change your mind.`,
         duplicatePhone: "Same phone number already exists or was submitted before.",
+        resubmitBlocked: "Resubmission is closed (maximum 4 guests already submitted).",
 
+        // (1) Location text
         locTitle: "LOCATION",
         locDesc: "Tap the button below to open directions.",
         locNote: "Tip: You can share the link with friends who are carpooling.",
         locSmallHTML: `Direction to wedding avenue
 (<a id="coordLink" href="#" target="_blank" rel="noopener">5.9752036,116.06877</a>)`,
+        // Centered label under photo
         locHotelText: "Promanade Hotel, Kota Kinabalu",
 
         contactTitle: "CONTACT (Bride's Family)",
@@ -936,6 +1062,7 @@ before 1 October 2025.</div>
         cdSub: "Our big day’s coming soon!",
         cdLabels: { days: "DAYS", hours: "HOURS", mins: "MINS", secs: "SECS" },
 
+        // Photos section i18n
         liveTitle: "PHOTOS",
         liveEmpty: "No photos yet.",
         liveHelp: `Show a slideshow from a folder named “PHOTOS”.
@@ -967,9 +1094,9 @@ before 1 October 2025.</div>
         nameNotConfirmed: (n)=>`Nama #${n} belum disahkan hadir.`,
         thanks: "Terima kasih! Respon anda telah diterima.",
         already: "RSVP telah dihantar. Sila hubungi keluarga pengantin sekiranya terdapat perubahan.",
-        // [NEW]
-        resubTipRemaining: (n)=>`Respon berjaya dihantar. Anda masih mempunyai ${n} baki kuota tetamu. Sila tambah nama dan hantar semula jika berubah fikiran.`,
+        thanksMore: (n)=>`Respon berjaya dihantar. Anda masih boleh tambah ${n} nama lagi (maks 4) dan hantar semula jika berubah fikiran.`,
         duplicatePhone: "Nombor telefon yang sama sudah wujud atau telah dihantar sebelum ini.",
+        resubmitBlocked: "Penghantaran semula ditutup (maksimum 4 tetamu telah dihantar).",
 
         locTitle: "LOKASI",
         locDesc: "Tekan butang dibawah untuk buka peta ke lokasi.",
@@ -1026,7 +1153,6 @@ before 1 October 2025.</div>
     const validationMsg = document.getElementById('validationMsg');
     const submitBtn = document.getElementById('submitBtn');
     const phoneInput = document.getElementById('phone');
-    const ccSelect = document.getElementById('ccSelect'); // [NEW]
     const toast = document.getElementById('toast');
     const bgm = document.getElementById('bgm');
 
@@ -1077,6 +1203,7 @@ before 1 October 2025.</div>
     const heroAddressEl = document.getElementById('heroAddress');
     const hotelLogoEl = document.getElementById('hotelLogo');
 
+    // NEW refs for Schedule & Countdown i18n
     const scheduleTitleEl = document.getElementById('scheduleTitle');
     const agendaDateEl = document.getElementById('agendaDate');
     const agendaDayEl  = document.getElementById('agendaDay');
@@ -1099,6 +1226,7 @@ before 1 October 2025.</div>
     const cdMinsLabel = document.getElementById('cdMinsLabel');
     const cdSecsLabel = document.getElementById('cdSecsLabel');
 
+    // Live photos
     const liveTitleEl = document.getElementById('liveTitle');
     const liveHelpEl  = document.getElementById('liveHelp');
     const liveImg     = document.getElementById('liveImage');
@@ -1108,8 +1236,12 @@ before 1 October 2025.</div>
 
     const coordLink = document.getElementById('coordLink');
 
+    // ===== New: country code refs & state =====
+    const ccSelect = document.getElementById('ccSelect');
+    const CC_MAP = { MY: '+60 ', ID: '+62 ' };
+
     // ===== Language state =====
-    let LANG = localStorage.getItem('rsvp_lang') || 'ms';
+    let LANG = localStorage.getItem('rsvp_lang') || 'ms'; // default Malay
     function refreshLangToggleLabel(){ langToggle.textContent = (LANG === 'en') ? 'Malay' : 'English'; }
 
     // ===== Local state helpers =====
@@ -1119,8 +1251,7 @@ before 1 October 2025.</div>
     function setStoredConfirmed(arr){ localStorage.setItem('rsvp_confirmed', JSON.stringify(arr)); }
     function isSubmitted(){ return localStorage.getItem('rsvp_submitted') === '1'; }
     function markSubmitted(){ localStorage.setItem('rsvp_submitted','1'); }
-    // [NEW] track confirmed count at last successful submit
-    function getSubmittedCount(){ return parseInt(localStorage.getItem('rsvp_submitted_count')||'0',10); }
+    function getSubmittedCount(){ return parseInt(localStorage.getItem('rsvp_submitted_count') || '0', 10); }
     function setSubmittedCount(n){ localStorage.setItem('rsvp_submitted_count', String(n)); }
 
     function showToast(msg){ toast.textContent = msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1600); }
@@ -1142,52 +1273,53 @@ before 1 October 2025.</div>
 
     function saveLocal(){
       localStorage.setItem('rsvp_phone', phoneInput.value.trim());
-      localStorage.setItem('rsvp_cc', ccSelect.value); // [NEW]
+      localStorage.setItem('rsvp_cc', ccSelect.value);
       setStoredNames(getGuestNames());
       localStorage.setItem('rsvp_lang', LANG);
       const confirmed = getGuestInputs().map(inp => !!(inp.readOnly && inp.value.trim().length>0));
       setStoredConfirmed(confirmed);
     }
 
-    // [NEW] lock UI after submit but keep empty boxes editable if quota remains
+    // New: apply post-submit UI with partial resubmission allowed
     function lockSubmissionUI(){
-      const submitted = getSubmittedCount();
-      const remaining = Math.max(0, MAX_GUESTS - submitted);
+      const T = I18N[LANG];
+      const prevSubmitted = getSubmittedCount();
 
+      // already-submitted names are locked; empty rows remain editable
       getGuestInputs().forEach((inp, idx) => {
+        const hasValue = inp.value.trim().length > 0;
         const btn = getGuestButtons()[idx];
-        const hasVal = inp.value.trim().length > 0;
-
-        if (hasVal){
+        if (hasValue){
           inp.readOnly = true;
           btn.disabled = true;
           btn.classList.remove('confirm-state'); btn.classList.add('edit-state');
+          btn.textContent = T.edit;
         } else {
-          if (remaining > 0){
-            inp.readOnly = false;
-            btn.disabled = true;
-            btn.classList.add('confirm-state'); btn.classList.remove('edit-state');
-          } else {
-            inp.readOnly = true;
-            btn.disabled = true;
-          }
+          inp.readOnly = false;
+          btn.disabled = true;
+          btn.classList.add('confirm-state'); btn.classList.remove('edit-state');
+          btn.textContent = T.confirm;
         }
       });
 
+      // phone stays locked after first submit
       phoneInput.readOnly = true;
 
-      // Submit stays disabled until new names are confirmed beyond previously submitted count
-      submitBtn.disabled = true;
-
+      // messaging + submit availability
+      const remaining = Math.max(0, MAX_GUESTS - prevSubmitted);
       validationMsg.style.display = 'block';
-      validationMsg.textContent = remaining > 0 ? I18N[LANG].resubTipRemaining(remaining) : I18N[LANG].already;
+      if (remaining > 0){
+        validationMsg.textContent = T.thanksMore(remaining);
+      } else {
+        validationMsg.textContent = T.already;
+      }
+
+      // submit enabled only when adding confirmed names and not exceeding max (handled by maybeEnableSubmit)
+      maybeEnableSubmit();
     }
 
-    // Show immediate success; message will reflect remaining quota
     function showSuccessUI(){
-      const confirmedNow = getConfirmedCount();
-      const remaining = Math.max(0, MAX_GUESTS - confirmedNow);
-
+      // Optimistic success (immediate)
       submitBtn.disabled = true;
       submitBtn.textContent = I18N[LANG].submit;
       getGuestInputs().forEach(inp => inp.readOnly = true);
@@ -1195,10 +1327,9 @@ before 1 October 2025.</div>
       phoneInput.readOnly = true;
 
       validationMsg.style.display = 'block';
-      validationMsg.textContent = remaining > 0 ? I18N[LANG].resubTipRemaining(remaining) : I18N[LANG].thanks;
+      validationMsg.textContent = I18N[LANG].thanks;
 
       markSubmitted();
-      setSubmittedCount(confirmedNow);
       saveLocal();
       showToast(I18N[LANG].thanks);
     }
@@ -1207,20 +1338,19 @@ before 1 October 2025.</div>
       localStorage.removeItem('rsvp_names');
       localStorage.removeItem('rsvp_confirmed');
       localStorage.removeItem('rsvp_phone');
-      localStorage.removeItem('rsvp_submitted');
-      localStorage.removeItem('rsvp_submitted_count');
 
       renderGuestRows();
       getGuestInputs().forEach((inp, idx)=>{
         const btn = getGuestButtons()[idx];
-        inp.readOnly = false; inp.value = '';
+        inp.readOnly = false;
+        inp.value = '';
         btn.textContent = I18N[LANG].confirm;
         btn.classList.remove('edit-state');
         btn.classList.add('confirm-state');
         btn.disabled = true;
       });
       phoneInput.readOnly = false;
-      phoneInput.value = ccSelect.value; // keep prefix
+      phoneInput.value = '';
       updateTotals();
       maybeEnableSubmit();
     }
@@ -1251,7 +1381,9 @@ before 1 October 2025.</div>
           btn.classList.remove('confirm-state'); btn.classList.add('edit-state');
           btn.disabled = false;
         }else{
-          if(!RESUBMISSION_ENABLE && isSubmitted()) return; // cannot edit confirmed names after submission
+          // allow editing only when resubmission is permitted
+          const allowEdit = (!isSubmitted()) || (getSubmittedCount() < MAX_GUESTS);
+          if(!allowEdit) return;
           input.readOnly = false;
           btn.textContent = T2.confirm;
           btn.classList.remove('edit-state'); btn.classList.add('confirm-state');
@@ -1268,6 +1400,7 @@ before 1 October 2025.</div>
       for(let i=0; i<MAX_GUESTS; i++){ guestRowsEl.appendChild(makeGuestRow(i)); }
     }
 
+    // UPDATED: contact rows (unchanged behavior)
     function renderContacts(){
       const contactList = document.getElementById('contactList');
       if(!contactList) return;
@@ -1304,19 +1437,21 @@ before 1 October 2025.</div>
     }
 
 	function renderMaps(){
-	  const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
-	  const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
-	  btnGmaps.href = gq; 
-	  btnWaze.href  = wz;
-
-	  const coordEl = document.getElementById('coordLink');
-	  if (coordEl) {
+	const gq = `https://www.google.com/maps/dir/?api=1&destination=${GMAPS_COORDS.lat},${GMAPS_COORDS.lng}&travelmode=driving&destination=${VENUE_LABEL}`;
+	const wz = `https://waze.com/ul?ll=${WAZE_COORDS.lat}%2C${WAZE_COORDS.lng}&navigate=yes`;
+	btnGmaps.href = gq; 
+	btnWaze.href  = wz;
+	
+	// Re-select the freshly-rendered link (the old reference becomes stale after i18n)
+	const coordEl = document.getElementById('coordLink');
+	if (coordEl) {
 		const direct = `https://www.google.com/maps/search/?api=1&query=${DISPLAY_COORDS.lat},${DISPLAY_COORDS.lng}`;
 		coordEl.href = direct;
 		coordEl.target = '_blank';
 		coordEl.rel = 'noopener';
-	  }
 	}
+	}
+
 
     function formatWeddingDateWithDay(lang){
       const d = new Date(`${WEDDING_DATE_ISO}T00:00:00`);
@@ -1347,6 +1482,7 @@ before 1 October 2025.</div>
       return new Intl.DateTimeFormat(locale, { weekday:'long' }).format(d);
     }
 
+    /* Sync logo to address height only on wide screens to avoid mobile jitter */
     function syncLogoHeight(){
       const isWide = window.innerWidth >= 700;
       const addr = heroAddressEl;
@@ -1364,6 +1500,7 @@ before 1 October 2025.</div>
     window.addEventListener('load', syncLogoHeight);
     window.addEventListener('resize', syncLogoHeight);
 
+    // Ensure arrow offset variable applies (fix for some browsers)
     function applyArrowOffset(){
       if(!scrollArrow) return;
       scrollArrow.style.bottom = `calc(var(--arrow-bottom-offset) + var(--hero-arrow-offset-y))`;
@@ -1371,9 +1508,16 @@ before 1 October 2025.</div>
     window.addEventListener('load', applyArrowOffset);
     window.addEventListener('resize', applyArrowOffset);
 
+    // Helper: escape HTML for safe bullet rendering
     function esc(s){
-      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+      return String(s)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#39;');
     }
+    // Helper: turn "line1\nline2" into bullets
     function bulletsFromText(text){
       const lines = String(text).split(/\n+/).map(l=>l.trim()).filter(Boolean);
       if(!lines.length) return '';
@@ -1383,17 +1527,23 @@ before 1 October 2025.</div>
     function i18n(){
       const T = I18N[LANG];
 
+      // Update shiny overlay text
       document.querySelectorAll('.couple-title .name').forEach(el=>{
         el.setAttribute('data-text', el.textContent.trim());
       });
 
+      // Hero
       heroTag.textContent = T.tagline;
       heroDate.textContent = formatWeddingDateWithDay(LANG);
 
+      // Address bilingual toggle — bold the first line
       if (Array.isArray(T.addrLines)) {
-        heroAddressEl.innerHTML = T.addrLines.map((line,i)=> i===0 ? `<strong>${line}</strong>` : line).join('<br/>');
+        heroAddressEl.innerHTML = T.addrLines
+          .map((line,i)=> i===0 ? `<strong>${line}</strong>` : line)
+          .join('<br/>');
       }
 
+      // Invitation section
       invSmall.textContent = T.invSmall;
       if (invSmall2) invSmall2.textContent = 'WalimatulUrus';
       invBody.textContent = T.invBody;
@@ -1406,6 +1556,7 @@ before 1 October 2025.</div>
       inviteVenueEl.textContent = "Promenade Hotel, Rafflesia Ballroom";
       inviteDressEl.textContent = T.invDressValue;
 
+      // CTA
       titleText.textContent = T.title;
       if (subtitleText) {
         const nl = (T.subtitle || '').replace(/\.\s*/g, '.\n');
@@ -1414,26 +1565,36 @@ before 1 October 2025.</div>
       if(rsvpBtn) rsvpBtn.textContent = T.rsvp;
       if(noBtn)   noBtn.textContent   = T.no;
       if(locationBtn) locationBtn.textContent = T.location;
+
+      // Top control labels
       if(quickLocation) quickLocation.textContent = T.location;
       if(quickContact)  quickContact.textContent  = T.contactNav;
       if(quickPhotos)   quickPhotos.textContent   = T.photosNav;
+
+      // RSVP section
       if (rsvpTitleEl) rsvpTitleEl.textContent = T.rsvpTitle;
       if(rsvpIntro)   rsvpIntro.textContent = T.rsvpIntro;
       if(phoneHeader) phoneHeader.textContent = T.phoneHeader;
       if(phoneHint)   phoneHint.textContent   = T.phoneHint;
       if(submitBtn)   submitBtn.textContent   = T.submit;
 
-      if (noMsg){ noMsg.textContent = T.noMsg; noMsg.style.display = 'none'; }
+      if (noMsg){
+        noMsg.textContent = T.noMsg;
+        noMsg.style.display = 'none';
+      }
 
+      // Location
       locTitle.textContent = T.locTitle;
       locDesc.textContent = T.locDesc;
       if(locNote) locNote.textContent = T.locNote;
       if(locSmall) locSmall.innerHTML = T.locSmallHTML;
       if(locHotel) locHotel.textContent = T.locHotelText;
 
+      // Contacts
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
 
+      // Schedule
       if (scheduleTitleEl) scheduleTitleEl.textContent = T.scheduleTitle;
       if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
       if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
@@ -1462,6 +1623,7 @@ before 1 October 2025.</div>
       }
       if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = ''; }
 
+      // Countdown
       if (countdownTitleEl) countdownTitleEl.textContent = T.countdownTitle || "Countdown";
       if (cdSubEl)          cdSubEl.textContent          = T.cdSub || "";
       if (cdDaysLabel)  cdDaysLabel.textContent  = (T.cdLabels && T.cdLabels.days)  || "DAYS";
@@ -1469,11 +1631,12 @@ before 1 October 2025.</div>
       if (cdMinsLabel)  cdMinsLabel.textContent  = (T.cdLabels && T.cdLabels.mins)  || "MINS";
       if (cdSecsLabel)  cdSecsLabel.textContent  = (T.cdLabels && T.cdLabels.secs)  || "SECS";
 
+      // Photos section
       if (liveTitleEl) liveTitleEl.textContent = T.liveTitle;
       if (liveHelpEl)  liveHelpEl.innerHTML = T.liveHelp.replace(/\n/g,'<br/>');
       if (liveEmpty)   liveEmpty.textContent = T.liveEmpty;
 
-      // re-render rows with texts & states
+      // Re-render guest rows with stored values
       const savedNames = getStoredNames();
       const savedConfirmed = getStoredConfirmed();
       renderGuestRows();
@@ -1493,56 +1656,33 @@ before 1 October 2025.</div>
       document.getElementById('post_lang').value = LANG;
 
       maybeEnableSubmit();
-      if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
 
+      if(isSubmitted()){
+        // ensure we show the correct partial/full lock state
+        lockSubmissionUI();
+      }
+
+      // resync heights and arrow offset
       syncLogoHeight();
       applyArrowOffset();
     }
 
-    // [NEW] Country code enforcement helpers
-    function ensurePrefix(){
-      const prefix = ccSelect.value || "+60 ";
-      let v = phoneInput.value || "";
-      if (!v.startsWith(prefix)){
-        // remove any starting +digits and space, then re-apply
-        const rest = v.replace(/^\+\d+\s*/, '');
-        v = prefix + rest.replace(/[^\d\s]/g,'');
-        phoneInput.value = v;
-      }
-      // keep caret behind prefix
-      const p = prefix.length;
-      setTimeout(()=>{
-        try{
-          if (phoneInput.selectionStart < p){
-            phoneInput.setSelectionRange(p,p);
-          }
-        }catch(_){}
-      },0);
-    }
-
     function maybeEnableSubmit(){
-      if(!RESUBMISSION_ENABLE && isSubmitted()){
-        // Allow re-submit only if more confirmed than previously submitted and no unconfirmed text left
-        const prev = getSubmittedCount();
-        const remaining = Math.max(0, MAX_GUESTS - prev);
+      // Enforce submission rules (allow partial resubmission if slots remain)
+      const submitted = isSubmitted();
+      const prevCount = getSubmittedCount();
+      const canResubmit = submitted && (prevCount < MAX_GUESTS);
 
-        const prefixLen = (ccSelect.value || "").length;
-        const hasPhone = (phoneInput.value || '').trim().length > prefixLen;
-
-        const confirmedCount = getConfirmedCount();
-        const unconfIdx = firstUnconfirmedIndexPlus1();
-
-        let ok = remaining > 0 && hasPhone && confirmedCount > prev && unconfIdx === -1;
-
-        submitBtn.disabled = !ok;
-        validationMsg.style.display = ok ? 'none' : 'block';
-        validationMsg.textContent = ok ? '' : I18N[LANG].resubTipRemaining(remaining);
+      // If fully locked (4 already submitted), always disable
+      if (submitted && !canResubmit){
+        submitBtn.disabled = true;
+        validationMsg.style.display = 'block';
+        validationMsg.textContent = I18N[LANG].resubmitBlocked;
         return;
       }
 
-      // Normal first submission rules
-      const prefixLen = (ccSelect.value || "").length;
-      const hasPhone = (phoneInput.value || '').trim().length > prefixLen;
+      const typedCount = getGuestInputs().filter(inp => inp.value.trim().length>0).length;
+      const hasPhone = phoneInput.value.trim().length > 0;
       const confirmedCount = getConfirmedCount();
       const unconfIdx = firstUnconfirmedIndexPlus1();
 
@@ -1550,9 +1690,9 @@ before 1 October 2025.</div>
       submitBtn.disabled = !ok;
 
       const T = I18N[LANG];
-      validationMsg.style.display = (!ok) ? 'block' : 'none';
+      validationMsg.style.display = (!ok) ? 'block' : validationMsg.style.display;
+
       if (!ok){
-        const typedCount = getGuestInputs().filter(inp => inp.value.trim().length>0).length;
         if (typedCount === 0 && confirmedCount === 0){
           validationMsg.textContent = T.needOneName;
         } else if (typedCount > 0 && !hasPhone){
@@ -1561,27 +1701,75 @@ before 1 October 2025.</div>
           validationMsg.textContent = T.nameNotConfirmed(unconfIdx);
         } else if (confirmedCount < 1){
           validationMsg.textContent = T.needOneName;
-        } else {
-          validationMsg.textContent = '';
         }
-      } else {
-        validationMsg.textContent = '';
       }
     }
 
-    // Language toggle
-    langToggle.addEventListener('click', (e)=>{
-      e.preventDefault();
-      LANG = (LANG === 'en') ? 'ms' : 'en';
-      localStorage.setItem('rsvp_lang', LANG);
-      i18n();
-      renderMaps();
+    // ===== Country code prefix logic (non-deletable) =====
+    function currentPrefix(){ return CC_MAP[ccSelect.value] || '+60 '; }
+    function ensurePrefix(){
+      const pref = currentPrefix();
+      if (!phoneInput.value || !phoneInput.value.startsWith(pref)){
+        // replace any old prefix with the new one
+        const digits = phoneInput.value.replace(/^\+\d+\s*/, '');
+        phoneInput.value = pref + digits.replace(/[^\d\s]/g,'');
+      }
+      // place caret after prefix if it's before
+      const pLen = pref.length;
+      try{
+        if (phoneInput.selectionStart < pLen){
+          phoneInput.setSelectionRange(pLen, pLen);
+        }
+      }catch(_){}
+    }
+    function canonicalPhone(){
+      // collapse spaces; keep leading + and digits only
+      const v = phoneInput.value.trim().replace(/\s+/g,' ');
+      const keep = v.replace(/(?!^\+)[^\d\s]/g,'');
+      return keep.replace(/\s+/g,' ').trim();
+    }
+
+    ccSelect.addEventListener('change', ()=>{
+      ensurePrefix();
       saveLocal();
       maybeEnableSubmit();
     });
 
+    phoneInput.addEventListener('input', ()=>{
+      ensurePrefix();
+      // block typing '+' or letters after prefix
+      phoneInput.value = phoneInput.value.replace(/(?!^\+)[^\d\s]/g,'');
+      saveLocal(); maybeEnableSubmit();
+    });
+    phoneInput.addEventListener('keydown', (e)=>{
+      const pref = currentPrefix();
+      const pLen = pref.length;
+      const pos = phoneInput.selectionStart || 0;
+      if ((e.key === 'Backspace' || e.key === 'Delete') && pos <= pLen){
+        e.preventDefault();
+        phoneInput.setSelectionRange(pLen, pLen);
+      }
+    });
+    function initCountryAndPhone(){
+      const savedCC = localStorage.getItem('rsvp_cc');
+      if (savedCC && CC_MAP[savedCC]) ccSelect.value = savedCC;
+      const savedPhone = localStorage.getItem('rsvp_phone') || '';
+      phoneInput.value = savedPhone || currentPrefix();
+      ensurePrefix();
+    }
+
+    // Language toggle
+	  langToggle.addEventListener('click', (e)=>{
+	    e.preventDefault();
+	    LANG = (LANG === 'en') ? 'ms' : 'en';
+	    localStorage.setItem('rsvp_lang', LANG);
+	    i18n();
+	    renderMaps();
+	    saveLocal(); 
+	    maybeEnableSubmit();
+	  });
+
     // Music
-    const bgm = document.getElementById('bgm');
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -1655,13 +1843,15 @@ before 1 October 2025.</div>
       });
     }
 
+    // Handlers
     handleSmoothLink(rsvpBtn, '#rsvp');
-    handleSmoothLink(locationBtn, '#location');
+    handleSmoothLink(locationBtn, '#location'); // legacy guard
     handleSmoothLink(quickHome, 'header.hero');
     handleSmoothLink(quickLocation, '#location');
     handleSmoothLink(quickContact,  '#contact');
     handleSmoothLink(quickPhotos,   '#live');
 
+    // (3) Force Google login then go to Drive folder when clicking ALIPPU
     const alippuLink = document.getElementById('alippuLink');
     if (alippuLink){
       alippuLink.addEventListener('click', (e)=>{
@@ -1674,6 +1864,7 @@ before 1 October 2025.</div>
       });
     }
 
+    // NO button behavior
     if(noBtn){
       noBtn.addEventListener('click', ()=>{
         noMsg.textContent = I18N[LANG].noMsg;
@@ -1685,6 +1876,7 @@ before 1 October 2025.</div>
       });
     }
 
+    // Scroll arrow behavior + delayed auto-trigger
     function scrollToCTAWithoutInvite(){
       const cta = document.querySelector('#cta');
       if(!cta){ return; }
@@ -1698,27 +1890,27 @@ before 1 October 2025.</div>
       }
       smoothScrollTo(target, 700);
     }
-    const scrollArrow = document.getElementById('scrollArrow');
     if(scrollArrow){
       scrollArrow.addEventListener('click', (e)=>{
         e.preventDefault();
         playClick();
         scrollToCTAWithoutInvite();
       });
-      (function autoArrow(){
-        let moved = false;
-        const mark = ()=>{ moved = true; };
-        ['wheel','touchstart','scroll','keydown','pointerdown'].forEach(ev=>{
-          window.addEventListener(ev, mark, { once:true, passive:true });
-        });
-        setTimeout(()=>{
-          if(!moved && (window.scrollY||window.pageYOffset) < 8){
-            scrollArrow && scrollArrow.click();
-          }
-        }, ARROW_AUTO_DELAY_MS);
-      })();
     }
+    (function autoArrow(){
+      let moved = false;
+      const mark = ()=>{ moved = true; };
+      ['wheel','touchstart','scroll','keydown','pointerdown'].forEach(ev=>{
+        window.addEventListener(ev, mark, { once:true, passive:true });
+      });
+      setTimeout(()=>{
+        if(!moved && (window.scrollY||window.pageYOffset) < 8){
+          scrollArrow && scrollArrow.click();
+        }
+      }, ARROW_AUTO_DELAY_MS);
+    })();
 
+    // Click sounds
     let audioCtx;
     function initAudioCtx(){ if(!audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; audioCtx = new AC(); } }
     function playTone(freq=660, ms=60, type='sine', volume=0.05){
@@ -1740,44 +1932,26 @@ before 1 October 2025.</div>
       playClick();
     }, true);
 
-    // ===== Country select + phone prefix behaviour =====
-    (function initCountryAndPhone(){
-      const storedCC = localStorage.getItem('rsvp_cc') || '+60 ';
-      if (storedCC === '+62 ') ccSelect.value = '+62 ';
-      else ccSelect.value = '+60 ';
-
-      // Initialize phone with prefix if empty / missing
-      if (!localStorage.getItem('rsvp_phone')) {
-        phoneInput.value = ccSelect.value;
-      } else {
-        phoneInput.value = localStorage.getItem('rsvp_phone');
-        ensurePrefix();
+    // ===== Duplicate phone check (Apps Script) =====
+    async function phoneExistsOnServer(phone){
+      try{
+        const url = `${APPS_SCRIPT_URL}?type=check_phone&phone=${encodeURIComponent(phone)}`;
+        const r = await fetch(url, { cache:'no-store' });
+        if(!r.ok) return false; // fail open if endpoint not present
+        const data = await r.json();
+        return !!(data && data.exists);
+      }catch(_){
+        return false; // fail open
       }
-
-      ccSelect.addEventListener('change', ()=>{
-        const oldPrefix = (phoneInput.value.match(/^\+\d+\s*/) || [''])[0];
-        const rest = (phoneInput.value || '').slice(oldPrefix.length);
-        phoneInput.value = ccSelect.value + rest.replace(/[^\d\s]/g,'');
-        saveLocal(); maybeEnableSubmit(); ensurePrefix();
-      });
-
-      phoneInput.addEventListener('focus', ensurePrefix);
-      phoneInput.addEventListener('keydown', (e)=>{
-        const p = (ccSelect.value || '').length;
-        const start = phoneInput.selectionStart || 0;
-        if (start <= p && (e.key === 'Backspace' || e.key === 'Delete')){
-          e.preventDefault();
-          phoneInput.setSelectionRange(p, p);
-        }
-      });
-      phoneInput.addEventListener('input', ()=>{ ensurePrefix(); saveLocal(); maybeEnableSubmit(); });
-    })();
+    }
 
     // Render
     function renderAll(){
       i18n();
       renderContacts();
       renderMaps();
+
+      initCountryAndPhone();
 
       const names = getStoredNames();
       const conf  = getStoredConfirmed();
@@ -1794,12 +1968,12 @@ before 1 October 2025.</div>
       updateTotals();
       refreshLangToggleLabel();
 
-      // phone restored in initCountryAndPhone()
-      if(!RESUBMISSION_ENABLE && isSubmitted()){
-        // if no count saved, infer from confirmed rows
-        if (!localStorage.getItem('rsvp_submitted_count')) setSubmittedCount(getConfirmedCount());
+      if(isSubmitted()){
+        // ensure locked/partial-locked after reload
         lockSubmissionUI();
       } else {
+        phoneInput.readOnly = false;
+        phoneInput.value = localStorage.getItem('rsvp_phone') || phoneInput.value;
         maybeEnableSubmit();
       }
 
@@ -1808,7 +1982,9 @@ before 1 October 2025.</div>
     }
     renderAll();
 
-    // Submit to Apps Script (iframe)
+    phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
+
+    // Submit to Apps Script (iframe) with pre-check
     const form = document.getElementById('rsvpForm');
     const hiddenIframe = document.getElementById('hidden_iframe');
     form.action = APPS_SCRIPT_URL;
@@ -1824,65 +2000,59 @@ before 1 October 2025.</div>
       document.getElementById('post_lang').value = LANG;
     }
 
-    // [NEW] check duplicate phone via Apps Script (expects JSON {exists:true|false})
-    async function checkDuplicatePhone(phone){
-      try{
-        const url = APPS_SCRIPT_URL + '?type=checkPhone&phone=' + encodeURIComponent(phone.trim());
-        const r = await fetch(url, { method:'GET', cache:'no-store' });
-        if(!r.ok) return false;
-        const data = await r.json();
-        return !!data.exists;
-      }catch(_){
-        return false; // fail-open so RSVP still works if endpoint not ready
-      }
-    }
-
     let _pendingSubmit = false;
     hiddenIframe.addEventListener('load', ()=>{
       if(!_pendingSubmit) return;
       _pendingSubmit = false;
-
-      // On true success, remember submitted count and lock appropriately
-      const confirmedNow = getConfirmedCount();
-      markSubmitted();
-      setSubmittedCount(confirmedNow);
-      lockSubmissionUI();
-      saveLocal();
-      updateTotals();
       showToast(I18N[LANG].thanks);
+
+      // Update submission counters and UI
+      markSubmitted();
+      const nowCount = getConfirmedCount();
+      setSubmittedCount(nowCount);
+      saveLocal();
+      lockSubmissionUI();
+      updateTotals();
     });
 
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
+    async function attemptSubmit(){
+      const T = I18N[LANG];
 
-      // Block if already submitted and no quota for extra names
-      if((!RESUBMISSION_ENABLE && isSubmitted())){
-        const prev = getSubmittedCount();
-        const confirmedNow = getConfirmedCount();
-        if (confirmedNow <= prev){ playError(); maybeEnableSubmit(); return; }
+      // block if fully locked
+      if(isSubmitted() && getSubmittedCount() >= MAX_GUESTS){
+        validationMsg.style.display = 'block';
+        validationMsg.textContent = T.resubmitBlocked;
+        return;
       }
 
-      // [NEW] duplicate phone protection (server-side check)
-      const phoneNow = (phoneInput.value || '').trim();
-      const isDup = await checkDuplicatePhone(phoneNow);
-      if (isDup){
+      // duplicate phone guard (block if another device, allow if same device resubmitting)
+      const canon = canonicalPhone();
+      const exists = await phoneExistsOnServer(canon);
+
+      const sameDevice = isSubmitted(); // same device already has a submission
+      if (exists && !sameDevice){
         validationMsg.style.display = 'block';
-        validationMsg.textContent = I18N[LANG].duplicatePhone;
-        submitBtn.disabled = true;
+        validationMsg.textContent = T.duplicatePhone;
+        submitBtn.disabled = false;
+        submitBtn.textContent = T.submit;
         playError();
         return;
       }
 
+      // proceed
       submitBtn.disabled = true;
-      submitBtn.textContent = I18N[LANG].submitting;
+      submitBtn.textContent = T.submitting;
       syncHiddenFields(); saveLocal();
       _pendingSubmit = true;
+      showSuccessUI();       // optimistic UX
+      form.submit();         // post to iframe
+    }
 
-      // Optimistic UI immediately
-      showSuccessUI();
-
-      // Post to iframe
-      form.submit();
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      // standard client-side conditions
+      if(submitBtn.disabled){ playError(); return; }
+      await attemptSubmit();
     });
 
     // Particles (unchanged)
@@ -1987,9 +2157,10 @@ before 1 October 2025.</div>
       window.addEventListener('resize', apply);
     })();
 
-    // LIVE PHOTOS
-    let LIVE_PHOTOS = [];
+    // ===== (6) LIVE PHOTOS loader =====
+    let LIVE_PHOTOS = []; // array of image URLs
     let liveIndex = 0;
+
     function showLivePhoto(){
       if (!LIVE_PHOTOS.length){
         liveImg.style.display = 'none';
@@ -2000,10 +2171,13 @@ before 1 October 2025.</div>
       liveImg.style.display = 'block';
       liveImg.src = LIVE_PHOTOS[liveIndex];
     }
+
     function nextPhoto(){ if (!LIVE_PHOTOS.length) return; liveIndex = (liveIndex + 1) % LIVE_PHOTOS.length; showLivePhoto(); }
     function prevPhoto(){ if (!LIVE_PHOTOS.length) return; liveIndex = (liveIndex - 1 + LIVE_PHOTOS.length) % LIVE_PHOTOS.length; showLivePhoto(); }
+
     liveNext.addEventListener('click', nextPhoto);
     livePrev.addEventListener('click', prevPhoto);
+
     async function tryFetchJSON(url){
       try{
         const r = await fetch(url, { cache: 'no-store' });
@@ -2011,20 +2185,27 @@ before 1 October 2025.</div>
         return await r.json();
       }catch(_){ return null; }
     }
+
     async function loadLivePhotos(){
+      // Priority 1: local manifest /PHOTOS/manifest.json
       let arr = await tryFetchJSON(PHOTOS_MANIFEST_URL);
       if (Array.isArray(arr) && arr.length){
         LIVE_PHOTOS = arr.filter(u=>typeof u === 'string');
-        showLivePhoto(); return;
+        showLivePhoto();
+        return;
       }
+      // Priority 2: Apps Script web app
       if (DRIVE_WEBAPP_URL){
         arr = await tryFetchJSON(DRIVE_WEBAPP_URL);
         if (Array.isArray(arr) && arr.length){
           LIVE_PHOTOS = arr.filter(u=>typeof u === 'string');
-          showLivePhoto(); return;
+          showLivePhoto();
+          return;
         }
       }
-      LIVE_PHOTOS = []; showLivePhoto();
+      // Nothing found
+      LIVE_PHOTOS = [];
+      showLivePhoto();
     }
     loadLivePhotos();
   </script>
