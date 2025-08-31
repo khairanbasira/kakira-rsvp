@@ -1737,18 +1737,23 @@ function maybeEnableSubmit(){
   submitBtn.disabled = !ok;
 
   // Error / guidance messages while disabled
-  if (!ok){
-    if (!hasPhone && (unconfirmedTypedCount > 0 || confirmedCount === 0)){
-      validationMsg.textContent = T.needPhone;
-      validationMsg.style.display = 'block';
-    } else if (unconfIdx !== -1){
-      validationMsg.textContent = T.nameNotConfirmed(unconfIdx);
-      validationMsg.style.display = 'block';
-    } else if (!submitted && confirmedCount < 1){
-      validationMsg.textContent = T.needOneName;
-      validationMsg.style.display = 'block';
-    }
+// Error / guidance messages while disabled (priority)
+if (!ok){
+  validationMsg.style.display = 'block';
+
+  if (unconfIdx !== -1){
+    // A name is typed but not confirmed
+    validationMsg.textContent = T.nameNotConfirmed(unconfIdx);
+  } else if (!submitted && confirmedCount < 1){
+    // No confirmed names yet (first submission)
+    validationMsg.textContent = T.needOneName;
+  } else if (!hasPhone){
+    // Phone comes after the name conditions are satisfied
+    validationMsg.textContent = T.needPhone;
+  } else {
+    validationMsg.style.display = 'none';
   }
+}
 }
 
     // ===== Country code prefix logic (non-deletable) =====
