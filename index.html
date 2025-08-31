@@ -1016,6 +1016,10 @@ before 1 October 2025.</div>
         thanks: "Thank you! Your RSVP has been received.",
         already: "RSVP already submitted. Do contact us if there are any changes.",
         thanksMore: (n)=>`Response submitted. You can still add ${n} more name(s) and resubmit if you change your mind.`,
+        // EN
+newConfirmedHint: (k)=> k===1
+  ? "New name added — please click Submit RSVP again to include it."
+  : `${k} new names added — please click Submit RSVP again to include them.`,
         duplicatePhone: "Same phone number already exists or was submitted before.",
         resubmitBlocked: "Resubmission is closed (maximum 4 guests already submitted).",
 
@@ -1095,6 +1099,10 @@ before 1 October 2025.</div>
         thanks: "Terima kasih! Respon anda telah diterima.",
         already: "RSVP telah dihantar. Sila hubungi keluarga pengantin sekiranya terdapat perubahan.",
         thanksMore: (n)=>`Respon berjaya dihantar. Anda masih boleh tambah ${n} nama lagi dan hantar semula jika berubah fikiran.`,
+        // MS
+newConfirmedHint: (k)=> k===1
+  ? "Nama baharu telah disahkan — sila tekan Hantar Respon sekali lagi untuk masukkan ke sistem."
+  : `${k} nama baharu telah disahkan — sila tekan Hantar Respon sekali lagi untuk masukkan ke sistem.`,
         duplicatePhone: "Nombor telefon yang sama sudah wujud atau telah dihantar sebelum ini.",
         resubmitBlocked: "Penghantaran semula ditutup (maksimum 4 tetamu telah dihantar).",
 
@@ -1670,75 +1678,68 @@ before 1 October 2025.</div>
 function maybeEnableSubmit(){
   const T = I18N[LANG];
 
-  const submitted   = isSubmitted();
-  const prevCount   = getSubmittedCount();   // how many were already submitted
-  const currConfirmed = getConfirmedCount(); // how many are confirmed now
-  const unconfIdx   = firstUnconfirmedIndexPlus1();
+  // Always start clean
+  validationMsg.textContent = '';
+  validationMsg.style.display = 'none';
 
-  // phone must have digits beyond the country prefix
+  const submitted       = isSubmitted();
+  const prevCount       = getSubmittedCount();
+  const confirmedCount  = getConfirmedCount();
+  const typedCount      = getGuestInputs().filter(inp => inp.value.trim().length>0).length;
+  const unconfIdx       = firstUnconfirmedIndexPlus1();
+
+  // Phone rule (your updated logic)
   const digitsAfterPrefix = phoneInput.value.replace(/^\+\d+\s*/, '').replace(/\D/g,'').length;
   const hasPhone = digitsAfterPrefix >= 6;
 
-  // Fully locked: already 4 submitted
-  if (submitted && prevCount >= MAX_GUESTS){
+  const canResubmit = submitted && prevCount < MAX_GUESTS;
+
+  // Fully locked
+  if (submitted && !canResubmit){
     submitBtn.disabled = true;
     validationMsg.style.display = 'block';
     validationMsg.textContent = T.resubmitBlocked;
     return;
   }
 
-  // Partial submit case: show info and keep button disabled
-  // until there's at least one new confirmed name
-  if (submitted && prevCount < MAX_GUESTS){
-    const remaining = MAX_GUESTS - prevCount;
-
-    // If the user has started typing a NEW (unconfirmed) name,
-    // hide the informational banner immediately.
-    if (anyUnconfirmedTyped()){
-      validationMsg.textContent = '';
-      validationMsg.style.display = 'none';
-      // don't return; continue to normal checks so the button stays disabled
-      // until they hit "Confirm" on the new name
-    } else if (currConfirmed <= prevCount){
-      // No new typing and no new confirmed names → show the banner
+  // Partial resubmit UX
+  if (canResubmit){
+    // If no new typing and no new confirmed names => keep "thanksMore" banner and block submit
+    if (confirmedCount <= prevCount && typedCount === 0){
       submitBtn.disabled = true;
       validationMsg.style.display = 'block';
-      validationMsg.textContent = T.thanksMore(remaining);
+      validationMsg.textContent = T.thanksMore(MAX_GUESTS - prevCount);
       return;
     }
-    // else: at least one new name is confirmed → continue to normal checks
+
+    // If at least one new name has been confirmed (and no unconfirmed names pending),
+    // show the "newConfirmedHint" to tell them to submit again.
+    if (confirmedCount > prevCount && unconfIdx === -1 && hasPhone){
+      const newlyConfirmed = confirmedCount - prevCount;
+      validationMsg.style.display = 'block';
+      validationMsg.textContent = T.newConfirmedHint(newlyConfirmed);
+      // (do NOT return; we still let the normal validation enable the button)
+    }
+    // If they’re typing an extra unconfirmed name, we’ll show the standard validation below.
   }
 
-  // Normal enable/disable checks
-  const ok = hasPhone && currConfirmed >= 1 && unconfIdx === -1;
+  // Normal validation
+  const ok = hasPhone && confirmedCount >= 1 && unconfIdx === -1;
   submitBtn.disabled = !ok;
 
   if (!ok){
-    validationMsg.style.display = 'block';
-    const typedCount = getGuestInputs().filter(inp => inp.value.trim().length>0).length;
-    if (typedCount === 0 && currConfirmed === 0){
+    if (typedCount === 0 && confirmedCount === 0){
       validationMsg.textContent = T.needOneName;
-    } else if (!hasPhone){
+      validationMsg.style.display = 'block';
+    } else if (typedCount > 0 && !hasPhone){
       validationMsg.textContent = T.needPhone;
+      validationMsg.style.display = 'block';
     } else if (unconfIdx !== -1){
       validationMsg.textContent = T.nameNotConfirmed(unconfIdx);
-    } else if (currConfirmed < 1){
+      validationMsg.style.display = 'block';
+    } else if (confirmedCount < 1){
       validationMsg.textContent = T.needOneName;
-    }
-  } else {
-    // Optional: after adding new confirmed names, keep a friendly hint of remaining slots
-    if (submitted && prevCount < MAX_GUESTS){
-      const remainingNow = Math.max(0, MAX_GUESTS - currConfirmed);
-      if (remainingNow > 0){
-        validationMsg.style.display = 'block';
-        validationMsg.textContent = T.thanksMore(remainingNow);
-      } else {
-        validationMsg.style.display = 'none';
-        validationMsg.textContent = '';
-      }
-    } else {
-      validationMsg.style.display = 'none';
-      validationMsg.textContent = '';
+      validationMsg.style.display = 'block';
     }
   }
 }
@@ -2055,6 +2056,17 @@ function maybeEnableSubmit(){
 
     async function attemptSubmit(){
       const T = I18N[LANG];
+      
+// Block re-submit if nothing new was confirmed since last submit
+const prevCount = getSubmittedCount();
+const currConfirmed = getConfirmedCount();
+if (isSubmitted() && prevCount < MAX_GUESTS && currConfirmed <= prevCount){
+  validationMsg.style.display = 'block';
+  validationMsg.textContent = T.thanksMore(MAX_GUESTS - prevCount);
+  submitBtn.disabled = true;
+  playError();
+  return;
+}
 
       // block if fully locked
       if(isSubmitted() && getSubmittedCount() >= MAX_GUESTS){
