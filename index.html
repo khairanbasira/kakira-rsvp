@@ -1691,13 +1691,22 @@ function maybeEnableSubmit(){
   // until there's at least one new confirmed name
   if (submitted && prevCount < MAX_GUESTS){
     const remaining = MAX_GUESTS - prevCount;
-    if (currConfirmed <= prevCount){
+
+    // If the user has started typing a NEW (unconfirmed) name,
+    // hide the informational banner immediately.
+    if (anyUnconfirmedTyped()){
+      validationMsg.textContent = '';
+      validationMsg.style.display = 'none';
+      // don't return; continue to normal checks so the button stays disabled
+      // until they hit "Confirm" on the new name
+    } else if (currConfirmed <= prevCount){
+      // No new typing and no new confirmed names → show the banner
       submitBtn.disabled = true;
       validationMsg.style.display = 'block';
       validationMsg.textContent = T.thanksMore(remaining);
-      return; // stop here until user confirms a NEW name
+      return;
     }
-    // else: user added at least one new confirmed name -> continue to normal checks
+    // else: at least one new name is confirmed → continue to normal checks
   }
 
   // Normal enable/disable checks
@@ -2053,6 +2062,19 @@ function maybeEnableSubmit(){
         validationMsg.textContent = T.resubmitBlocked;
         return;
       }
+
+// Block re-submit if nothing new was confirmed
+  {
+    const prevCount     = getSubmittedCount();
+    const currConfirmed = getConfirmedCount();
+    if (isSubmitted() && prevCount < MAX_GUESTS && currConfirmed <= prevCount){
+      validationMsg.style.display = 'block';
+      validationMsg.textContent = T.thanksMore(MAX_GUESTS - prevCount);
+      submitBtn.disabled = true;
+      playError();
+      return;
+    }
+  }
 
       // duplicate phone guard (block if another device, allow if same device resubmitting)
       const canon = canonicalPhone();
