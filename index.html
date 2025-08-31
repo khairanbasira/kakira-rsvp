@@ -1678,23 +1678,27 @@ newConfirmedHint: (k)=> k===1
 function maybeEnableSubmit(){
   const T = I18N[LANG];
 
-  // Always start clean
+  // Start clean
   validationMsg.textContent = '';
   validationMsg.style.display = 'none';
 
   const submitted       = isSubmitted();
   const prevCount       = getSubmittedCount();
   const confirmedCount  = getConfirmedCount();
-  const typedCount      = getGuestInputs().filter(inp => inp.value.trim().length>0).length;
   const unconfIdx       = firstUnconfirmedIndexPlus1();
 
-  // Phone rule (your updated logic)
+  // Count only unconfirmed typed names (NOT readOnly)
+  const unconfirmedTypedCount = getGuestInputs()
+    .filter(inp => !inp.readOnly && inp.value.trim().length > 0).length;
+
+  // Phone rule
   const digitsAfterPrefix = phoneInput.value.replace(/^\+\d+\s*/, '').replace(/\D/g,'').length;
   const hasPhone = digitsAfterPrefix >= 6;
 
   const canResubmit = submitted && prevCount < MAX_GUESTS;
+  const newlyConfirmed = Math.max(0, confirmedCount - prevCount);
 
-  // Fully locked
+  // Fully locked (already hit max)
   if (submitted && !canResubmit){
     submitBtn.disabled = true;
     validationMsg.style.display = 'block';
@@ -1702,42 +1706,45 @@ function maybeEnableSubmit(){
     return;
   }
 
-  // Partial resubmit UX
+  // After first submit — show info & keep button grey unless new names are confirmed
   if (canResubmit){
-    // If no new typing and no new confirmed names => keep "thanksMore" banner and block submit
-    if (confirmedCount <= prevCount && typedCount === 0){
+    // nothing new typed or confirmed → keep the “thanksMore” banner, button grey
+    if (newlyConfirmed === 0 && unconfirmedTypedCount === 0){
       submitBtn.disabled = true;
       validationMsg.style.display = 'block';
       validationMsg.textContent = T.thanksMore(MAX_GUESTS - prevCount);
       return;
     }
 
-    // If at least one new name has been confirmed (and no unconfirmed names pending),
-    // show the "newConfirmedHint" to tell them to submit again.
-    if (confirmedCount > prevCount && unconfIdx === -1 && hasPhone){
-      const newlyConfirmed = confirmedCount - prevCount;
+    // if at least one new name was confirmed (and no unconfirmed pending), show the resubmit hint
+    if (newlyConfirmed > 0 && unconfIdx === -1 && hasPhone){
       validationMsg.style.display = 'block';
       validationMsg.textContent = T.newConfirmedHint(newlyConfirmed);
-      // (do NOT return; we still let the normal validation enable the button)
+      // (do not return; we'll enable the button via `ok` below)
     }
-    // If they’re typing an extra unconfirmed name, we’ll show the standard validation below.
   }
 
-  // Normal validation
-  const ok = hasPhone && confirmedCount >= 1 && unconfIdx === -1;
+  // Validation → enable rules differ before vs after the first submit
+  let ok;
+  if (!submitted){
+    // First submission: need at least 1 confirmed name + phone, no unconfirmed pending
+    ok = hasPhone && confirmedCount >= 1 && unconfIdx === -1;
+  } else {
+    // After submission: only enable if there are NEW confirmed names
+    ok = hasPhone && newlyConfirmed > 0 && unconfIdx === -1;
+  }
+
   submitBtn.disabled = !ok;
 
+  // Error / guidance messages while disabled
   if (!ok){
-    if (typedCount === 0 && confirmedCount === 0){
-      validationMsg.textContent = T.needOneName;
-      validationMsg.style.display = 'block';
-    } else if (typedCount > 0 && !hasPhone){
+    if (!hasPhone && (unconfirmedTypedCount > 0 || confirmedCount === 0)){
       validationMsg.textContent = T.needPhone;
       validationMsg.style.display = 'block';
     } else if (unconfIdx !== -1){
       validationMsg.textContent = T.nameNotConfirmed(unconfIdx);
       validationMsg.style.display = 'block';
-    } else if (confirmedCount < 1){
+    } else if (!submitted && confirmedCount < 1){
       validationMsg.textContent = T.needOneName;
       validationMsg.style.display = 'block';
     }
