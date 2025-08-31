@@ -68,10 +68,10 @@
       --top-btn-min-width: 36px;
       --top-btn-padding-x: 8px;
 
-      /* Arrow vertical offset */
+      /* Arrow vertical offset (distance from bottom of the hero) */
       --arrow-bottom-offset: 3px;
 
-      /* Fine position controls for ALL hero items */
+      /* NEW: fine position controls for ALL hero items */
       --hero-tag-offset-x: 0px;
       --hero-tag-offset-y: 15px;
       --hero-date-offset-x: 0px;
@@ -111,7 +111,6 @@
       :root{ --wallpaper:url('rsvpwallpaper_web.png'); }
     }
 
-    /* Extra safeguard: keep colors the same even if system prefers dark */
     @media (prefers-color-scheme: dark){
       html, body { background: var(--cream) !important; color: var(--text) !important; }
       .card, .btn, .input, .confirm-btn { background:#fff !important; color:#111 !important; }
@@ -147,7 +146,6 @@
     .card,
     .footer { position:relative; z-index:10; }
 
-    /* Top-centered controls */
     .top-controls{
       position: fixed;
       left: 50%;
@@ -183,12 +181,10 @@
 	/* Hide the Photos/Gambar top button */
 	#quickPhotos { display:none !important; }
 
-    /* Hero */
     .hero{
       position:relative;
       min-height:100svh;
       display:grid; place-items:center; text-align:center; color:#222;
-
       background-image:
         linear-gradient(
           180deg,
@@ -245,11 +241,7 @@
       text-shadow:0 2px 0 rgba(0,0,0,.04), 0 8px 22px rgba(212,175,55,.25);
       position:relative;
     }
-    .couple-title .name{
-      display:inline-block;
-      position: relative;
-      z-index: 1;
-    }
+    .couple-title .name{ position: relative; z-index: 1; }
     .couple-title .n1{ transform: translate(var(--name1-offset-x), var(--name1-offset-y)); z-index: var(--name1-z); }
     .couple-title .n2{ transform: translate(var(--name2-offset-x), var(--name2-offset-y)); z-index: var(--name2-z); }
 
@@ -292,18 +284,11 @@
       margin:0;
     }
     .hero-logo{
-      display:block;
-      height:auto;
-      max-height:160px;
-      width:auto; object-fit:contain;
-      flex:0 0 auto;
+      display:block; height:auto; max-height:160px; width:auto; object-fit:contain; flex:0 0 auto;
       transform: translate(var(--hero-logo-offset-x), var(--hero-logo-offset-y));
     }
     @media (max-width:560px){
-      .hero-address-wrap{
-        gap:12px; padding:0 10px;
-        flex-direction:column; align-items:center; text-align:center;
-      }
+      .hero-address-wrap{ gap:12px; padding:0 10px; flex-direction:column; align-items:center; text-align:center; }
       .hero-logo{ max-height:var(--mobile-logo-max-height); max-width:60vw; }
       .hero-address{ text-align:center; }
     }
@@ -352,10 +337,6 @@
     .input:focus:not([readonly]){ border-color:var(--gold-strong); box-shadow:0 0 0 3px rgba(212,175,55,.20); }
     .input[readonly]{ background:#fffdf7; border-color:#ead79a; color:#6b4b00; }
 
-    /* Country code select sizing */
-    #phoneRow{ grid-template-columns: 110px 1fr; }
-    #ccSelect{ appearance:none; text-align-last:left; font-weight:600; }
-
     .tiny{ font-size:12px; color:#6b7280 }
     .total{ text-align:center; margin-top:6px; color:#374151 }
 
@@ -392,22 +373,9 @@
     .footer{ text-align:center; color:#6b7280; padding:30px 16px 70px; background:transparent; }
 
     .brandline{
-      display:inline-flex;
-      align-items:baseline;
-      gap:8px;
-      color:#c9c3b9;
-      letter-spacing:.18em;
-      text-transform:lowercase;
-      font-size:14px;
+      display:inline-flex; align-items:baseline; gap:8px; color:#c9c3b9; letter-spacing:.18em; text-transform:lowercase; font-size:14px;
     }
-    .brandline .brand-link{
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      color:#c9c3b9;
-      text-decoration:none;
-      transition:color .15s ease, transform .15s ease;
-      line-height:1;
-    }
+    .brandline .brand-link{ letter-spacing:.04em; text-transform:uppercase; color:#c9c3b9; text-decoration:none; transition:color .15s ease, transform .15s ease; line-height:1; }
     .brandline .brand-strong{ font-weight:800; }
     .brandline .brand-light{ font-weight:300; }
     .brandline .brand-link:hover{ color:var(--gold-strong); }
@@ -421,24 +389,11 @@
 
     /* COUNTDOWN */
     #countdown .cd-sub{ margin:6px 0 16px; }
-    .countdown-row{
-      display:flex; gap:12px; align-items:stretch; justify-content:stretch;
-      flex-wrap:nowrap;
-    }
+    .countdown-row{ display:flex; gap:12px; align-items:stretch; justify-content:stretch; flex-wrap:nowrap; }
     .cd-box{
       background:
-        radial-gradient(circle at 50% 45%,
-          rgba(255,253,245,.88) 0%,
-          rgba(255,245,215,.70) 38%,
-          rgba(248,229,160,.52) 62%,
-          rgba(232,202,110,.48) 82%,
-          rgba(212,175,55,.55) 100%);
-      border:1px solid rgba(0,0,0,.06);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow-sm); padding:16px 12px;
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      text-align:center; aspect-ratio:1/1; min-width:0;
-      flex: 1 1 0;
+        radial-gradient(circle at 50% 45%, rgba(255,253,245,.88) 0%, rgba(255,245,215,.70) 38%, rgba(248,229,160,.52) 62%, rgba(232,202,110,.48) 82%, rgba(212,175,55,.55) 100%);
+      border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow-sm); padding:16px 12px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; aspect-ratio:1/1; min-width:0; flex: 1 1 0;
     }
     .cd-num{ font-weight:700; line-height:1; font-size:clamp(22px, 7.2vw, 48px); }
     .cd-label{ margin-top:6px; font-size:12px; letter-spacing:.35em; color:#6b7280; }
@@ -447,23 +402,14 @@
     .agenda{ display:grid; grid-template-columns: 240px 1fr; gap:24px; --timeline-pad:28px; --tl-line-x:11px; --tl-dot-nudge:1px; }
     .agenda-date{ font-size:clamp(18px,2.6vw,24px); }
     .agenda-day{ color:#6b7280; margin-top:6px; }
-
     .timeline{ position:relative; padding-left:var(--timeline-pad); }
     .timeline::before{ content:''; position:absolute; left:var(--tl-line-x); top:6px; bottom:6px; width:2px; background:var(--gold-strong); }
-
     .tl-item{ position:relative; display:grid; grid-template-columns: 120px 1fr; align-items:center; gap:10px; margin:20px 0; }
     .tl-mid{ display:none; }
-
     .tl-item::before{
-      content:''; position:absolute;
-      left: calc( (var(--tl-line-x) - var(--timeline-pad)) + var(--tl-dot-nudge) );
-      top:50%;
-      width:14px; height:14px; border-radius:50%;
-      background:var(--gold-strong);
-      transform:translate(-50%, -50%);
-      box-shadow:0 0 0 3px var(--gold-soft);
+      content:''; position:absolute; left: calc( (var(--tl-line-x) - var(--timeline-pad)) + var(--tl-dot-nudge) ); top:50%;
+      width:14px; height:14px; border-radius:50%; background:var(--gold-strong); transform:translate(-50%, -50%); box-shadow:0 0 0 3px var(--gold-soft);
     }
-
     .tl-time{ font-weight:600; color:#0f172a; }
     .tl-what{ color:#0f172a; }
     .tl-title{ font-weight:700; letter-spacing:.02em; }
@@ -493,8 +439,7 @@
       background:
         linear-gradient(#fff,#fff) padding-box,
         linear-gradient(135deg, rgba(255,255,255,.7), rgba(212,175,55,.9), rgba(255,255,255,.7)) border-box;
-      border:2px solid transparent;
-      text-align:center;
+      border:2px solid transparent; text-align:center;
     }
 
     .inv-small{ text-align:center; font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:#6b4b00; }
@@ -503,7 +448,6 @@
 
     .parents-block .inv-couple{ font-size: var(--parent-name-size); }
     #invBody{ letter-spacing: var(--inv-body-letter-spacing); }
-
     .parents-block .inv-couple{ margin: var(--pair-gap, 6px) 0; }
     .parents-block .inv-and{ margin: var(--pair-gap, 6px) 0; }
     .parents-a{ --pair-gap: var(--parentsA-gap); }
@@ -514,22 +458,11 @@
 
     .inv-label{
       font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      font-weight:700;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      color:var(--inv-label-color);
-      font-size:var(--inv-label-size);
+      font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--inv-label-color); font-size:var(--inv-label-size);
     }
     .inv-value{ margin-top:4px; color:#0f172a; }
 
-    .loc-photo{
-      display:block;
-      margin:12px auto 12px;
-      max-width:100%;
-      height:auto;
-      border-radius:12px;
-      box-shadow:var(--shadow-sm);
-    }
+    .loc-photo{ display:block; margin:12px auto 12px; max-width:100%; height:auto; border-radius:12px; box-shadow:var(--shadow-sm); }
 
     .location-card{ text-align:center; display:flex; flex-direction:column; align-items:center; }
     .location-card .actions{ justify-content:center; }
@@ -537,9 +470,7 @@
     .location-card .section-title{ align-self:flex-start; text-align:left; }
 
     #locNote{ display:none; }
-
     #noMsg{ text-align:center; margin-top:16px; display:none; }
-
     #cta .btn{ text-transform:none; font-weight:600; }
 
     .invite-inner #invSmall{ display:block; text-align:center; }
@@ -548,7 +479,6 @@
     .parents-a{ margin-bottom:10px; }
     .parents-b{ margin-top:10px; }
 
-    /* Contact list layout */
     .contact-list{ display:grid; gap:10px; }
     .contact-row{
       display:grid; grid-template-columns: 1fr auto; align-items:center;
@@ -559,27 +489,41 @@
     .contact-left{ font-weight:700; color:#0f172a; }
     .contact-right{ display:flex; align-items:center; gap:10px; color:#6b7280; }
 
-    /* Phone icon button */
-    .call-btn{
-      width:36px; height:36px;
-      display:inline-flex; align-items:center; justify-content:center;
-      background:transparent; border:0; box-shadow:none; border-radius:0;
-      text-decoration:none; padding:0;
-    }
+    .call-btn{ width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; background:transparent; border:0; box-shadow:none; border-radius:0; text-decoration:none; padding:0; }
     .call-btn img{ width:100%; height:100%; object-fit:contain; display:block; }
 
-    /* PHOTOS section */
-    .live-gallery{
-      display:flex; align-items:center; justify-content:center; gap:12px;
-      margin-top:8px;
-    }
-    .live-gallery img{
-      max-width:100%; max-height:420px; border-radius:12px; box-shadow:var(--shadow-sm);
-    }
+    .live-gallery{ display:flex; align-items:center; justify-content:center; gap:12px; margin-top:8px; }
+    .live-gallery img{ max-width:100%; max-height:420px; border-radius:12px; box-shadow:var(--shadow-sm); }
 
     #locSmall, #subtitleText { white-space: pre-line; }
     #locSmall{ align-self:flex-start; text-align:left !important; }
     .loc-hotel{ text-align:center; font-weight:600; margin-top:4px; }
+
+    /* [NEW] Phone row with country select */
+    .phone-row{
+      display:grid;
+      grid-template-columns: auto 1fr;
+      gap:10px;
+      align-items:center;
+    }
+    .country-select{
+      height:48px;
+      min-width:70px;
+      padding:0 12px;
+      border-radius:12px;
+      border:1px solid var(--gold-strong);
+      background:#fff;
+      font-weight:700;
+      color:#111;
+      box-shadow:var(--shadow-sm);
+      cursor:pointer;
+      appearance:none;
+      background-image:
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="%23b89017"><path d="M7 10l5-5 5 5z"/><path d="M7 14l5 5 5-5z"/></svg>');
+      background-repeat:no-repeat;
+      background-position:right 10px center;
+      padding-right:34px;
+    }
   </style>
 </head>
 <body>
@@ -587,7 +531,6 @@
   <canvas id="bg-particles" aria-hidden="true"></canvas>
 
   <div class="top-controls">
-    <!-- (NEW ORDER) Home (icon) → Location → Contact → Photos → Mute → Language -->
     <button id="quickHome" class="icon-btn icon-only" aria-label="Go to Home" title="Home">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
         <path d="M3 10.5L12 3l9 7.5v8.5a1 1 0 0 1-1 1h-5.5a.5.5 0 0 1-.5-.5V15a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4.5a.5.5 0 0 1-.5.5H4a1 1 0 0 1-1-1v-8.5z" fill="currentColor"/>
@@ -724,14 +667,15 @@ before 1 October 2025.</div>
                 <h2 class="section-title" id="phoneHeader">PHONE NUMBER</h2>
                 <p class="tiny muted" id="phoneHint">We’ll use this to contact you if there are any updates or changes.</p>
 
-                <!-- (2) Country code + phone in a row -->
-                <div class="row" id="phoneRow">
-                  <select class="input" id="ccSelect" aria-label="Country Code">
-                    <option value="MY">MY</option>
-                    <option value="ID">ID</option>
+                <!-- [NEW] Country code + phone input row -->
+                <div class="phone-row">
+                  <select id="ccSelect" class="country-select" aria-label="Country code">
+                    <option value="+60 ">MY</option>
+                    <option value="+62 ">ID</option>
                   </select>
                   <input class="input" id="phone" name="phone" autocomplete="tel" placeholder="e.g. +60 12 345 6789" required />
                 </div>
+                <!-- /[NEW] -->
               </div>
 
               <div class="spacer-16"></div>
@@ -839,7 +783,7 @@ before 1 October 2025.</div>
       </div>
     </section>
 
-    <!-- PHOTOS -->
+    <!-- PHOTOS (hidden by default) -->
     <section id="live" hidden>
       <div class="container">
         <div class="card">
@@ -890,9 +834,6 @@ before 1 October 2025.</div>
   <script>
     // ====== CONFIG ======
     const MAX_GUESTS = 4;
-    // NOTE: for (3) duplicate check, your Apps Script MUST support:
-    //   GET .../exec?type=check_phone&phone=+60%20123456789
-    // and return JSON: { "exists": true/false }
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbWUzpJp8IH7eIJ4PorTtVFEJK9npyGY8HR6o0HfaNj9_Adin081iRrvof4V_LVMs/exec";
 
     const GMAPS_COORDS = { lat: 5.975194, lng: 116.0688396 };
@@ -915,7 +856,7 @@ before 1 October 2025.</div>
 
     const BGM_STOP_AFTER_LOOPS = 1;
 
-    // Kept (unused toggle)
+    // ===== RESUBMISSION TOGGLE (legacy, keep off) =====
     const RESUBMISSION_ENABLE = 0;
 
     const ARROW_AUTO_DELAY_MS = 7000;
@@ -950,8 +891,9 @@ before 1 October 2025.</div>
         nameNotConfirmed: (n)=>`Name #${n} not yet confirmed.`,
         thanks: "Thank you! Your RSVP has been received.",
         already: "RSVP already submitted. Do contact us if there are any changes.",
-        quotaRemain: (max)=>`Response submitted. You still have remaining quota (max ${max} persons). You may add names and submit again.`,
-        phoneDup: "Same phone number already exists or was submitted before.",
+        // [NEW]
+        resubTipRemaining: (n)=>`Your response has been received. You still have ${n} more guest slot(s). Add names and submit again if you change your mind.`,
+        duplicatePhone: "Same phone number already exists or was submitted before.",
 
         locTitle: "LOCATION",
         locDesc: "Tap the button below to open directions.",
@@ -1025,8 +967,9 @@ before 1 October 2025.</div>
         nameNotConfirmed: (n)=>`Nama #${n} belum disahkan hadir.`,
         thanks: "Terima kasih! Respon anda telah diterima.",
         already: "RSVP telah dihantar. Sila hubungi keluarga pengantin sekiranya terdapat perubahan.",
-        quotaRemain: (max)=>`Respon berjaya dihantar. Kuota anda belum penuh (maks ${max} orang). Sila tambah nama dan hantar semula jika berubah fikiran.`,
-        phoneDup: "Nombor telefon yang sama telah wujud atau pernah dihantar sebelum ini.",
+        // [NEW]
+        resubTipRemaining: (n)=>`Respon berjaya dihantar. Anda masih mempunyai ${n} baki kuota tetamu. Sila tambah nama dan hantar semula jika berubah fikiran.`,
+        duplicatePhone: "Nombor telefon yang sama sudah wujud atau telah dihantar sebelum ini.",
 
         locTitle: "LOKASI",
         locDesc: "Tekan butang dibawah untuk buka peta ke lokasi.",
@@ -1083,7 +1026,7 @@ before 1 October 2025.</div>
     const validationMsg = document.getElementById('validationMsg');
     const submitBtn = document.getElementById('submitBtn');
     const phoneInput = document.getElementById('phone');
-    const ccSelect = document.getElementById('ccSelect');
+    const ccSelect = document.getElementById('ccSelect'); // [NEW]
     const toast = document.getElementById('toast');
     const bgm = document.getElementById('bgm');
 
@@ -1134,7 +1077,6 @@ before 1 October 2025.</div>
     const heroAddressEl = document.getElementById('heroAddress');
     const hotelLogoEl = document.getElementById('hotelLogo');
 
-    // Schedule & Countdown
     const scheduleTitleEl = document.getElementById('scheduleTitle');
     const agendaDateEl = document.getElementById('agendaDate');
     const agendaDayEl  = document.getElementById('agendaDay');
@@ -1157,7 +1099,6 @@ before 1 October 2025.</div>
     const cdMinsLabel = document.getElementById('cdMinsLabel');
     const cdSecsLabel = document.getElementById('cdSecsLabel');
 
-    // Live photos
     const liveTitleEl = document.getElementById('liveTitle');
     const liveHelpEl  = document.getElementById('liveHelp');
     const liveImg     = document.getElementById('liveImage');
@@ -1178,6 +1119,7 @@ before 1 October 2025.</div>
     function setStoredConfirmed(arr){ localStorage.setItem('rsvp_confirmed', JSON.stringify(arr)); }
     function isSubmitted(){ return localStorage.getItem('rsvp_submitted') === '1'; }
     function markSubmitted(){ localStorage.setItem('rsvp_submitted','1'); }
+    // [NEW] track confirmed count at last successful submit
     function getSubmittedCount(){ return parseInt(localStorage.getItem('rsvp_submitted_count')||'0',10); }
     function setSubmittedCount(n){ localStorage.setItem('rsvp_submitted_count', String(n)); }
 
@@ -1200,50 +1142,52 @@ before 1 October 2025.</div>
 
     function saveLocal(){
       localStorage.setItem('rsvp_phone', phoneInput.value.trim());
-      localStorage.setItem('rsvp_cc', ccSelect.value);
+      localStorage.setItem('rsvp_cc', ccSelect.value); // [NEW]
       setStoredNames(getGuestNames());
       localStorage.setItem('rsvp_lang', LANG);
       const confirmed = getGuestInputs().map(inp => !!(inp.readOnly && inp.value.trim().length>0));
       setStoredConfirmed(confirmed);
     }
 
+    // [NEW] lock UI after submit but keep empty boxes editable if quota remains
     function lockSubmissionUI(){
-      const confirmedCount = getConfirmedCount();
-      const allowMore = confirmedCount < MAX_GUESTS;
+      const submitted = getSubmittedCount();
+      const remaining = Math.max(0, MAX_GUESTS - submitted);
 
-      // Lock already-confirmed names; keep empty slots editable if quota not full
-      getGuestInputs().forEach(inp => {
-        if (inp.value.trim().length>0){
+      getGuestInputs().forEach((inp, idx) => {
+        const btn = getGuestButtons()[idx];
+        const hasVal = inp.value.trim().length > 0;
+
+        if (hasVal){
           inp.readOnly = true;
-        } else {
-          inp.readOnly = !allowMore;
-        }
-      });
-      getGuestButtons().forEach((btn, idx) => {
-        const inp = getGuestInputs()[idx];
-        if (inp.readOnly && inp.value.trim().length>0){
           btn.disabled = true;
-          btn.textContent = I18N[LANG].edit;
           btn.classList.remove('confirm-state'); btn.classList.add('edit-state');
         } else {
-          btn.disabled = !allowMore;
-          btn.textContent = I18N[LANG].confirm;
-          btn.classList.add('confirm-state'); btn.classList.remove('edit-state');
+          if (remaining > 0){
+            inp.readOnly = false;
+            btn.disabled = true;
+            btn.classList.add('confirm-state'); btn.classList.remove('edit-state');
+          } else {
+            inp.readOnly = true;
+            btn.disabled = true;
+          }
         }
       });
 
-      // Keep phone locked after first submit
       phoneInput.readOnly = true;
 
-      // Message
-      validationMsg.style.display = 'block';
-      validationMsg.textContent = allowMore ? I18N[LANG].quotaRemain(MAX_GUESTS) : I18N[LANG].already;
-
-      // Submit will be re-evaluated by maybeEnableSubmit()
+      // Submit stays disabled until new names are confirmed beyond previously submitted count
       submitBtn.disabled = true;
+
+      validationMsg.style.display = 'block';
+      validationMsg.textContent = remaining > 0 ? I18N[LANG].resubTipRemaining(remaining) : I18N[LANG].already;
     }
 
+    // Show immediate success; message will reflect remaining quota
     function showSuccessUI(){
+      const confirmedNow = getConfirmedCount();
+      const remaining = Math.max(0, MAX_GUESTS - confirmedNow);
+
       submitBtn.disabled = true;
       submitBtn.textContent = I18N[LANG].submit;
       getGuestInputs().forEach(inp => inp.readOnly = true);
@@ -1251,9 +1195,10 @@ before 1 October 2025.</div>
       phoneInput.readOnly = true;
 
       validationMsg.style.display = 'block';
-      validationMsg.textContent = I18N[LANG].thanks;
+      validationMsg.textContent = remaining > 0 ? I18N[LANG].resubTipRemaining(remaining) : I18N[LANG].thanks;
 
       markSubmitted();
+      setSubmittedCount(confirmedNow);
       saveLocal();
       showToast(I18N[LANG].thanks);
     }
@@ -1268,15 +1213,14 @@ before 1 October 2025.</div>
       renderGuestRows();
       getGuestInputs().forEach((inp, idx)=>{
         const btn = getGuestButtons()[idx];
-        inp.readOnly = false;
-        inp.value = '';
+        inp.readOnly = false; inp.value = '';
         btn.textContent = I18N[LANG].confirm;
         btn.classList.remove('edit-state');
         btn.classList.add('confirm-state');
         btn.disabled = true;
       });
       phoneInput.readOnly = false;
-      phoneInput.value = currentPrefix();
+      phoneInput.value = ccSelect.value; // keep prefix
       updateTotals();
       maybeEnableSubmit();
     }
@@ -1305,10 +1249,9 @@ before 1 October 2025.</div>
           input.readOnly = true; input.blur();
           btn.textContent = T2.edit;
           btn.classList.remove('confirm-state'); btn.classList.add('edit-state');
-          btn.disabled = true;
+          btn.disabled = false;
         }else{
-          // If already submitted and not allowing edit of confirmed names, ignore
-          if(isSubmitted()) return;
+          if(!RESUBMISSION_ENABLE && isSubmitted()) return; // cannot edit confirmed names after submission
           input.readOnly = false;
           btn.textContent = T2.confirm;
           btn.classList.remove('edit-state'); btn.classList.add('confirm-state');
@@ -1422,7 +1365,6 @@ before 1 October 2025.</div>
     window.addEventListener('resize', syncLogoHeight);
 
     function applyArrowOffset(){
-      const scrollArrow = document.getElementById('scrollArrow');
       if(!scrollArrow) return;
       scrollArrow.style.bottom = `calc(var(--arrow-bottom-offset) + var(--hero-arrow-offset-y))`;
     }
@@ -1430,12 +1372,7 @@ before 1 October 2025.</div>
     window.addEventListener('resize', applyArrowOffset);
 
     function esc(s){
-      return String(s)
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#39;');
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     }
     function bulletsFromText(text){
       const lines = String(text).split(/\n+/).map(l=>l.trim()).filter(Boolean);
@@ -1454,9 +1391,7 @@ before 1 October 2025.</div>
       heroDate.textContent = formatWeddingDateWithDay(LANG);
 
       if (Array.isArray(T.addrLines)) {
-        heroAddressEl.innerHTML = T.addrLines
-          .map((line,i)=> i===0 ? `<strong>${line}</strong>` : line)
-          .join('<br/>');
+        heroAddressEl.innerHTML = T.addrLines.map((line,i)=> i===0 ? `<strong>${line}</strong>` : line).join('<br/>');
       }
 
       invSmall.textContent = T.invSmall;
@@ -1479,22 +1414,16 @@ before 1 October 2025.</div>
       if(rsvpBtn) rsvpBtn.textContent = T.rsvp;
       if(noBtn)   noBtn.textContent   = T.no;
       if(locationBtn) locationBtn.textContent = T.location;
-
       if(quickLocation) quickLocation.textContent = T.location;
       if(quickContact)  quickContact.textContent  = T.contactNav;
       if(quickPhotos)   quickPhotos.textContent   = T.photosNav;
-
       if (rsvpTitleEl) rsvpTitleEl.textContent = T.rsvpTitle;
-
       if(rsvpIntro)   rsvpIntro.textContent = T.rsvpIntro;
       if(phoneHeader) phoneHeader.textContent = T.phoneHeader;
       if(phoneHint)   phoneHint.textContent   = T.phoneHint;
       if(submitBtn)   submitBtn.textContent   = T.submit;
 
-      if (noMsg){
-        noMsg.textContent = T.noMsg;
-        noMsg.style.display = 'none';
-      }
+      if (noMsg){ noMsg.textContent = T.noMsg; noMsg.style.display = 'none'; }
 
       locTitle.textContent = T.locTitle;
       locDesc.textContent = T.locDesc;
@@ -1544,7 +1473,7 @@ before 1 October 2025.</div>
       if (liveHelpEl)  liveHelpEl.innerHTML = T.liveHelp.replace(/\n/g,'<br/>');
       if (liveEmpty)   liveEmpty.textContent = T.liveEmpty;
 
-      // Re-render guest rows with saved state
+      // re-render rows with texts & states
       const savedNames = getStoredNames();
       const savedConfirmed = getStoredConfirmed();
       renderGuestRows();
@@ -1556,7 +1485,7 @@ before 1 October 2025.</div>
         btn.textContent = isConfirmed ? T.edit : T.confirm;
         btn.classList.toggle('edit-state', isConfirmed);
         btn.classList.toggle('confirm-state', !isConfirmed);
-        btn.disabled = isConfirmed ? true : inp.value.trim().length === 0;
+        btn.disabled = isConfirmed ? false : inp.value.trim().length === 0;
       });
 
       updateTotals();
@@ -1564,97 +1493,80 @@ before 1 October 2025.</div>
       document.getElementById('post_lang').value = LANG;
 
       maybeEnableSubmit();
-      if(isSubmitted()) lockSubmissionUI();
+      if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
 
       syncLogoHeight();
       applyArrowOffset();
     }
 
-    function maybeEnableSubmit(){
-      // If submitted already, allow re-submit only when confirmed count increased AND quota not full
-      const confirmedCount = getConfirmedCount();
-      const submittedCount = getSubmittedCount();
-      const quotaFull = confirmedCount >= MAX_GUESTS;
+    // [NEW] Country code enforcement helpers
+    function ensurePrefix(){
+      const prefix = ccSelect.value || "+60 ";
+      let v = phoneInput.value || "";
+      if (!v.startsWith(prefix)){
+        // remove any starting +digits and space, then re-apply
+        const rest = v.replace(/^\+\d+\s*/, '');
+        v = prefix + rest.replace(/[^\d\s]/g,'');
+        phoneInput.value = v;
+      }
+      // keep caret behind prefix
+      const p = prefix.length;
+      setTimeout(()=>{
+        try{
+          if (phoneInput.selectionStart < p){
+            phoneInput.setSelectionRange(p,p);
+          }
+        }catch(_){}
+      },0);
+    }
 
-      const hasExtraBeyondPrefix = phoneInput.value.trim().length > currentPrefix().length;
+    function maybeEnableSubmit(){
+      if(!RESUBMISSION_ENABLE && isSubmitted()){
+        // Allow re-submit only if more confirmed than previously submitted and no unconfirmed text left
+        const prev = getSubmittedCount();
+        const remaining = Math.max(0, MAX_GUESTS - prev);
+
+        const prefixLen = (ccSelect.value || "").length;
+        const hasPhone = (phoneInput.value || '').trim().length > prefixLen;
+
+        const confirmedCount = getConfirmedCount();
+        const unconfIdx = firstUnconfirmedIndexPlus1();
+
+        let ok = remaining > 0 && hasPhone && confirmedCount > prev && unconfIdx === -1;
+
+        submitBtn.disabled = !ok;
+        validationMsg.style.display = ok ? 'none' : 'block';
+        validationMsg.textContent = ok ? '' : I18N[LANG].resubTipRemaining(remaining);
+        return;
+      }
+
+      // Normal first submission rules
+      const prefixLen = (ccSelect.value || "").length;
+      const hasPhone = (phoneInput.value || '').trim().length > prefixLen;
+      const confirmedCount = getConfirmedCount();
       const unconfIdx = firstUnconfirmedIndexPlus1();
 
-      let ok = hasExtraBeyondPrefix && confirmedCount >= 1 && unconfIdx === -1;
+      const ok = hasPhone && confirmedCount >= 1 && unconfIdx === -1;
+      submitBtn.disabled = !ok;
 
-      if (isSubmitted()){
-        ok = ok && (confirmedCount > submittedCount) && !quotaFull;
-        // Show quota reminder if still not full
-        validationMsg.style.display = 'block';
-        validationMsg.textContent = quotaFull ? I18N[LANG].already : I18N[LANG].quotaRemain(MAX_GUESTS);
-      } else {
-        // Before first submit, only show validation when not ok
-        if (!ok){
-          validationMsg.style.display = 'block';
-          if (!hasExtraBeyondPrefix)       validationMsg.textContent = I18N[LANG].needPhone;
-          else if (unconfIdx !== -1)       validationMsg.textContent = I18N[LANG].nameNotConfirmed(unconfIdx);
-          else if (confirmedCount < 1)     validationMsg.textContent = I18N[LANG].needOneName;
-          else                              validationMsg.textContent = '';
+      const T = I18N[LANG];
+      validationMsg.style.display = (!ok) ? 'block' : 'none';
+      if (!ok){
+        const typedCount = getGuestInputs().filter(inp => inp.value.trim().length>0).length;
+        if (typedCount === 0 && confirmedCount === 0){
+          validationMsg.textContent = T.needOneName;
+        } else if (typedCount > 0 && !hasPhone){
+          validationMsg.textContent = T.needPhone;
+        } else if (unconfIdx !== -1){
+          validationMsg.textContent = T.nameNotConfirmed(unconfIdx);
+        } else if (confirmedCount < 1){
+          validationMsg.textContent = T.needOneName;
         } else {
-          validationMsg.style.display = 'none';
           validationMsg.textContent = '';
         }
+      } else {
+        validationMsg.textContent = '';
       }
-
-      submitBtn.disabled = !ok;
-      if (!ok) submitBtn.textContent = I18N[LANG].submit;
-    }
-
-    // ===== Country code + phone prefix lock (2) =====
-    const PREFIX = { MY: '+60 ', ID: '+62 ' };
-    function currentPrefix(){ return PREFIX[ccSelect.value] || '+60 '; }
-    function enforcePrefixOnInput(){
-      const p = currentPrefix();
-      if (!phoneInput.value.startsWith(p)){
-        const digits = phoneInput.value.replace(/^\+\d+\s*/, ''); // strip any leading +## and space
-        phoneInput.value = p + digits.replace(/[^\d\s]/g,'');
-      }
-    }
-    // Prevent deleting the prefix
-    function guardPrefixKey(e){
-      const p = currentPrefix();
-      const selStart = phoneInput.selectionStart || 0;
-      const selEnd   = phoneInput.selectionEnd || 0;
-      // Block backspace/delete if caret is inside the prefix
-      if ((e.key === 'Backspace' && selStart <= p.length && selEnd <= p.length) ||
-          (e.key === 'Delete'    && selStart <  p.length)) {
-        e.preventDefault();
-        phoneInput.setSelectionRange(p.length, p.length);
-      }
-    }
-    ccSelect.addEventListener('change', ()=>{
-      const old = phoneInput.value;
-      const prevPrefixes = Object.values(PREFIX);
-      const pNew = currentPrefix();
-      let rest = old;
-      for (const pp of prevPrefixes){
-        if (old.startsWith(pp)){ rest = old.slice(pp.length); break; }
-      }
-      phoneInput.value = pNew + rest;
-      saveLocal(); maybeEnableSubmit();
-    });
-    phoneInput.addEventListener('keydown', guardPrefixKey);
-    phoneInput.addEventListener('input', ()=>{ enforcePrefixOnInput(); saveLocal(); maybeEnableSubmit(); });
-    phoneInput.addEventListener('focus', ()=>{
-      // Ensure caret after prefix
-      const p = currentPrefix();
-      if (phoneInput.selectionStart < p.length){
-        phoneInput.setSelectionRange(p.length, p.length);
-      }
-    });
-
-    // ===== Duplicate phone check (3) =====
-    async function checkPhoneDuplicate(phone){
-      try{
-        const r = await fetch(APPS_SCRIPT_URL + '?type=check_phone&phone=' + encodeURIComponent(phone), { cache:'no-store' });
-        if(!r.ok) return false;
-        const data = await r.json();
-        return !!(data && (data.exists || data.found));
-      }catch(_){ return false; } // If API not available, don't block
     }
 
     // Language toggle
@@ -1669,6 +1581,7 @@ before 1 October 2025.</div>
     });
 
     // Music
+    const bgm = document.getElementById('bgm');
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -1785,27 +1698,27 @@ before 1 October 2025.</div>
       }
       smoothScrollTo(target, 700);
     }
+    const scrollArrow = document.getElementById('scrollArrow');
     if(scrollArrow){
       scrollArrow.addEventListener('click', (e)=>{
         e.preventDefault();
         playClick();
         scrollToCTAWithoutInvite();
       });
+      (function autoArrow(){
+        let moved = false;
+        const mark = ()=>{ moved = true; };
+        ['wheel','touchstart','scroll','keydown','pointerdown'].forEach(ev=>{
+          window.addEventListener(ev, mark, { once:true, passive:true });
+        });
+        setTimeout(()=>{
+          if(!moved && (window.scrollY||window.pageYOffset) < 8){
+            scrollArrow && scrollArrow.click();
+          }
+        }, ARROW_AUTO_DELAY_MS);
+      })();
     }
-    (function autoArrow(){
-      let moved = false;
-      const mark = ()=>{ moved = true; };
-      ['wheel','touchstart','scroll','keydown','pointerdown'].forEach(ev=>{
-        window.addEventListener(ev, mark, { once:true, passive:true });
-      });
-      setTimeout(()=>{
-        if(!moved && (window.scrollY||window.pageYOffset) < 8){
-          scrollArrow && scrollArrow.click();
-        }
-      }, ARROW_AUTO_DELAY_MS);
-    })();
 
-    // Click sounds
     let audioCtx;
     function initAudioCtx(){ if(!audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; audioCtx = new AC(); } }
     function playTone(freq=660, ms=60, type='sine', volume=0.05){
@@ -1827,6 +1740,39 @@ before 1 October 2025.</div>
       playClick();
     }, true);
 
+    // ===== Country select + phone prefix behaviour =====
+    (function initCountryAndPhone(){
+      const storedCC = localStorage.getItem('rsvp_cc') || '+60 ';
+      if (storedCC === '+62 ') ccSelect.value = '+62 ';
+      else ccSelect.value = '+60 ';
+
+      // Initialize phone with prefix if empty / missing
+      if (!localStorage.getItem('rsvp_phone')) {
+        phoneInput.value = ccSelect.value;
+      } else {
+        phoneInput.value = localStorage.getItem('rsvp_phone');
+        ensurePrefix();
+      }
+
+      ccSelect.addEventListener('change', ()=>{
+        const oldPrefix = (phoneInput.value.match(/^\+\d+\s*/) || [''])[0];
+        const rest = (phoneInput.value || '').slice(oldPrefix.length);
+        phoneInput.value = ccSelect.value + rest.replace(/[^\d\s]/g,'');
+        saveLocal(); maybeEnableSubmit(); ensurePrefix();
+      });
+
+      phoneInput.addEventListener('focus', ensurePrefix);
+      phoneInput.addEventListener('keydown', (e)=>{
+        const p = (ccSelect.value || '').length;
+        const start = phoneInput.selectionStart || 0;
+        if (start <= p && (e.key === 'Backspace' || e.key === 'Delete')){
+          e.preventDefault();
+          phoneInput.setSelectionRange(p, p);
+        }
+      });
+      phoneInput.addEventListener('input', ()=>{ ensurePrefix(); saveLocal(); maybeEnableSubmit(); });
+    })();
+
     // Render
     function renderAll(){
       i18n();
@@ -1843,23 +1789,19 @@ before 1 October 2025.</div>
         btn.textContent = isConfirmed ? I18N[LANG].edit : I18N[LANG].confirm;
         btn.classList.toggle('edit-state', isConfirmed);
         btn.classList.toggle('confirm-state', !isConfirmed);
-        btn.disabled = isConfirmed ? true : inp.value.trim().length === 0;
+        btn.disabled = isConfirmed ? false : inp.value.trim().length === 0;
       });
       updateTotals();
       refreshLangToggleLabel();
 
-      // Country code restore + prefix enforce
-      const savedCC = localStorage.getItem('rsvp_cc') || 'MY';
-      ccSelect.value = savedCC === 'ID' ? 'ID' : 'MY';
-      if (!localStorage.getItem('rsvp_phone')){
-        phoneInput.value = currentPrefix();
+      // phone restored in initCountryAndPhone()
+      if(!RESUBMISSION_ENABLE && isSubmitted()){
+        // if no count saved, infer from confirmed rows
+        if (!localStorage.getItem('rsvp_submitted_count')) setSubmittedCount(getConfirmedCount());
+        lockSubmissionUI();
       } else {
-        // ensure prefix exists/correct
-        enforcePrefixOnInput();
+        maybeEnableSubmit();
       }
-
-      if(isSubmitted()) lockSubmissionUI();
-      else maybeEnableSubmit();
 
       syncLogoHeight();
       applyArrowOffset();
@@ -1882,36 +1824,51 @@ before 1 October 2025.</div>
       document.getElementById('post_lang').value = LANG;
     }
 
+    // [NEW] check duplicate phone via Apps Script (expects JSON {exists:true|false})
+    async function checkDuplicatePhone(phone){
+      try{
+        const url = APPS_SCRIPT_URL + '?type=checkPhone&phone=' + encodeURIComponent(phone.trim());
+        const r = await fetch(url, { method:'GET', cache:'no-store' });
+        if(!r.ok) return false;
+        const data = await r.json();
+        return !!data.exists;
+      }catch(_){
+        return false; // fail-open so RSVP still works if endpoint not ready
+      }
+    }
+
     let _pendingSubmit = false;
     hiddenIframe.addEventListener('load', ()=>{
       if(!_pendingSubmit) return;
       _pendingSubmit = false;
-      showToast(I18N[LANG].thanks);
 
-      // After successful post, remember the current confirmed count
-      const confirmedCount = getConfirmedCount();
-      setSubmittedCount(confirmedCount);
-
+      // On true success, remember submitted count and lock appropriately
+      const confirmedNow = getConfirmedCount();
       markSubmitted();
+      setSubmittedCount(confirmedNow);
       lockSubmissionUI();
       saveLocal();
       updateTotals();
-      maybeEnableSubmit();
+      showToast(I18N[LANG].thanks);
     });
 
-    // Make submit async to run duplicate check (3)
     form.addEventListener('submit', async (e)=>{
       e.preventDefault();
-      if(submitBtn.disabled){ playError(); return; }
 
-      // Duplicate number guard
-      const phoneVal = phoneInput.value.trim();
-      const dup = await checkPhoneDuplicate(phoneVal);
-      if (dup){
+      // Block if already submitted and no quota for extra names
+      if((!RESUBMISSION_ENABLE && isSubmitted())){
+        const prev = getSubmittedCount();
+        const confirmedNow = getConfirmedCount();
+        if (confirmedNow <= prev){ playError(); maybeEnableSubmit(); return; }
+      }
+
+      // [NEW] duplicate phone protection (server-side check)
+      const phoneNow = (phoneInput.value || '').trim();
+      const isDup = await checkDuplicatePhone(phoneNow);
+      if (isDup){
         validationMsg.style.display = 'block';
-        validationMsg.textContent = I18N[LANG].phoneDup;
+        validationMsg.textContent = I18N[LANG].duplicatePhone;
         submitBtn.disabled = true;
-        submitBtn.textContent = I18N[LANG].submit;
         playError();
         return;
       }
@@ -1920,8 +1877,12 @@ before 1 October 2025.</div>
       submitBtn.textContent = I18N[LANG].submitting;
       syncHiddenFields(); saveLocal();
       _pendingSubmit = true;
+
+      // Optimistic UI immediately
       showSuccessUI();
-      form.submit(); // posts to iframe
+
+      // Post to iframe
+      form.submit();
     });
 
     // Particles (unchanged)
@@ -2026,10 +1987,9 @@ before 1 October 2025.</div>
       window.addEventListener('resize', apply);
     })();
 
-    // LIVE PHOTOS loader
+    // LIVE PHOTOS
     let LIVE_PHOTOS = [];
     let liveIndex = 0;
-
     function showLivePhoto(){
       if (!LIVE_PHOTOS.length){
         liveImg.style.display = 'none';
@@ -2040,13 +2000,10 @@ before 1 October 2025.</div>
       liveImg.style.display = 'block';
       liveImg.src = LIVE_PHOTOS[liveIndex];
     }
-
     function nextPhoto(){ if (!LIVE_PHOTOS.length) return; liveIndex = (liveIndex + 1) % LIVE_PHOTOS.length; showLivePhoto(); }
     function prevPhoto(){ if (!LIVE_PHOTOS.length) return; liveIndex = (liveIndex - 1 + LIVE_PHOTOS.length) % LIVE_PHOTOS.length; showLivePhoto(); }
-
     liveNext.addEventListener('click', nextPhoto);
     livePrev.addEventListener('click', prevPhoto);
-
     async function tryFetchJSON(url){
       try{
         const r = await fetch(url, { cache: 'no-store' });
@@ -2054,24 +2011,20 @@ before 1 October 2025.</div>
         return await r.json();
       }catch(_){ return null; }
     }
-
     async function loadLivePhotos(){
       let arr = await tryFetchJSON(PHOTOS_MANIFEST_URL);
       if (Array.isArray(arr) && arr.length){
         LIVE_PHOTOS = arr.filter(u=>typeof u === 'string');
-        showLivePhoto();
-        return;
+        showLivePhoto(); return;
       }
       if (DRIVE_WEBAPP_URL){
         arr = await tryFetchJSON(DRIVE_WEBAPP_URL);
         if (Array.isArray(arr) && arr.length){
           LIVE_PHOTOS = arr.filter(u=>typeof u === 'string');
-          showLivePhoto();
-          return;
+          showLivePhoto(); return;
         }
       }
-      LIVE_PHOTOS = [];
-      showLivePhoto();
+      LIVE_PHOTOS = []; showLivePhoto();
     }
     loadLivePhotos();
   </script>
