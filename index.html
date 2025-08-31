@@ -1690,7 +1690,7 @@ before 1 October 2025.</div>
       submitBtn.disabled = !ok;
 
       const T = I18N[LANG];
-      validationMsg.style.display = (!ok) ? 'block' : validationMsg.style.display;
+      validationMsg.style.display = (!ok) ? 'block' : 'none';
 
       if (!ok){
         if (typedCount === 0 && confirmedCount === 0){
