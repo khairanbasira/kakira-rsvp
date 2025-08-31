@@ -355,10 +355,6 @@
     .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
     .row{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
 
-    /* NEW: phone row with country code on the left */
-    .phone-row{ grid-template-columns: auto 1fr; }
-    .phone-code{ width: 130px; }
-
     .input{
       width:100%; height:48px; padding:0 16px; border-radius:12px;
       border:1px solid #e5e7eb; font-size:16px; background:#fff;
@@ -752,15 +748,7 @@ before 1 October 2025.</div>
               <div>
                 <h2 class="section-title" id="phoneHeader">PHONE NUMBER</h2>
                 <p class="tiny muted" id="phoneHint">We’ll use this to contact you if there are any updates or changes.</p>
-
-                <!-- NEW: Country code + number (left select, right input) -->
-                <div class="row phone-row">
-                  <select class="input phone-code" id="phoneCode" aria-label="Country code">
-                    <option value="+60">MY +60</option>
-                    <option value="+62">IDN +62</option>
-                  </select>
-                  <input class="input" id="phone" autocomplete="tel" placeholder="e.g. 12 345 6789" required />
-                </div>
+                <input class="input" id="phone" name="phone" autocomplete="tel" placeholder="e.g. +60 12 345 6789" required />
               </div>
 
               <div class="spacer-16"></div>
@@ -926,10 +914,6 @@ before 1 October 2025.</div>
     const MAX_GUESTS = 4;
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbWUzpJp8IH7eIJ4PorTtVFEJK9npyGY8HR6o0HfaNj9_Adin081iRrvof4V_LVMs/exec";
 
-    // Server requirement for #3 (duplicate phone):
-    // Your Apps Script should handle:  GET ?type=check_phone&phone=<normalized>
-    // and return JSON: { exists: true/false }
-
     // Original map button coords (kept)
     const GMAPS_COORDS = { lat: 5.975194, lng: 116.0688396 };
     const WAZE_COORDS  = { lat: 5.975194, lng: 116.0688396 };
@@ -956,7 +940,7 @@ before 1 October 2025.</div>
     const BGM_STOP_AFTER_LOOPS = 1;
 
     // ===== RESUBMISSION TOGGLE (1 - able to resubmit) =====
-    const RESUBMISSION_ENABLE = 0; // keep global lock at 0; we selectively allow when quota not full
+    const RESUBMISSION_ENABLE = 0;
 
     // Auto-scroll delay variable (ms)
     const ARROW_AUTO_DELAY_MS = 7000;
@@ -992,8 +976,6 @@ before 1 October 2025.</div>
         nameNotConfirmed: (n)=>`Name #${n} not yet confirmed.`,
         thanks: "Thank you! Your RSVP has been received.",
         already: "RSVP already submitted. Do contact us if there are any changes.",
-        partial: (remain)=>`Response submitted. You still have ${remain} slot(s) remaining (max 4). You may add more names and submit again.`,
-        dupPhone: "Same phone number already exists or was submitted before.",
 
         // (1) Location text
         locTitle: "LOCATION",
@@ -1073,8 +1055,6 @@ before 1 October 2025.</div>
         nameNotConfirmed: (n)=>`Nama #${n} belum disahkan hadir.`,
         thanks: "Terima kasih! Respon anda telah diterima.",
         already: "RSVP telah dihantar. Sila hubungi keluarga pengantin sekiranya terdapat perubahan.",
-        partial: (remain)=>`Respon berjaya dihantar. Kuota anda masih berbaki ${remain} orang (maks 4). Anda boleh tambah nama dan hantar semula.`,
-        dupPhone: "Nombor telefon yang sama sudah wujud / pernah dihantar sebelum ini.",
 
         locTitle: "LOKASI",
         locDesc: "Tekan butang dibawah untuk buka peta ke lokasi.",
@@ -1133,7 +1113,6 @@ before 1 October 2025.</div>
     const validationMsg = document.getElementById('validationMsg');
     const submitBtn = document.getElementById('submitBtn');
     const phoneInput = document.getElementById('phone');
-    const phoneCode = document.getElementById('phoneCode'); // NEW
     const toast = document.getElementById('toast');
     const bgm = document.getElementById('bgm');
 
@@ -1228,7 +1207,6 @@ before 1 October 2025.</div>
     function setStoredConfirmed(arr){ localStorage.setItem('rsvp_confirmed', JSON.stringify(arr)); }
     function isSubmitted(){ return localStorage.getItem('rsvp_submitted') === '1'; }
     function markSubmitted(){ localStorage.setItem('rsvp_submitted','1'); }
-    function getPhoneCodeStored(){ return localStorage.getItem('rsvp_phone_code') || '+60'; }
 
     function showToast(msg){ toast.textContent = msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1600); }
 
@@ -1246,11 +1224,9 @@ before 1 October 2025.</div>
       return -1;
     }
     function updateTotals(){ const n = getGuestNames().filter(Boolean).length; totalGuestsEl.textContent = I18N[LANG].total(n); }
-    function quotaRemaining(){ return Math.max(0, MAX_GUESTS - getConfirmedCount()); }
 
     function saveLocal(){
       localStorage.setItem('rsvp_phone', phoneInput.value.trim());
-      localStorage.setItem('rsvp_phone_code', phoneCode.value);
       setStoredNames(getGuestNames());
       localStorage.setItem('rsvp_lang', LANG);
       const confirmed = getGuestInputs().map(inp => !!(inp.readOnly && inp.value.trim().length>0));
@@ -1258,35 +1234,16 @@ before 1 October 2025.</div>
     }
 
     function lockSubmissionUI(){
-      // Lock filled/confirmed rows, but keep EMPTY rows editable if quota not full
-      const remain = quotaRemaining();
-      getGuestInputs().forEach((inp, idx) => {
-        const btn = getGuestButtons()[idx];
-        const hasVal = inp.value.trim().length > 0;
-        if (hasVal){
-          // freeze already submitted names
-          inp.readOnly = true;
-          btn.disabled = true;
-          btn.classList.remove('confirm-state');
-          btn.classList.add('edit-state');
-        } else {
-          // allow adding new names AFTER submit only if still have quota
-          inp.readOnly = !(remain > 0);
-          btn.disabled = inp.readOnly || inp.value.trim().length === 0;
-          btn.classList.add('confirm-state');
-          btn.classList.remove('edit-state');
-          btn.textContent = I18N[LANG].confirm;
-        }
-      });
+      getGuestInputs().forEach(inp => { inp.readOnly = true; });
+      getGuestButtons().forEach(btn => { btn.disabled = true; btn.classList.remove('confirm-state'); btn.classList.add('edit-state'); });
       phoneInput.readOnly = true;
-      // submit button state handled by maybeEnableSubmit()
-      // message:
+      submitBtn.disabled = true;
       validationMsg.style.display = 'block';
-      const T = I18N[LANG];
-      validationMsg.textContent = (remain > 0) ? T.partial(remain) : T.already;
+      validationMsg.textContent = I18N[LANG].already;
     }
 
     function showSuccessUI(){
+      // Optimistic success (immediate)
       submitBtn.disabled = true;
       submitBtn.textContent = I18N[LANG].submit;
       getGuestInputs().forEach(inp => inp.readOnly = true);
@@ -1299,8 +1256,6 @@ before 1 October 2025.</div>
       markSubmitted();
       saveLocal();
       showToast(I18N[LANG].thanks);
-      // Immediately reflect partial-resubmission possibility
-      setTimeout(()=>{ lockSubmissionUI(); maybeEnableSubmit(); }, 50);
     }
 
     function resetFormToFreshState(){
@@ -1350,7 +1305,6 @@ before 1 October 2025.</div>
           btn.classList.remove('confirm-state'); btn.classList.add('edit-state');
           btn.disabled = false;
         }else{
-          // After first submit, prevent editing existing confirmed names unless global resubmission is on
           if(!RESUBMISSION_ENABLE && isSubmitted()) return;
           input.readOnly = false;
           btn.textContent = T2.confirm;
@@ -1368,7 +1322,7 @@ before 1 October 2025.</div>
       for(let i=0; i<MAX_GUESTS; i++){ guestRowsEl.appendChild(makeGuestRow(i)); }
     }
 
-    // UPDATED: contact rows (unchanged features)
+    // UPDATED: contact rows (name left, number + PNG phone icon right; only icon is clickable)
     function renderContacts(){
       const contactList = document.getElementById('contactList');
       if(!contactList) return;
@@ -1513,6 +1467,7 @@ before 1 October 2025.</div>
 
       // Invitation section
       invSmall.textContent = T.invSmall;
+      //if (invSmall2) invSmall2.textContent = T.invSmall.replace(/Invitation/i,'WalimatulUrus');
       if (invSmall2) invSmall2.textContent = 'WalimatulUrus';
       invBody.textContent = T.invBody;
       invDateLabel.textContent  = T.invDateLabel;
@@ -1526,6 +1481,7 @@ before 1 October 2025.</div>
 
       // CTA
       titleText.textContent = T.title;
+      // (2) After every full stop, new line (handled with white-space:pre-line in CSS)
       if (subtitleText) {
         const nl = (T.subtitle || '').replace(/\.\s*/g, '.\n');
         subtitleText.textContent = nl;
@@ -1534,12 +1490,12 @@ before 1 October 2025.</div>
       if(noBtn)   noBtn.textContent   = T.no;
       if(locationBtn) locationBtn.textContent = T.location;
 
-      // Top control labels
+      // Top control labels for Location/Contact/Photos (Home stays as icon)
       if(quickLocation) quickLocation.textContent = T.location;
       if(quickContact)  quickContact.textContent  = T.contactNav;
       if(quickPhotos)   quickPhotos.textContent   = T.photosNav;
 
-      // RSVP title per language
+      // RSVP title per language (3)
       if (rsvpTitleEl) rsvpTitleEl.textContent = T.rsvpTitle;
 
       // RSVP body/phone
@@ -1565,7 +1521,7 @@ before 1 October 2025.</div>
       contactTitle.textContent = T.contactTitle;
       contactDesc.textContent = T.contactDesc;
 
-      // Schedule
+      // Schedule (exact structure per request)
       if (scheduleTitleEl) scheduleTitleEl.textContent = T.scheduleTitle;
       if (agendaDateEl) agendaDateEl.textContent = formatDateOnly(LANG);
       if (agendaDayEl)  agendaDayEl.textContent  = weekdayOnly(LANG);
@@ -1622,10 +1578,6 @@ before 1 October 2025.</div>
         btn.disabled = isConfirmed ? false : inp.value.trim().length === 0;
       });
 
-      // Restore phone & code
-      phoneCode.value = getPhoneCodeStored();
-      phoneInput.value = localStorage.getItem('rsvp_phone') || '';
-
       updateTotals();
       refreshLangToggleLabel();
       document.getElementById('post_lang').value = LANG;
@@ -1633,16 +1585,14 @@ before 1 October 2025.</div>
       maybeEnableSubmit();
       if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
 
+      // resync heights and arrow offset
       syncLogoHeight();
       applyArrowOffset();
     }
 
     function maybeEnableSubmit(){
-      // If already submitted and resubmission globally disabled:
-      if(!RESUBMISSION_ENABLE && isSubmitted()){
-        // Only allow submit if quota not full (can add names)
-        if (quotaRemaining() === 0){ submitBtn.disabled = true; return; }
-      }
+      if(!RESUBMISSION_ENABLE && isSubmitted()){ submitBtn.disabled = true; return; }
+
       const typedCount = getGuestInputs().filter(inp => inp.value.trim().length>0).length;
       const hasPhone = phoneInput.value.trim().length > 0;
       const confirmedCount = getConfirmedCount();
@@ -1677,13 +1627,13 @@ before 1 October 2025.</div>
 	LANG = (LANG === 'en') ? 'ms' : 'en';
 	localStorage.setItem('rsvp_lang', LANG);
 	i18n();
-	renderMaps();
+	renderMaps(); // <-- add this line
 	saveLocal(); 
 	maybeEnableSubmit();
 	});
 
+
     // Music
-    const bgm = document.getElementById('bgm');
     bgm.volume = 0.2;
     function setMutedUI(){ muteBtn.textContent = bgm.muted ? '🔇' : '🔊'; }
     async function tryPlayAudible(){ try{ bgm.muted = false; await bgm.play(); setMutedUI(); return true; }catch(e){ return false; } }
@@ -1866,7 +1816,6 @@ before 1 October 2025.</div>
       });
       updateTotals();
       refreshLangToggleLabel();
-      phoneCode.value = getPhoneCodeStored();
       phoneInput.value = localStorage.getItem('rsvp_phone') || '';
       if(!RESUBMISSION_ENABLE && isSubmitted()) lockSubmissionUI();
       else maybeEnableSubmit();
@@ -1876,9 +1825,7 @@ before 1 October 2025.</div>
     }
     renderAll();
 
-    // Save phone & code on input/change
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
-    phoneCode.addEventListener('change', ()=>{ saveLocal(); maybeEnableSubmit(); });
 
     // Submit to Apps Script (iframe)
     const form = document.getElementById('rsvpForm');
@@ -1894,27 +1841,6 @@ before 1 October 2025.</div>
       document.getElementById('post_count').value = names.filter(Boolean).length;
       document.getElementById('post_ua').value = navigator.userAgent;
       document.getElementById('post_lang').value = LANG;
-    }
-
-    function normalizePhoneForCheck(full){
-      return String(full).replace(/[^\d+]/g,'').replace(/^\+?/, '+'); // keep leading +
-    }
-    function buildFullPhone(){
-      const code = phoneCode.value || '+60';
-      const raw = phoneInput.value.trim();
-      // remove leading country if user typed it
-      const stripped = raw.replace(/^\+?\d+\s*/, '').trim();
-      return `${code} ${stripped}`.trim();
-    }
-
-    async function checkPhoneExists(full){
-      const url = APPS_SCRIPT_URL + '?type=check_phone&phone=' + encodeURIComponent(normalizePhoneForCheck(full));
-      try{
-        const r = await fetch(url, { cache: 'no-store' });
-        if(!r.ok) return false;
-        const j = await r.json();
-        return !!(j && j.exists);
-      }catch(_){ return false; } // fail open if network error
     }
 
     let _pendingSubmit = false;
@@ -1933,35 +1859,14 @@ before 1 October 2025.</div>
       updateTotals();
     });
 
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-
-      // Guard if fully locked
-      if((!RESUBMISSION_ENABLE && isSubmitted() && quotaRemaining() === 0) || submitBtn.disabled){
-        playError(); return;
+    form.addEventListener('submit', (e)=>{
+      if((!RESUBMISSION_ENABLE && isSubmitted()) || submitBtn.disabled){
+        e.preventDefault(); playError(); return;
       }
-
-      // Build full phone with code and check duplicate with server
-      const fullPhone = buildFullPhone();
-      const exists = await checkPhoneExists(fullPhone);
-      if (exists){
-        validationMsg.style.display = 'block';
-        validationMsg.textContent = I18N[LANG].dupPhone;
-        playError();
-        return;
-      }
-
-      // Proceed to submit
       submitBtn.disabled = true;
       submitBtn.textContent = I18N[LANG].submitting;
-
-      // Put the full phone (with code) into the visible input so Apps Script receives it under name="phone"
-      phoneInput.value = fullPhone;
-
       syncHiddenFields(); saveLocal();
-
       _pendingSubmit = true; // posts to iframe
-      form.submit();         // keep the hidden iframe mechanism
       showSuccessUI();
     });
 
