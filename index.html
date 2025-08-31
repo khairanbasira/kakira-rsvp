@@ -1667,47 +1667,72 @@ before 1 October 2025.</div>
       applyArrowOffset();
     }
 
-    function maybeEnableSubmit(){
-      // Enforce submission rules (allow partial resubmission if slots remain)
-      const submitted = isSubmitted();
-      const prevCount = getSubmittedCount();
-      const canResubmit = submitted && (prevCount < MAX_GUESTS);
+function maybeEnableSubmit(){
+  const T = I18N[LANG];
 
-      // If fully locked (4 already submitted), always disable
-      if (submitted && !canResubmit){
-        submitBtn.disabled = true;
-        validationMsg.style.display = 'block';
-        validationMsg.textContent = I18N[LANG].resubmitBlocked;
-        return;
-      }
+  const submitted   = isSubmitted();
+  const prevCount   = getSubmittedCount();   // how many were already submitted
+  const currConfirmed = getConfirmedCount(); // how many are confirmed now
+  const unconfIdx   = firstUnconfirmedIndexPlus1();
 
-      const typedCount = getGuestInputs().filter(inp => inp.value.trim().length>0).length;
-      const digitsAfterPrefix = phoneInput.value.replace(/^\+\d+\s*/, '').replace(/\D/g,'').length;
-      const hasPhone = digitsAfterPrefix >= 6; // require at least 6 digits after country code
-      const confirmedCount = getConfirmedCount();
-      const unconfIdx = firstUnconfirmedIndexPlus1();
+  // phone must have digits beyond the country prefix
+  const digitsAfterPrefix = phoneInput.value.replace(/^\+\d+\s*/, '').replace(/\D/g,'').length;
+  const hasPhone = digitsAfterPrefix >= 6;
 
-      const ok = hasPhone && confirmedCount >= 1 && unconfIdx === -1;
-      submitBtn.disabled = !ok;
-
-      const T = I18N[LANG];
-      validationMsg.style.display = (!ok) ? 'block' : validationMsg.style.display;
-
-      if (!ok){
-  if (typedCount === 0 && confirmedCount === 0){
-    validationMsg.textContent = T.needOneName;
-  } else if (typedCount > 0 && !hasPhone){
-    validationMsg.textContent = T.needPhone;
-  } else if (unconfIdx !== -1){
-    validationMsg.textContent = T.nameNotConfirmed(unconfIdx);
-  } else if (confirmedCount < 1){
-    validationMsg.textContent = T.needOneName;
+  // Fully locked: already 4 submitted
+  if (submitted && prevCount >= MAX_GUESTS){
+    submitBtn.disabled = true;
+    validationMsg.style.display = 'block';
+    validationMsg.textContent = T.resubmitBlocked;
+    return;
   }
-} else {
-  validationMsg.textContent = '';
-  validationMsg.style.display = 'none'; // <-- make sure it hides
-}
+
+  // Partial submit case: show info and keep button disabled
+  // until there's at least one new confirmed name
+  if (submitted && prevCount < MAX_GUESTS){
+    const remaining = MAX_GUESTS - prevCount;
+    if (currConfirmed <= prevCount){
+      submitBtn.disabled = true;
+      validationMsg.style.display = 'block';
+      validationMsg.textContent = T.thanksMore(remaining);
+      return; // stop here until user confirms a NEW name
     }
+    // else: user added at least one new confirmed name -> continue to normal checks
+  }
+
+  // Normal enable/disable checks
+  const ok = hasPhone && currConfirmed >= 1 && unconfIdx === -1;
+  submitBtn.disabled = !ok;
+
+  if (!ok){
+    validationMsg.style.display = 'block';
+    const typedCount = getGuestInputs().filter(inp => inp.value.trim().length>0).length;
+    if (typedCount === 0 && currConfirmed === 0){
+      validationMsg.textContent = T.needOneName;
+    } else if (!hasPhone){
+      validationMsg.textContent = T.needPhone;
+    } else if (unconfIdx !== -1){
+      validationMsg.textContent = T.nameNotConfirmed(unconfIdx);
+    } else if (currConfirmed < 1){
+      validationMsg.textContent = T.needOneName;
+    }
+  } else {
+    // Optional: after adding new confirmed names, keep a friendly hint of remaining slots
+    if (submitted && prevCount < MAX_GUESTS){
+      const remainingNow = Math.max(0, MAX_GUESTS - currConfirmed);
+      if (remainingNow > 0){
+        validationMsg.style.display = 'block';
+        validationMsg.textContent = T.thanksMore(remainingNow);
+      } else {
+        validationMsg.style.display = 'none';
+        validationMsg.textContent = '';
+      }
+    } else {
+      validationMsg.style.display = 'none';
+      validationMsg.textContent = '';
+    }
+  }
+}
 
     // ===== Country code prefix logic (non-deletable) =====
     function currentPrefix(){ return CC_MAP[ccSelect.value] || '+60 '; }
