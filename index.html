@@ -1690,19 +1690,22 @@ before 1 October 2025.</div>
       submitBtn.disabled = !ok;
 
       const T = I18N[LANG];
-      validationMsg.style.display = (!ok) ? 'block' : 'none';
+      validationMsg.style.display = (!ok) ? 'block' : validationMsg.style.display;
 
       if (!ok){
-        if (typedCount === 0 && confirmedCount === 0){
-          validationMsg.textContent = T.needOneName;
-        } else if (typedCount > 0 && !hasPhone){
-          validationMsg.textContent = T.needPhone;
-        } else if (unconfIdx !== -1){
-          validationMsg.textContent = T.nameNotConfirmed(unconfIdx);
-        } else if (confirmedCount < 1){
-          validationMsg.textContent = T.needOneName;
-        }
-      }
+  if (typedCount === 0 && confirmedCount === 0){
+    validationMsg.textContent = T.needOneName;
+  } else if (typedCount > 0 && !hasPhone){
+    validationMsg.textContent = T.needPhone;
+  } else if (unconfIdx !== -1){
+    validationMsg.textContent = T.nameNotConfirmed(unconfIdx);
+  } else if (confirmedCount < 1){
+    validationMsg.textContent = T.needOneName;
+  }
+} else {
+  validationMsg.textContent = '';
+  validationMsg.style.display = 'none'; // <-- make sure it hides
+}
     }
 
     // ===== Country code prefix logic (non-deletable) =====
