@@ -783,7 +783,7 @@ before 1 October 2025.</div>
                   <div class="cc-wrap">
                     <select id="ccSelect" class="cc-select" aria-label="Country code">
                       <option value="MY">MY</option>
-                      <option value="ID">ID</option>
+                      <option value="IDN">IDN</option>
                     </select>
                   </div>
                   <input class="input" id="phone" name="phone" autocomplete="tel" placeholder="e.g. +60 12 345 6789" required />
@@ -1248,7 +1248,7 @@ let _isSubmitting = false;   // 🚦 single-click guard
 
     // ===== New: country code refs & state =====
     const ccSelect = document.getElementById('ccSelect');
-    const CC_MAP = { MY: '+60 ', ID: '+62 ' };
+    const CC_MAP = { MY: '+60 ', IDN: '+62 ' };
 
     // ===== Language state =====
     let LANG = localStorage.getItem('rsvp_lang') || 'ms'; // default Malay
