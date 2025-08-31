@@ -1682,7 +1682,8 @@ before 1 October 2025.</div>
       }
 
       const typedCount = getGuestInputs().filter(inp => inp.value.trim().length>0).length;
-      const hasPhone = phoneInput.value.trim().length > 0;
+      const digitsAfterPrefix = phoneInput.value.replace(/^\+\d+\s*/, '').replace(/\D/g,'').length;
+      const hasPhone = digitsAfterPrefix >= 6; // require at least 6 digits after country code
       const confirmedCount = getConfirmedCount();
       const unconfIdx = firstUnconfirmedIndexPlus1();
 
