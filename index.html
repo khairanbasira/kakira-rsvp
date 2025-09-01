@@ -846,11 +846,18 @@ before 1 October 2025.</div>
                   <div class="tl-desc" id="s4Desc"></div>
                 </div>
               </div>
+			  <div class="tl-item">
+				<div class="tl-time" id="s5Time">02:00pm</div>
+				<div class="tl-what">
+					<div class="tl-title" id="s5Title">PHOTO SESSION</div>
+					<div class="tl-desc" id="s5Desc"></div>
+				</div>
+			  </div>
               <div class="tl-item">
-                <div class="tl-time" id="s5Time">03:00pm</div>
+                <div class="tl-time" id="s6Time">03:00pm</div>
                 <div class="tl-what">
-                  <div class="tl-title" id="s5Title">FAREWELL SESSION</div>
-                  <div class="tl-desc" id="s5Desc"></div>
+                  <div class="tl-title" id="s6Title">FAREWELL SESSION</div>
+                  <div class="tl-desc" id="s6Desc"></div>
                 </div>
               </div>
 
@@ -1054,14 +1061,21 @@ newConfirmedHint: (k)=> k===1
         noMsg: "Please refresh the page if you change your mind.",
 
         scheduleTitle: "SCHEDULE",
-        scheduleTimes: ["10:00AM","11:00AM","12:00PM","1:00PM","3:00PM"],
-        schedItems: [
-          { title: "GUEST ARRIVAL", desc: "Guests take their seats" },
-          { title: "NIKAH CEREMONY", desc: "" },
-          { title: "WEDDING CEREMONY", desc: "" },
-          { title: "LUNCH", extraTitle: "PHOTO SESSION", desc: "" },
-          { title: "FAREWELL", desc: "" },
-        ],
+        scheduleTimes: ["10:00AM","11:30AM","12:00PM","1:00PM","2:00PM","3:00PM"],
+		schedItems: [
+		{
+			title: "GUEST ARRIVAL",
+			desc: "Red carpet\nPhoto booth (10:00–12:00pm)\nGuests take their seats"
+		},
+		{ title: "NIKAH CEREMONY", desc: "" },
+		{
+			title: "WEDDING CEREMONY",
+			desc: "Merenjis (blessing ritual)\nKaraoke"
+		},
+		{ title: "LUNCH", desc: "" },
+		{ title: "PHOTO SESSION", desc: "" },
+		{ title: "FAREWELL", desc: "" }
+		],
         countdownTitle: "Countdown Timer",
         cdSub: "Our big day’s coming soon!",
         cdLabels: { days: "DAYS", hours: "HOURS", mins: "MINS", secs: "SECS" },
@@ -1135,14 +1149,22 @@ newConfirmedHint: (k)=> k===1
         noMsg: "Sila muat semula laman ini jika berubah fikiran.",
 
         scheduleTitle: "ATUR CARA",
-        scheduleTimes: ["10:00AM","11:00AM","12:00PM","1:00PM","3:00PM"],
-        schedItems: [
-          { title: "KETIBAAN PARA TETAMU", desc: "Tetamu mengambil tempat duduk" },
-          { title: "MAJLIS AKAD NIKAH", desc: "" },
-          { title: "MAJLIS PERSANDINGAN", desc: "" },
-          { title: "JAMUAN MAKAN", extraTitle: "SESI BERGAMBAR", desc: "" },
-          { title: "BERSURAI", desc: "" },
-        ],
+		scheduleTimes: ["10:00AM","11:30AM","12:00PM","1:00PM","2:00PM","3:00PM"],
+		schedItems: [
+		{
+			title: "KETIBAAN PARA TETAMU",
+			desc: "Red carpet\nFoto booth (10:00–12:00pm)\nTetamu mengambil tempat duduk"
+		},
+		{ title: "MAJLIS AKAD NIKAH", desc: "" },
+		{
+			title: "MAJLIS PERSANDINGAN",
+			desc: "Merenjis\nKaraoke"
+		},
+		{ title: "JAMUAN MAKAN", desc: "" },
+		{ title: "SESI BERGAMBAR", desc: "" },
+		{ title: "BERSURAI", desc: "" }
+		],
+
         countdownTitle: "KIRAAN DETIK",
         cdSub: "Hari istimewa kami semakin hampir!",
         cdLabels: { days: "HARI", hours: "JAM", mins: "MIN", secs: "SAAT" },
@@ -1228,6 +1250,10 @@ let _isSubmitting = false;   // 🚦 single-click guard
     const s4Title = document.getElementById('s4Title'); const s4Desc = document.getElementById('s4Desc');
     const s4Title2 = document.getElementById('s4Title2');
     const s5Title = document.getElementById('s5Title'); const s5Desc = document.getElementById('s5Desc');
+	const s6Time  = document.getElementById('s6Time');
+const s6Title = document.getElementById('s6Title');
+const s6Desc  = document.getElementById('s6Desc');
+
 
     const countdownTitleEl = document.getElementById('countdownTitle');
     const cdSubEl = document.getElementById('cdSub');
@@ -1615,6 +1641,7 @@ let _isSubmitting = false;   // 🚦 single-click guard
       if (s3Time && times[2]) s3Time.textContent = times[2];
       if (s4Time && times[3]) s4Time.textContent = times[3];
       if (s5Time && times[4]) s5Time.textContent = times[4];
+	  if (s6Time && times[5]) s6Time.textContent = times[5];
 
       const items = T.schedItems || [];
       if (items[0]){ s1Title.textContent = items[0].title; s1Desc.innerHTML = bulletsFromText(items[0].desc); }
@@ -1632,6 +1659,10 @@ let _isSubmitting = false;   // 🚦 single-click guard
         s4Desc.innerHTML = '';
       }
       if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = ''; }
+	  if (items[5]){
+		s6Title.textContent = items[5].title;
+		s6Desc.innerHTML    = bulletsFromText(items[5].desc);
+	}
 
       // Countdown
       if (countdownTitleEl) countdownTitleEl.textContent = T.countdownTitle || "Countdown";
