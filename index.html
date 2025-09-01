@@ -1645,20 +1645,21 @@ const s6Desc  = document.getElementById('s6Desc');
 
       const items = T.schedItems || [];
       if (items[0]){ s1Title.textContent = items[0].title; s1Desc.innerHTML = bulletsFromText(items[0].desc); }
-      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.innerHTML = ''; }
-      if (items[2]){ s3Title.textContent = items[2].title; s3Desc.innerHTML = ''; }
-      if (items[3]){
-        s4Title.textContent  = items[3].title || '';
-        if (items[3].extraTitle){
-          s4Title2.style.display = '';
-          s4Title2.textContent = items[3].extraTitle;
-        } else {
-          s4Title2.style.display = 'none';
-          s4Title2.textContent = '';
-        }
-        s4Desc.innerHTML = '';
-      }
-      if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = ''; }
+      if (items[1]){ s2Title.textContent = items[1].title; s2Desc.innerHTML = bulletsFromText(items[1].desc); }
+if (items[2]){ s3Title.textContent = items[2].title; s3Desc.innerHTML = bulletsFromText(items[2].desc); }
+if (items[3]){
+  s4Title.textContent  = items[3].title || '';
+  if (items[3].extraTitle){
+    s4Title2.style.display = '';
+    s4Title2.textContent = items[3].extraTitle;
+  } else {
+    s4Title2.style.display = 'none';
+    s4Title2.textContent = '';
+  }
+  s4Desc.innerHTML = bulletsFromText(items[3].desc);
+}
+if (items[4]){ s5Title.textContent = items[4].title; s5Desc.innerHTML = bulletsFromText(items[4].desc); }
+
 	  if (items[5]){
 		s6Title.textContent = items[5].title;
 		s6Desc.innerHTML    = bulletsFromText(items[5].desc);
