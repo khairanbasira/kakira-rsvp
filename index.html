@@ -2124,21 +2124,25 @@ async function attemptSubmit(){
   const currConfirmed = getConfirmedCount();
 
   if (isSubmitted() && prevCount < MAX_GUESTS && currConfirmed <= prevCount){
-    validationMsg.textContent = T.thanksMore(MAX_GUESTS - prevCount);
-    submitBtn.textContent = T.submit;
-    _isSubmitting = false;
-    maybeEnableSubmit();
-    playError();
-    return;
+	validationMsg.style.display = 'block';
+	validationMsg.textContent = T.thanksMore(MAX_GUESTS - prevCount);
+	submitBtn.textContent = T.submit;
+	_isSubmitting = false;
+	// don't call maybeEnableSubmit() — we want the message to stay
+	playError();
+	return;
   }
 
+
   if (isSubmitted() && getSubmittedCount() >= MAX_GUESTS){
-    validationMsg.textContent = T.resubmitBlocked;
-    submitBtn.textContent = T.submit;
-    _isSubmitting = false;
-    maybeEnableSubmit();
-    return;
+	validationMsg.style.display = 'block';
+	validationMsg.textContent = T.resubmitBlocked;
+	submitBtn.textContent = T.submit;
+	_isSubmitting = false;
+	// don't call maybeEnableSubmit() — keep the message shown
+	return;
   }
+
 
   // --- duplicate phone check (allow same device resubmits) ---
   const canon = canonicalPhone();
@@ -2146,14 +2150,16 @@ async function attemptSubmit(){
   const sameDevice = isSubmitted();
 
   if (exists && !sameDevice){
-    // revert optimistic success → show error and re-enable logic
-    validationMsg.textContent = T.duplicatePhone;
-    submitBtn.textContent = T.submit;
-    _isSubmitting = false;
-    maybeEnableSubmit();
-    playError();
-    return;
+	// show error and keep it visible
+	validationMsg.style.display = 'block';
+	validationMsg.textContent = T.duplicatePhone;
+	submitBtn.textContent = T.submit;
+	_isSubmitting = false;
+	// IMPORTANT: do NOT call maybeEnableSubmit() here — it clears the message
+	playError();
+	return;
   }
+
 
   // --- proceed with real submit ---
   syncHiddenFields();
