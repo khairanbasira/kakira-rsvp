@@ -632,29 +632,24 @@
       pointer-events:none; color:#6b4b00; font-size:12px;
     }
 
-    /* ====== (1) NEW: Submit loading dots ====== */
-    #submitBtn.loading{
-      position: relative;
-      color: transparent !important;  /* hide label while loading */
-      pointer-events: none;
-    }
-    #submitBtn.loading::after{
-      content: "";
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 6px; height: 6px; border-radius: 50%;
-      transform: translate(-50%, -50%);
-      box-shadow:
-        -16px 0 0 0 #111,
-         0    0 0 0 #111,
-         16px 0 0 0 #111;
-      animation: btnDots 0.9s infinite ease-in-out;
-    }
-    @keyframes btnDots{
-      0%, 80%, 100% { box-shadow: -16px 0 0 0 #111, 0 0 0 0 transparent, 16px 0 0 0 transparent; }
-      40%          { box-shadow: -16px 0 0 0 transparent, 0 0 0 0 #111, 16px 0 0 0 transparent; }
-      60%          { box-shadow: -16px 0 0 0 transparent, 0 0 0 0 transparent, 16px 0 0 0 #111; }
-    }
+/* ====== Submit loading: circular spinner ====== */
+#submitBtn.loading{
+  position: relative;
+  color: transparent !important;   /* hide label while loading */
+  pointer-events: none;
+}
+#submitBtn.loading::after{
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 22px; height: 22px;
+  margin: -11px 0 0 -11px;         /* perfectly center the spinner */
+  border-radius: 50%;
+  border: 3px solid #111;          /* spinner color */
+  border-top-color: transparent;   /* gap to show motion */
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
     /* ====== (2) NEW: Group nudge for schedule line+dots+time ====== */
     .timeline::before{
