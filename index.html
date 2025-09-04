@@ -100,6 +100,10 @@
       /* Tighten letter-spacing for invite body */
       --inv-body-letter-spacing: .04em;
 
+      /* ===== NEW (Schedule group nudge) ===== */
+      --sched-group-x: 0px;  /* +right, -left  */
+      --sched-group-y: 0px;  /* +down,  -up    */
+
       /* Force light UI widgets even in dark mode */
       color-scheme: light;
     }
@@ -626,6 +630,41 @@
       position:absolute; right:10px; top:50%;
       transform:translateY(-50%);
       pointer-events:none; color:#6b4b00; font-size:12px;
+    }
+
+    /* ====== (1) NEW: Submit loading dots ====== */
+    #submitBtn.loading{
+      position: relative;
+      color: transparent !important;  /* hide label while loading */
+      pointer-events: none;
+    }
+    #submitBtn.loading::after{
+      content: "";
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 6px; height: 6px; border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow:
+        -16px 0 0 0 #111,
+         0    0 0 0 #111,
+         16px 0 0 0 #111;
+      animation: btnDots 0.9s infinite ease-in-out;
+    }
+    @keyframes btnDots{
+      0%, 80%, 100% { box-shadow: -16px 0 0 0 #111, 0 0 0 0 transparent, 16px 0 0 0 transparent; }
+      40%          { box-shadow: -16px 0 0 0 transparent, 0 0 0 0 #111, 16px 0 0 0 transparent; }
+      60%          { box-shadow: -16px 0 0 0 transparent, 0 0 0 0 transparent, 16px 0 0 0 #111; }
+    }
+
+    /* ====== (2) NEW: Group nudge for schedule line+dots+time ====== */
+    .timeline::before{
+      transform: translate(var(--sched-group-x), var(--sched-group-y));
+    }
+    .tl-item::before{
+      transform: translate(var(--sched-group-x), var(--sched-group-y)) translate(-50%, -50%);
+    }
+    .tl-time{
+      transform: translate(var(--sched-group-x), var(--sched-group-y));
     }
   </style>
 </head>
@@ -1182,7 +1221,6 @@ newConfirmedHint: (k)=> k===1
     const totalGuestsEl = document.getElementById('totalGuests');
     const validationMsg = document.getElementById('validationMsg');
     const submitBtn = document.getElementById('submitBtn');
-    // after: const submitBtn = document.getElementById('submitBtn');
 let _isSubmitting = false;   // 🚦 single-click guard
     const phoneInput = document.getElementById('phone');
     const toast = document.getElementById('toast');
@@ -2074,6 +2112,10 @@ if (!ok){
 
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
 
+    // ===== (1) Loading helpers for submit button =====
+    function startBtnLoading(btn){ btn.classList.add('loading'); btn.disabled = true; }
+    function stopBtnLoading(btn){ btn.classList.remove('loading'); }
+
     // Submit to Apps Script (iframe) with pre-check
     const form = document.getElementById('rsvpForm');
     const hiddenIframe = document.getElementById('hidden_iframe');
@@ -2095,9 +2137,11 @@ if (!ok){
       if(!_pendingSubmit) return;
       _pendingSubmit = false;
       _isSubmitting = false;
+      stopBtnLoading(submitBtn);                 // ← stop spinner
+      submitBtn.textContent = I18N[LANG].submit; // ← revert label
       showToast(I18N[LANG].thanks);
 
-      // Update submission counters and UI
+      // Update submission counters and UI (show "respon berjaya dihantar..." / "...ditutup")
       markSubmitted();
       const nowCount = getConfirmedCount();
       setSubmittedCount(nowCount);
@@ -2113,36 +2157,33 @@ async function attemptSubmit(){
   if (_isSubmitting) return;
   _isSubmitting = true;
 
-  // lock immediately + optimistic message
-  submitBtn.disabled = true;
-  submitBtn.textContent = T.submitting;
-  validationMsg.style.display = 'block';
-  validationMsg.textContent = T.thanks; // show success instantly
+  // start loading animation (show dots), hide message while sending
+  startBtnLoading(submitBtn);
+  submitBtn.textContent = T.submitting; // label hidden by .loading
+  validationMsg.style.display = 'none';
 
   // --- re-submit guards (same logic, but now they also clear the guard) ---
   const prevCount     = getSubmittedCount();
   const currConfirmed = getConfirmedCount();
 
   if (isSubmitted() && prevCount < MAX_GUESTS && currConfirmed <= prevCount){
-	validationMsg.style.display = 'block';
-	validationMsg.textContent = T.thanksMore(MAX_GUESTS - prevCount);
-	submitBtn.textContent = T.submit;
-	_isSubmitting = false;
-	// don't call maybeEnableSubmit() — we want the message to stay
-	playError();
-	return;
+    stopBtnLoading(submitBtn);
+    validationMsg.style.display = 'block';
+    validationMsg.textContent = T.thanksMore(MAX_GUESTS - prevCount);
+    submitBtn.textContent = T.submit;
+    _isSubmitting = false;
+    playError();
+    return;
   }
-
 
   if (isSubmitted() && getSubmittedCount() >= MAX_GUESTS){
-	validationMsg.style.display = 'block';
-	validationMsg.textContent = T.resubmitBlocked;
-	submitBtn.textContent = T.submit;
-	_isSubmitting = false;
-	// don't call maybeEnableSubmit() — keep the message shown
-	return;
+    stopBtnLoading(submitBtn);
+    validationMsg.style.display = 'block';
+    validationMsg.textContent = T.resubmitBlocked;
+    submitBtn.textContent = T.submit;
+    _isSubmitting = false;
+    return;
   }
-
 
   // --- duplicate phone check (allow same device resubmits) ---
   const canon = canonicalPhone();
@@ -2150,26 +2191,21 @@ async function attemptSubmit(){
   const sameDevice = isSubmitted();
 
   if (exists && !sameDevice){
-	// show error and keep it visible
-	validationMsg.style.display = 'block';
-	validationMsg.textContent = T.duplicatePhone;
-	submitBtn.textContent = T.submit;
-	_isSubmitting = false;
-	// IMPORTANT: do NOT call maybeEnableSubmit() here — it clears the message
-	playError();
-	return;
+    stopBtnLoading(submitBtn);
+    validationMsg.style.display = 'block';
+    validationMsg.textContent = T.duplicatePhone;
+    submitBtn.textContent = T.submit;
+    _isSubmitting = false;
+    playError();
+    return;
   }
-
 
   // --- proceed with real submit ---
   syncHiddenFields();
   saveLocal();
   _pendingSubmit = true;
 
-  // lock UI optimistically (marks submitted, disables edits)
-  showSuccessUI();
-
-  // post to iframe
+  // Post to iframe (keep spinner on until iframe loads)
   form.submit();
 }
 
