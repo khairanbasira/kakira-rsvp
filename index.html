@@ -2114,9 +2114,7 @@ if (!ok){
     }
     renderAll();
 
-	// ===== Secret Admin Reset (tap Home 10×) =====
-	// Works on phone & laptop. While counting taps, the Home button won't scroll.
-	
+	// ===== Secret Admin Reset (tap Home 10×, non-intrusive) =====
 	(function secretAdminReset(){
 	const homeBtn = document.getElementById('quickHome');
 	if (!homeBtn) return;
@@ -2136,56 +2134,33 @@ if (!ok){
 		RESET_KEYS.forEach(k => localStorage.removeItem(k));
 		if (typeof resetFormToFreshState === 'function') resetFormToFreshState();
 		if (typeof renderAll === 'function') renderAll();
-		if (typeof showToast === 'function') showToast('Local RSVP reset');
-		else alert('Local RSVP reset');
+		if (typeof showToast === 'function') showToast('Local RSVP reset'); else alert('Local RSVP reset');
 		try { navigator.vibrate && navigator.vibrate([20, 40, 20]); } catch(_) {}
 		}catch(_){}
 	}
 	
-	// Tap logic
-	const TAP_TARGET_SELECTOR = '#quickHome';
-	const TAP_WINDOW_MS = 2500; // time window to complete 10 taps (adjust if you like)
-	const REQUIRED_TAPS  = 10;
-	
+	const REQUIRED_TAPS = 10;
+	const WINDOW_MS     = 2500;  // time window to complete the sequence
 	let tapCount = 0;
-	let tapTimer = null;
-	let tapCounting = false;
+	let timer    = null;
 	
-	function resetTapSeq(){
-		tapCounting = false;
-		tapCount = 0;
-		clearTimeout(tapTimer);
-	}
-	
-	// Block the Home button's default behavior while we're counting taps
-	document.addEventListener('click', (e)=>{
-		if (!tapCounting) return;
-		if (e.target.closest && e.target.closest(TAP_TARGET_SELECTOR)){
-		e.preventDefault();
-		e.stopImmediatePropagation(); // stop the smooth-scroll handler you already attach
-		}
-	}, true); // capture so we intercept before other handlers
-	
-	// Count taps on the Home button (capture phase to win over other listeners)
 	homeBtn.addEventListener('click', (e)=>{
-		tapCounting = true;
-		tapCount++;
-	
-		clearTimeout(tapTimer);
-		tapTimer = setTimeout(resetTapSeq, TAP_WINDOW_MS);
-	
+		// Count taps, but DON'T block normal behavior until the 10th tap
+		tapCount += 1;
+		clearTimeout(timer);
 		if (tapCount >= REQUIRED_TAPS){
+		tapCount = 0;
+		// Only on the 10th tap do we stop the normal Home action and reset
 		e.preventDefault();
 		e.stopImmediatePropagation();
-		resetTapSeq();
 		doReset();
-		} else {
-		// While counting, block the usual scroll action
-		e.preventDefault();
-		e.stopImmediatePropagation();
+		return;
 		}
-	}, true);
+		// Reset the counting window after inactivity
+		timer = setTimeout(()=>{ tapCount = 0; }, WINDOW_MS);
+	}, true); // capture so we can stop other click handlers only on the 10th tap
 	})();
+
 
 
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
