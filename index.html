@@ -735,7 +735,7 @@
         <div class="card" style="text-align:center">
           <div class="heading" id="titleText">Will you attend our wedding?</div>
           <!-- (2) Make small like RSVP description + show new lines -->
-          <div class="tiny muted" id="subtitleText">We'd love to celebrate with you.
+          <div class="tiny muted" id="subtitleText">
 Please confirm your attendance
 before 1 October 2025.</div>
           <div class="cta-row" style="justify-content:center">
@@ -1023,7 +1023,7 @@ before 1 October 2025.</div>
 
     // Single source of truth for the date/time
     const WEDDING_DATE_ISO = '2025-11-22';
-    const WEDDING_TIME = '10:30:00'; // local time for countdown target
+    const WEDDING_TIME = '10:00:00'; // local time for countdown target
     let COUNTDOWN_TARGET = new Date(`${WEDDING_DATE_ISO}T${WEDDING_TIME}`);
 
     const BGM_STOP_AFTER_LOOPS = 1;
@@ -1630,7 +1630,7 @@ const s6Desc  = document.getElementById('s6Desc');
       invVenueLabel.textContent = T.invVenueLabel;
       invDressLabel.textContent = T.invDressLabel;
       inviteDateEl.textContent  = formatWeddingDateWithDay(LANG);
-      inviteTimeEl.textContent  = "10:30 AM – 3:00 PM";
+      inviteTimeEl.textContent  = "10:00 AM – 3:00 PM";
       inviteVenueEl.textContent = "Promenade Hotel, Rafflesia Ballroom";
       inviteDressEl.textContent = T.invDressValue;
 
