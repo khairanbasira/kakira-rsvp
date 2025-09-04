@@ -639,15 +639,24 @@
   pointer-events: none;
 }
 #submitBtn.loading::after{
-  content: "";
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 22px; height: 22px;
-  margin: -11px 0 0 -11px;         /* perfectly center the spinner */
-  border-radius: 50%;
-  border: 3px solid #111;          /* spinner color */
-  border-top-color: transparent;   /* gap to show motion */
-  animation: spin .8s linear infinite;
+  content:"";
+  position:absolute;
+  top:50%; left:50%;
+  width:22px; height:22px;
+  margin:-11px 0 0 -11px;
+  border-radius:50%;
+  /* create 8 dots around a circle */
+  --dot: radial-gradient(farthest-side, #111 95%, #0000);
+  background:
+    var(--dot) 50%   0    /4px 4px no-repeat,
+    var(--dot) 85%  15%   /3.5px 3.5px no-repeat,
+    var(--dot) 100% 50%   /3px 3px no-repeat,
+    var(--dot) 85%  85%   /2.5px 2.5px no-repeat,
+    var(--dot) 50% 100%   /2px 2px no-repeat,
+    var(--dot) 15%  85%   /2.5px 2.5px no-repeat,
+    var(--dot) 0%   50%   /3px 3px no-repeat,
+    var(--dot) 15%  15%   /3.5px 3.5px no-repeat;
+  animation: spin .9s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
