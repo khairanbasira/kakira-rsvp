@@ -2114,6 +2114,57 @@ if (!ok){
     }
     renderAll();
 
+	// ===== Secret Admin Reset (no password) =====
+	// Phone: tap "ALIPPU" 8x quickly
+	// Laptop: press "Q" 8x quickly (ignored when typing inputs)
+	(function secretAdminReset(){
+	const alippu = document.getElementById('alippuLink');
+	if (!alippu) return;
+	
+	const RESET_KEYS = ['rsvp_names','rsvp_confirmed','rsvp_phone','rsvp_submitted','rsvp_submitted_count'];
+	
+	function doReset(){
+		try{
+		RESET_KEYS.forEach(k => localStorage.removeItem(k));
+		if (typeof resetFormToFreshState === 'function') resetFormToFreshState();
+		if (typeof renderAll === 'function') renderAll();
+		if (typeof showToast === 'function') showToast('Local RSVP reset'); else alert('Local RSVP reset');
+		try { navigator.vibrate && navigator.vibrate([20,40,20]); } catch(_) {}
+		}catch(_){}
+	}
+	
+	// Phone: 8 taps on ALIPPU
+	let tapCount = 0, tapTimer = null, tapCounting = false;
+	document.addEventListener('click', (e)=>{
+		if (!tapCounting) return;
+		if (e.target.closest && e.target.closest('#alippuLink')){
+		e.preventDefault(); e.stopImmediatePropagation();
+		}
+	}, true);
+	function resetTapSeq(){ tapCounting=false; tapCount=0; clearTimeout(tapTimer); }
+	alippu.addEventListener('click', (e)=>{
+		tapCounting = true;
+		tapCount++;
+		clearTimeout(tapTimer);
+		tapTimer = setTimeout(resetTapSeq, 1500); // 1.5s window
+		if (tapCount >= 8){ resetTapSeq(); e.preventDefault(); doReset(); }
+		else { e.preventDefault(); }
+	});
+	
+	// Laptop: press 'Q' 8x quickly
+	let qCount = 0, qTimer = null;
+	function isTypingTarget(el){ return el && (el.tagName==='INPUT'||el.tagName==='TEXTAREA'||el.tagName==='SELECT'||el.isContentEditable); }
+	document.addEventListener('keydown', (e)=>{
+		if (isTypingTarget(e.target)) return;
+		if (e.key === 'q' || e.key === 'Q'){
+		qCount++; clearTimeout(qTimer);
+		qTimer = setTimeout(()=>{ qCount = 0; }, 1500);
+		if (qCount >= 8){ qCount = 0; doReset(); }
+		}
+	});
+	})();
+
+
     phoneInput.addEventListener('input', ()=>{ saveLocal(); maybeEnableSubmit(); });
 
     // ===== (1) Loading helpers for submit button =====
